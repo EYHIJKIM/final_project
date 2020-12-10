@@ -1,6 +1,6 @@
 package com.hothiz.fund.project.dto;
 
-public class ProjectDAO {
+public class ProjectInfoDTO {
 
 	private String projectId;
 }

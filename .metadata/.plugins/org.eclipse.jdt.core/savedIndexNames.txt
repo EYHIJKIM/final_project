@@ -19,7 +19,6 @@ INDEX VERSION 1.131+E:\web_java\Spring\final_project\.metadata\.plugins\org.ecli
 3917827810.index
 1365943647.index
 296941048.index
-2157476791.index
 324933885.index
 530549179.index
 2064275435.index

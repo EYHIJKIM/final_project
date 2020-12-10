@@ -1,22 +1,5 @@
 Manifest-Version: 1.0
-<<<<<<< HEAD
 Built-By: sawqx
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-Built-By: ingya
-=======
-Built-By: june
->>>>>>> 1a1c60354e5c73c7436c42b1a2ee518309b1dbb6
-=======
-Built-By: ingya
->>>>>>> d28c1480b0c184a2a59f05f2de756c1d6eb7e8a8
-Build-Jdk: 11.0.9
-=======
-Built-By: crk33
->>>>>>> eba6bd375b03d4f4f6561c3d51f94692d2fa2906
 Build-Jdk: 1.8.0_251
->>>>>>> 6965e2c91b52a99227f279549135acb7e4082a49
 Created-By: Maven Integration for Eclipse
 

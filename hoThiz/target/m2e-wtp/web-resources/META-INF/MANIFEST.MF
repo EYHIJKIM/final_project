@@ -1,5 +1,9 @@
 Manifest-Version: 1.0
+<<<<<<< HEAD
+Built-By: ingya
+=======
 Built-By: june
+>>>>>>> 1a1c60354e5c73c7436c42b1a2ee518309b1dbb6
 Build-Jdk: 11.0.9
 Created-By: Maven Integration for Eclipse
 

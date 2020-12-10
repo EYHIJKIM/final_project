@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /.metadata/
 <<<<<<< HEAD
 =======
@@ -6,3 +7,16 @@ Servers
 =======
 >>>>>>> 1a1c60354e5c73c7436c42b1a2ee518309b1dbb6
 >>>>>>> ChangYeol
+=======
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+>>>>>>> d28c1480b0c184a2a59f05f2de756c1d6eb7e8a8

@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2020-12-10 16:29:43.805
+!MESSAGE Using platform encoding (MS949 actually) to copy filtered resources, i.e. build is platform dependent!
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2020-12-10 16:29:43.807
+=======
 !SESSION 2020-12-10 14:59:38.621 -----------------------------------------------
 eclipse.buildId=4.17.0.I20200902-1800
 java.version=11.0.9
@@ -304,6 +311,7 @@ java.net.UnknownHostException: jope.ow2.org
 !MESSAGE Using platform encoding (MS949 actually) to copy filtered resources, i.e. build is platform dependent!
 
 !ENTRY org.eclipse.m2e.logback.appender 2 0 2020-12-10 16:16:35.058
+>>>>>>> ChangYeol
 !MESSAGE Using platform encoding (MS949 actually) to copy filtered resources, i.e. build is platform dependent!
 
 !ENTRY org.eclipse.m2e.logback.appender 2 0 2020-12-10 16:48:16.379

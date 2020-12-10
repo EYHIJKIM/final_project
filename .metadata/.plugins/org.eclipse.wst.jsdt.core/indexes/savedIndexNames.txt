@@ -1,5 +1,15 @@
+<<<<<<< HEAD
 INDEX VERSION 1.4+D:\Spring\final_project\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
 122404013.index
 3907165947.index
 2267988265.index
 4092656781.index
+=======
+INDEX VERSION 1.4+E:\web_java\Spring\final_project\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+1707676067.index
+2157476791.index
+2708895357.index
+202823864.index
+22752823.index
+3149617898.index
+>>>>>>> bc28fb8ef5a72b19bd9b39d5efcbf854cb07a6cb

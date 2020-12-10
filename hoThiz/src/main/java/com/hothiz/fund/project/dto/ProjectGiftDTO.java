@@ -1,17 +1,11 @@
 package com.hothiz.fund.project.dto;
 
 public class ProjectGiftDTO {
-<<<<<<< HEAD
 
 	private int project_id;
 	private int project_gift_price;
 	private String project_gift;
-	
-=======
-	private int project_id;
-	private int project_gift_price;
-	private String project_gift;
->>>>>>> bc28fb8ef5a72b19bd9b39d5efcbf854cb07a6cb
+
 	public int getProject_id() {
 		return project_id;
 	}
@@ -30,10 +24,6 @@ public class ProjectGiftDTO {
 	public void setProject_gift(String project_gift) {
 		this.project_gift = project_gift;
 	}
-<<<<<<< HEAD
 
-	
-=======
->>>>>>> bc28fb8ef5a72b19bd9b39d5efcbf854cb07a6cb
 	
 }

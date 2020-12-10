@@ -1,10 +1,5 @@
 Manifest-Version: 1.0
-<<<<<<< HEAD
 Built-By: crk33
 Build-Jdk: 1.8.0_251
-=======
-Built-By: ingya
-Build-Jdk: 11.0.9
->>>>>>> bc28fb8ef5a72b19bd9b39d5efcbf854cb07a6cb
 Created-By: Maven Integration for Eclipse
 

@@ -1,4 +1,4 @@
-package com.hothiz.fund.member_like.dto;
+package com.hothiz.fund.member.dto;
 
 public class Member_likeDTO {
 	private String member_email;

@@ -1,4 +1,4 @@
-package com.hothiz.fund.member_msg.dto;
+package com.hothiz.fund.member.dto;
 
 public class Member_messageDTO {
 	private String member_email;

@@ -1,4 +1,4 @@
-package com.hothiz.fund.project.dao;
+package com.hothiz.fund.project.dto;
 
 public class ProjectDAO {
 

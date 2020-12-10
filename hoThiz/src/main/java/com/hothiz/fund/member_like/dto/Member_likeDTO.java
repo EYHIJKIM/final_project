@@ -1,6 +1,6 @@
 package com.hothiz.fund.member_like.dto;
 
-public class member_likeDTO {
+public class Member_likeDTO {
 	private String member_email;
 	private int project_id;
 	public String getMember_email() {

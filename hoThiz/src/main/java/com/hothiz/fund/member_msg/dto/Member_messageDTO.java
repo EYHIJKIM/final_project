@@ -1,6 +1,6 @@
 package com.hothiz.fund.member_msg.dto;
 
-public class messageDTO {
+public class Member_messageDTO {
 	private String member_email;
 	private String message_type;
 	private String message_content;

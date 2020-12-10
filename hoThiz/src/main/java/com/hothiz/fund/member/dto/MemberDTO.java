@@ -1,6 +1,6 @@
 package com.hothiz.fund.member.dto;
 
-public class memberDTO {
+public class MemberDTO {
 	private String member_email;
 	private String member_name;
 	private String member_phnum;

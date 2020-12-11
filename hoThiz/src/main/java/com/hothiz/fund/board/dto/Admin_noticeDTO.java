@@ -2,11 +2,13 @@ package com.hothiz.fund.board.dto;
 
 import java.sql.Date;
 
-public class NoticeDTO {
+public class Admin_noticeDTO {
+	
 	private int notice_board_id;
 	private String notice_board_title;
 	private Date notice_board_date;
 	private String notice_board_content;
+	
 	public int getNotice_board_id() {
 		return notice_board_id;
 	}

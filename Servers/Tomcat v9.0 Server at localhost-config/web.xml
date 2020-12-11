@@ -542,11 +542,15 @@
   <!-- pages, javascript, or any other content you wish.  This filter       -->
 =======
 <<<<<<< HEAD
+  <!-- pages, javascript, or any other content you wish.  This filter       -->
+=======
+<<<<<<< HEAD
   <!-- pages, JavaScript, or any other content you wish.  This filter       -->
 =======
   <!-- pages, javascript, or any other content you wish.  This filter       -->
 >>>>>>> 1a1c60354e5c73c7436c42b1a2ee518309b1dbb6
 >>>>>>> ChangYeol
+>>>>>>> eba6bd375b03d4f4f6561c3d51f94692d2fa2906
   <!-- supports the following initialization parameters (default values are -->
   <!-- in square brackets):                                                 -->
   <!--                                                                      -->
@@ -4259,6 +4263,8 @@
 <<<<<<< HEAD
 =======
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
         <extension>wasm</extension>
         <mime-type>application/wasm</mime-type>
     </mime-mapping>
@@ -4266,6 +4272,7 @@
 =======
 >>>>>>> 1a1c60354e5c73c7436c42b1a2ee518309b1dbb6
 >>>>>>> ChangYeol
+>>>>>>> eba6bd375b03d4f4f6561c3d51f94692d2fa2906
         <extension>wav</extension>
         <mime-type>audio/x-wav</mime-type>
     </mime-mapping>

@@ -1,5 +1,13 @@
 Manifest-Version: 1.0
-Built-By: crk33
+<<<<<<< HEAD
+Built-By: sawqx
+=======
+<<<<<<< HEAD
+Built-By: sawqx
+=======
+Built-By: user
+>>>>>>> 4ced116d514023b453134f5c6f694d58831f042e
+>>>>>>> HHs
 Build-Jdk: 1.8.0_251
 Created-By: Maven Integration for Eclipse
 

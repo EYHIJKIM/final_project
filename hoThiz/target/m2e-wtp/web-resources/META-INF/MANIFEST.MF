@@ -1,18 +1,5 @@
 Manifest-Version: 1.0
-<<<<<<< HEAD
 Built-By: june
 Build-Jdk: 11.0.9
-=======
-<<<<<<< HEAD
-Built-By: sawqx
-=======
-<<<<<<< HEAD
-Built-By: sawqx
-=======
-Built-By: user
->>>>>>> 4ced116d514023b453134f5c6f694d58831f042e
->>>>>>> HHs
-Build-Jdk: 1.8.0_251
->>>>>>> 3938b6a3dfc7c05c7a6d24a27bd7f968061f255f
 Created-By: Maven Integration for Eclipse
 

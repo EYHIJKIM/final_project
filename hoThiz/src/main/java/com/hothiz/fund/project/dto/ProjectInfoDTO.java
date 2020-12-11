@@ -18,6 +18,14 @@ public class ProjectInfoDTO {
 	private int project_current_percent;
 	private String project_main_category;
 	private String project_sub_category;
+	private int project_check;
+	
+	public int getProject_check() {
+		return project_check;
+	}
+	public void setProject_check(int project_check) {
+		this.project_check = project_check;
+	}
 	public String getMember_email() {
 		return member_email;
 	}

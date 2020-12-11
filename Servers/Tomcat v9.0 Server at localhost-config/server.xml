@@ -21,11 +21,15 @@
  --><Server port="8005" shutdown="SHUTDOWN">
 =======
 <<<<<<< HEAD
+ --><Server port="8005" shutdown="SHUTDOWN">
+=======
+<<<<<<< HEAD
  --><Server port="8087" shutdown="SHUTDOWN">
 =======
  --><Server port="8005" shutdown="SHUTDOWN">
 >>>>>>> 1a1c60354e5c73c7436c42b1a2ee518309b1dbb6
 >>>>>>> ChangYeol
+>>>>>>> eba6bd375b03d4f4f6561c3d51f94692d2fa2906
   <Listener className="org.apache.catalina.startup.VersionLoggerListener"/>
   <!-- Security listener. Documentation at /docs/config/listeners.html
   <Listener className="org.apache.catalina.security.SecurityListener" />
@@ -69,6 +73,9 @@
          Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
     -->
 <<<<<<< HEAD
+    <Connector connectionTimeout="20000" port="8080" protocol="HTTP/1.1" redirectPort="8443"/>
+=======
+<<<<<<< HEAD
     <Connector connectionTimeout="20000" port="8282" protocol="HTTP/1.1" redirectPort="8443"/>
 =======
 <<<<<<< HEAD
@@ -77,6 +84,7 @@
     <Connector connectionTimeout="20000" port="8282" protocol="HTTP/1.1" redirectPort="8443"/>
 >>>>>>> 1a1c60354e5c73c7436c42b1a2ee518309b1dbb6
 >>>>>>> ChangYeol
+>>>>>>> eba6bd375b03d4f4f6561c3d51f94692d2fa2906
     <!-- A "Connector" using the shared thread pool-->
     <!--
     <Connector executor="tomcatThreadPool"

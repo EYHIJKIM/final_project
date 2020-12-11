@@ -1,11 +1,20 @@
 package com.hothiz.fund.member.dto;
 
+import java.sql.Date;
+
 public class Member_messageDTO {
 	private String member_email;
 	private String message_type;
 	private String message_content;
 	private String message_send_member;
 	private String message_receive_member;
+	private Date message_date;
+	public Date getMessage_date() {
+		return message_date;
+	}
+	public void setMessage_date(Date message_date) {
+		this.message_date = message_date;
+	}
 	public String getMember_email() {
 		return member_email;
 	}

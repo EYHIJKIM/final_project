@@ -1,30 +1,52 @@
 package com.hothiz.fund;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hothiz.fund.project.dto.TestDTO;
 import com.hothiz.fund.project.service.ProjectServiceImpl;
 
-@RestController
+@Controller
 @RequestMapping("test")
 public class TestController {
 	
 	@Autowired
 	ProjectServiceImpl ps;
 	
-	//寃뚯떆湲� 由ъ뒪�듃
-		@GetMapping(value = "/", produces = "application/json;charset=utf-8")
-		public String test() {
-			System.out.println("湲�紐⑸줉 �슂泥�");
-			String list = ps.testList();
-			return list;
+		//게시글 전체 목록
+		@GetMapping(value = "/getData", produces = "application/json;charset=utf-8")
+		@ResponseBody
+		public String test(@RequestParam int locatedPage) {
+			System.out.println("페이징 처리하러왔슴다");
+
+			
+			return ps.testList(locatedPage);
+		}
+		
+		@GetMapping(value="/testList")
+		public String testList() {
+			
+			return "test/testList";
+		}
+		
+		@GetMapping(value="/allList", produces = "application/json;charset=utf-8")
+		@ResponseBody
+		public String all() {
+			
+			String all = ps.all();
+			
+			return all;
 		}
 		
 		
@@ -40,13 +62,15 @@ public class TestController {
 			return dto;
 		}
 		
-		/*
-		@RequestMapping(value = "/")
+		
+		@RequestMapping(value = "/insert")
 		public ModelAndView insert() {
+			
+			ps.insert();
 
 			return new ModelAndView("redirect:/test/testList");
 			
 		}
-		*/
+		
 		
 }

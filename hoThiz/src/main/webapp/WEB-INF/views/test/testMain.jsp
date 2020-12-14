@@ -9,7 +9,7 @@
 <body>
 
 <a href="/">메인</a>
-<a href="test/">게시글 목록</a>
+<a href="test/testList">게시글 목록</a>
 
 </body>
 </html>

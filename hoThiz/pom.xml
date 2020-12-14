@@ -161,7 +161,7 @@
 			<version>${org.springframework-version}</version>
 		</dependency>
 
-<!-- json , ajax -->
+		<!-- json , ajax -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -174,11 +174,21 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 
-		<!-- Spring Test 모듈 -->
+		<!-- 이메일 -->
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
+			<artifactId>spring-context-support</artifactId>
 			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>javax.mail-api</artifactId>
+			<version>1.5.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.5.3</version>
 		</dependency>
 
 	</dependencies>

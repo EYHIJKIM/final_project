@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hothiz.fund.project.dao.ProjectDAO;
+import com.hothiz.fund.project.dto.ProjectPagingDTO;
 import com.hothiz.fund.project.dto.TestDTO;
 
 @Service
@@ -19,11 +20,16 @@ public class ProjectServiceImpl{
 
 	@Autowired
 	ProjectDAO dao;
+
 	
 	
-	public String testList(){
-		ArrayList<TestDTO> list = dao.testList();
+	
+	public String testList(int locatedPage){
+		ProjectPagingDTO dto = new ProjectPagingDTO();
+		dto.pagingSetting(locatedPage);
+		ArrayList<TestDTO> list = dao.testList(dto);
 		
+
 		ObjectMapper mapper = new ObjectMapper();
 		String listJson = null;
 		
@@ -35,7 +41,7 @@ public class ProjectServiceImpl{
 			e.printStackTrace();
 		}
 		
-		
+
 		return listJson;
 	}
 
@@ -46,10 +52,32 @@ public class ProjectServiceImpl{
 		
 		return dto;
 	}
+	
+	public String all() {
+		
+
+		ArrayList<TestDTO> list = dao.allList();
+		
+
+		ObjectMapper mapper = new ObjectMapper();
+		String listJson = null;
+		
+		
+		try {
+			listJson = mapper.writeValueAsString(list);
+		} catch (JsonProcessingException e) {
+			System.out.println("testList 서비스 오류");
+			e.printStackTrace();
+		}
+		
+		return listJson;
+	}
+
+
 
 
 	public void insert() {
-		for(int i=150;i<=250;i++) {
+		for(int i=260;i<450;i++) {
 			TestDTO dto = new TestDTO();
 			dto.setProject_id(i);
 			dto.setMember_name(i+"a");
@@ -58,7 +86,8 @@ public class ProjectServiceImpl{
 			dao.insert(dto);
 		}
 	}
-		
+
+
 	
 	
 }

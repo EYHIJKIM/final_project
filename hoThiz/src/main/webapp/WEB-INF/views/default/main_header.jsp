@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="assets/css/main.css" />
 </head>
 <body class="is-preload">
-
+<%String path = request.getContextPath(); %>
 
 	<header id="header">
 		<a class="logo" href="/">Industrious</a>
@@ -37,9 +37,9 @@
 
 	<nav id="menu">
 		<ul class="links">
-			ㅡ
+			
 			<!-- 프로젝트마다 태그를 파라미터로 묻혀서 보내줌. -->
-			<li><a href="discover">모든 프로젝트</a>
+			<li><a href="<%=path%>/discover/">모든 프로젝트</a>
 			<a href="elements.html">인기 추천 프로젝트</a>
 			</li>
 			<li></li>

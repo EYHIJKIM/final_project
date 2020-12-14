@@ -28,7 +28,9 @@ public interface ProjectDAO {
 	public void insert(TestDTO dto);
 	
 	
-	//30게시글 갯수
+	
+	
+	//30게시글 갯수(메뉴탭들)
 	@Select("SELECT B.*" + 
 			"FROM (SELECT rownum rn, A.*" + 
 					"FROM (select * from test order by project_id desc) A" + 
@@ -37,13 +39,31 @@ public interface ProjectDAO {
 	public ArrayList<TestDTO> testList(ProjectPagingDTO dto);
 
 	
+	///////////////////////////////////////////////////////////////////////////////
 	
-	//해당 카테고리 게시글을 30개씩 뽑아냄. =>스크롤 비동기
+	//모든 프로젝트
+	@Select("SELECT B.*" + 
+			"FROM (SELECT rownum rn, A.*" + 
+					"FROM (select * from project_info order by project_id desc) A" + 
+			")B " + 
+			"WHERE rn between #{startRownum} and #{endRownum}")
+	public ArrayList<TestDTO> getAllProjectList(ProjectPagingDTO dto);
 	
 	
 	
-	//메인에서 카
+	//태그별 게시글
 	
+	
+	
+	
+	
+	
+	
+	
+	//메인에서 10개씩 있는거..카테고리별로 where줘야 함.
+	
+	
+
 	
 	
 }

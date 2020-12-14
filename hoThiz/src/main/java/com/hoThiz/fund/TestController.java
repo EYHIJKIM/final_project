@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,15 +15,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.hothiz.fund.project.dao.ProjectDAO;
+import com.hothiz.fund.project.dto.ProjectPagingDTO;
 import com.hothiz.fund.project.dto.TestDTO;
 import com.hothiz.fund.project.service.ProjectServiceImpl;
 
 @Controller
-@RequestMapping("test")
+@RequestMapping("/test")
 public class TestController {
 	
 	@Autowired
 	ProjectServiceImpl ps;
+	
+	@Autowired
+	ProjectDAO dao;
 	
 		//게시글 전체 목록
 		@GetMapping(value = "/getData", produces = "application/json;charset=utf-8")
@@ -34,12 +40,20 @@ public class TestController {
 			return ps.testList(locatedPage);
 		}
 		
-		@GetMapping(value="/testList")
-		public String testList() {
+		
+		@GetMapping(value="/testList", produces = "application/json;charset=utf-8")
+		@ResponseBody
+		public ModelAndView testList(ModelAndView model) {
+			System.out.println("게시글 목록이다");
+			ProjectPagingDTO dto = new ProjectPagingDTO();
+			dto.pagingSetting(0);
+			model.addObject("list", dao.testList(dto));
+			model.setViewName("test/testList");
 			
-			return "test/testList";
+			return model;
 		}
 		
+		/*
 		@GetMapping(value="/allList", produces = "application/json;charset=utf-8")
 		@ResponseBody
 		public String all() {
@@ -49,7 +63,7 @@ public class TestController {
 			return all;
 		}
 		
-		
+		*/
 		
 		
 		//寃뚯떆湲� �긽�꽭蹂닿린
@@ -62,7 +76,7 @@ public class TestController {
 			return dto;
 		}
 		
-		
+		/*
 		@RequestMapping(value = "/insert")
 		public ModelAndView insert() {
 			
@@ -71,6 +85,6 @@ public class TestController {
 			return new ModelAndView("redirect:/test/testList");
 			
 		}
-		
+		*/
 		
 }

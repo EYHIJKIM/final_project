@@ -8,8 +8,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-<c:set var="dto" value="project" />
-${dto.project_id }
+ 
+ <%=request.getContextPath() %>
+
+<h1>프로젝트 나열공간</h1>
 
 
 

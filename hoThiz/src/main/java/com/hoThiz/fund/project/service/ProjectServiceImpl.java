@@ -25,8 +25,11 @@ public class ProjectServiceImpl{
 	
 	
 	public String testList(int locatedPage){
+		
 		ProjectPagingDTO dto = new ProjectPagingDTO();
 		dto.pagingSetting(locatedPage);
+		
+		
 		ArrayList<TestDTO> list = dao.testList(dto);
 		
 
@@ -53,39 +56,11 @@ public class ProjectServiceImpl{
 		return dto;
 	}
 	
-	public String all() {
-		
-
-		ArrayList<TestDTO> list = dao.allList();
-		
-
-		ObjectMapper mapper = new ObjectMapper();
-		String listJson = null;
-		
-		
-		try {
-			listJson = mapper.writeValueAsString(list);
-		} catch (JsonProcessingException e) {
-			System.out.println("testList 서비스 오류");
-			e.printStackTrace();
-		}
-		
-		return listJson;
-	}
 
 
 
 
-	public void insert() {
-		for(int i=260;i<450;i++) {
-			TestDTO dto = new TestDTO();
-			dto.setProject_id(i);
-			dto.setMember_name(i+"a");
-			dto.setProject_title(i+"제목");
-			dto.setProject_content(i+"내용");
-			dao.insert(dto);
-		}
-	}
+
 
 
 	

@@ -15,10 +15,10 @@ function test(){
 			
 			let html=""
 			$.each(list, function(index, item){
-				html += "<br>아이디 : </br>"+item.project_id+"<br>";
-				html += "<br>나이 : </br>" +item.member_name+"<br>";
-				html += "<br>제목 : </br>" +item.project_title+"<br>";
-				html += "<br>내용 : </br>" +item.project_content+"<br><hr>";
+				html += "<b>아이디 : </b>"+item.project_id+"<br>";
+				html += "<b>나이 : </b>" +item.member_name+"<br>";
+				html += "<b>제목 : </b>" +item.project_title+"<br>";
+				html += "<b>내용 : </b>" +item.project_content+"<br><hr>";
 			});
 			$("#result").html(html);
 		},

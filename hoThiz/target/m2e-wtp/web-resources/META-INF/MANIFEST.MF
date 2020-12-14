@@ -1,9 +1,13 @@
 Manifest-Version: 1.0
 <<<<<<< HEAD
+<<<<<<< HEAD
 Built-By: june
 Build-Jdk: 11.0.9
 =======
 Built-By: crk33
+=======
+Built-By: user
+>>>>>>> 742f1c303852826df2a3c7fdcc1df8e45a2a046a
 Build-Jdk: 1.8.0_251
 >>>>>>> 33eaaa979806eb42b535edb094a94e1cf1aeb451
 Created-By: Maven Integration for Eclipse

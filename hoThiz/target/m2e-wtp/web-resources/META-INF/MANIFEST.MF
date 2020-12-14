@@ -1,10 +1,15 @@
 Manifest-Version: 1.0
 <<<<<<< HEAD
+<<<<<<< HEAD
 Built-By: june
 Build-Jdk: 11.0.9
 =======
 Built-By: user
 Build-Jdk: 1.8.0_251
 >>>>>>> 742f1c303852826df2a3c7fdcc1df8e45a2a046a
+=======
+Built-By: june
+Build-Jdk: 11.0.9
+>>>>>>> pjune
 Created-By: Maven Integration for Eclipse
 

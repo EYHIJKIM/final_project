@@ -42,6 +42,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 		// 카테고리 분류인 경우
 		if (paramDto.getCategory() != null) {
+			System.out.println("카테고리 가져오기");
 			String category = paramDto.getCategory();
 			projectList = dao.getCategoryProjectList(pageDto, category);
 

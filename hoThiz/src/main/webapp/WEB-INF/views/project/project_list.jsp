@@ -10,6 +10,7 @@
 
 </head>
 <body>
+
 <c:forEach var="pj" items="${firstList}">
 
 ${pj.project_title }<br>
@@ -39,14 +40,20 @@ var page = 0;
 		console.log("인피니트 진입")
 		//만약 전체 스크롤-10보다 내려온 스크롤이 크면(밑바닥에 거의 닿으면)
 		if($(document).height()-30<=$(window).height()+$(window).scrollTop()){
-			console.log(page);
 			page +=1;
 			//list객체에서 page값을 1 올려준다. 
 			
+			var params = "?page="+page;
+			//param += ${param.category} ->이렇게 하면 안돼ㅜ
+				params += "&category=${param.category}";
+			
+				console.log(params);
+		
+				
 			//비동기 실행
 			$.ajax({
 				type: 'GET',
-				url : '/fund/discover/getData?page='+page,
+				url : '/fund/discover/getData'+params,
 				contentType : "application/json; charset=utf-8",
 				success : function(data){
 					let html=""
@@ -58,8 +65,8 @@ var page = 0;
 						});
 						$("#scrollContent").append(html);
 						
-				},//success func 
-				
+				}//success func 
+				,
 				error : function(){
 					alert("문제발생");
 				}

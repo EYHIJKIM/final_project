@@ -64,7 +64,8 @@ public interface ProjectDAO {
 						+" ORDER BY project_id desc) A" + 
 				") B " + 
 				" WHERE rn BETWEEN #{dto.startRownum} AND #{dto.endRownum}")
-		public ArrayList<ProjectInfoDTO> getCategoryProjectList(@Param("dto") ProjectPagingDTO dto, @Param("c") String category);
+		public ArrayList<ProjectInfoDTO> getCategoryProjectList(
+					@Param("dto") ProjectPagingDTO dto, @Param("c") String category);
 
 	/*
 	//3. 성공 임박 프로젝트 80~99퍼 사이

@@ -32,11 +32,8 @@ public class ProjectController {
 	@Autowired
 	ProjectService ps;
 	
-	@Autowired
-	ProjectDAO dao;
 	
-	
-	//처음 눌렀을 때..
+	//게시글 화면
 	@GetMapping(value="", produces = "application/json;charset=utf-8")
 	public ModelAndView projectList(ModelAndView mv,
 			@ModelAttribute ParamDTO paramDto) {
@@ -49,9 +46,6 @@ public class ProjectController {
 	
 
 	//비동기로 값 끌어오기 로직
-	//여기서 날라오는 파라미터 값은....어케 받아줘야하지...?...dto로 받자...
-	//비동기로 처리할때 계속 파라미터값도 받아줘야 할듯.
-	//Map형태로 값을 매칭시켜도 될듯???
 	@GetMapping(value = "/getData", produces = "application/json;charset=utf-8")
 	public String getProjectList(ModelAndView mv,
 					@ModelAttribute ParamDTO paramDto) {

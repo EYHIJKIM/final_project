@@ -3,6 +3,7 @@ package com.hothiz.fund.project.dto;
 import java.sql.Date;
 
 public class ProjectInfoDTO {
+	private int project_id;
 	private String member_email;
 	private String project_title;
 	private String project_main_image;
@@ -20,6 +21,12 @@ public class ProjectInfoDTO {
 	private String project_sub_category;
 	private int project_check;
 	
+	public int getProject_id() {
+		return project_id;
+	}
+	public void setProject_id(int project_id) {
+		this.project_id = project_id;
+	}
 	public int getProject_check() {
 		return project_check;
 	}

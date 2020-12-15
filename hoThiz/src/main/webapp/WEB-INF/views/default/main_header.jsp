@@ -1,6 +1,5 @@
 <!DOCTYPE HTML>
-<%@ page contentType="text/html;charset=utf-8"%>
-
+<%@ page contentType = "text/html;charset=utf-8" %>
 <!--
 	Industrious by TEMPLATED
 	templated.co @templatedco
@@ -17,10 +16,11 @@
 <link rel="stylesheet" href="assets/css/main.css" />
 </head>
 <body class="is-preload">
-<%String path = request.getContextPath(); %>
+<%String jspPath = "/fund/WebContent/WEB-INF/views/"; %>
+
 
 	<header id="header">
-		<a class="logo" href="/">Industrious</a>
+		<a class="logo" href="/fund/">Industrious</a>
 		<nav>
 			<a href="#menu">Menu</a>
 		</nav>
@@ -39,15 +39,34 @@
 		<ul class="links">
 			
 			<!-- 프로젝트마다 태그를 파라미터로 묻혀서 보내줌. -->
-			<li><a href="<%=path%>/discover/">모든 프로젝트</a>
-			<a href="elements.html">인기 추천 프로젝트</a>
+			<li><a href="/fund/discover">모든 프로젝트</a>
+			<a href="/fund/discover?sort=popular&ongoing=onGoing">인기 추천 프로젝트</a>
+			<a href="/fund/discover?maxAchieveRate=99&minAchieveRate=80&sort=endedAt&ongoing=onGoing">성공 임박 프로젝트</a>
+			<a href="/fund/sort=publishedAt&ongoing=onGoing">신규 추천 프로젝트</a>
+			<a href="/fund/ongoing=prelaunching">공개예정 프로젝트</a>
 			</li>
+			<hr>
+			<li>
+			<a href="/fund/discover?category=games">모든 게임</a>
+			</li>
+			
+			
+			<li><a href="/fund/discover?category=show">모든 공연</a></li>
 			<li></li>
-			<li><a href="generic.html">성공 임박 프로젝트</a></li>
-			<li><a href="generic.html">신규 추천 프로젝트</a></li>
-			<li><a href="generic.html">공개예정 프로젝트</a></li>
+			<li></li>
 		</ul>
+		
+		
+		
+		
+		
+		
 	</nav>
-
+	<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
 </body>
 </html>

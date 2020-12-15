@@ -12,15 +12,13 @@ public class ProjectPagingDTO {
 	private int startRownum; //시작 rownum
 	private int endRownum; //시작 rownum
 	
-	
-	
-	public void pagingSetting(int locatedPage) {
-		this.locatedPage = locatedPage;
+	public ProjectPagingDTO() {}
+	public ProjectPagingDTO(int page) {
+		this.locatedPage = page;
 		setStartRownum();setEndRownum();
-		
-		
-		
 	}
+
+
 
 
 	

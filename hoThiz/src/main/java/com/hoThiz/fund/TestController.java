@@ -15,30 +15,40 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.hothiz.fund.member.dto.MemberDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
 import com.hothiz.fund.project.dto.ProjectPagingDTO;
 import com.hothiz.fund.project.dto.TestDTO;
+import com.hothiz.fund.project.service.ProjectService;
 import com.hothiz.fund.project.service.ProjectServiceImpl;
 
-@Controller
+//@Controller
 @RequestMapping("/test")
 public class TestController {
 	
 	@Autowired
-	ProjectServiceImpl ps;
+	ProjectService ps;
 	
 	@Autowired
 	ProjectDAO dao;
 	
-		//게시글 전체 목록
-		@GetMapping(value = "/getData", produces = "application/json;charset=utf-8")
-		@ResponseBody
-		public String test(@RequestParam int locatedPage) {
-			System.out.println("페이징 처리하러왔슴다");
-
-			
-			return ps.testList(locatedPage);
+	@RequestMapping("/insert")
+	public void insertMem() {
+		
+		for(int i=3;i<70;i++) {
+			MemberDTO dto = new MemberDTO();
+			dto.setMember_email("testEmail"+i);
+			dto.setMember_name("testName"+i);
+			dto.setMember_phnum("testPH"+i);
+			dao.insertMember(dto);
 		}
+		
+		
+		
+	}
+	
+	/*
+		
 		
 		
 		@GetMapping(value="/testList", produces = "application/json;charset=utf-8")
@@ -53,7 +63,7 @@ public class TestController {
 			return model;
 		}
 		
-		/*
+
 		@GetMapping(value="/allList", produces = "application/json;charset=utf-8")
 		@ResponseBody
 		public String all() {
@@ -63,18 +73,19 @@ public class TestController {
 			return all;
 		}
 		
-		*/
+
 		
 		
 		//寃뚯떆湲� �긽�꽭蹂닿린
 		@GetMapping(value = "/{project_id}")
 		public TestDTO test(@PathVariable int project_id, Model model) {
 			
-			//�뿬湲곗뿉 寃뚯떆湲� �꽭遺��궗�빆 �엳�쓬.
+			
 			TestDTO dto = ps.selectOne(project_id);
 
 			return dto;
 		}
+		
 		
 		/*
 		@RequestMapping(value = "/insert")

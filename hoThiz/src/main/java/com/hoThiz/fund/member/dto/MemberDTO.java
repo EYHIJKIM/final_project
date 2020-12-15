@@ -3,6 +3,7 @@ package com.hothiz.fund.member.dto;
 public class MemberDTO {
 	private String member_email;
 	private String member_name;
+	private String member_pwd;
 	private String member_phnum;
 	private String member_addr;
 	private String member_profile_pic;
@@ -20,6 +21,12 @@ public class MemberDTO {
 	}
 	public void setMember_name(String member_name) {
 		this.member_name = member_name;
+	}
+	public String getMember_pwd() {
+		return member_pwd;
+	}
+	public void setMember_pwd(String member_pwd) {
+		this.member_pwd = member_pwd;
 	}
 	public String getMember_phnum() {
 		return member_phnum;
@@ -57,4 +64,8 @@ public class MemberDTO {
 	public void setMember_email_verify(int member_email_verify) {
 		this.member_email_verify = member_email_verify;
 	}
+
+	
+	
+	
 }

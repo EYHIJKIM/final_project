@@ -42,7 +42,7 @@ var page = 0;
 			//비동기 실행
 			$.ajax({
 				type: 'GET',
-				url : 'getData?locatedPage='+page,
+				url : 'getProjectList?locatedPage='+page,
 				contentType : "application/json",
 				success : function(data){
 					console.log("성공");
@@ -63,7 +63,7 @@ var page = 0;
 
 			
 		}
-	}
+	}//infiniteScroll함수
 	
 	$(document).ready(function(){
 		$(window).scroll(infiniteScroll)

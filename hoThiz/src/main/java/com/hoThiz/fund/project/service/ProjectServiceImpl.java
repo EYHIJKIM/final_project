@@ -39,11 +39,14 @@ public class ProjectServiceImpl implements ProjectService {
 
 		// 파람에 따라 프로젝트 로직 조절
 		String sort = paramDto.getSort();
-
+		
 		// 카테고리 분류인 경우
-		if (paramDto.getCategory() != null) {
+		String category = paramDto.getCategory();
+		System.out.println(category);
+		
+		if (!(category.equals(""))) {
 			System.out.println("카테고리 가져오기");
-			String category = paramDto.getCategory();
+
 			projectList = dao.getCategoryProjectList(pageDto, category);
 
 		} else if (paramDto.getOnGoing() != null) {// 태그분류인 경우
@@ -93,8 +96,8 @@ public class ProjectServiceImpl implements ProjectService {
 		String sort = paramDto.getSort();
 
 		// 카테고리 분류인 경우
-		if (paramDto.getCategory() != null) {
-			System.out.println("첫 카테고리 화면");
+		if (paramDto.getCategory()!=null) {
+			System.out.println("카테고리파라미터 존재, but 오는값 없음==공백");
 			
 			System.out.println(pageDto.getStartRownum());
 			System.out.println(pageDto.getEndRownum());
@@ -103,7 +106,9 @@ public class ProjectServiceImpl implements ProjectService {
 			
 			projectList = dao.getCategoryProjectList(pageDto, category);
 
-		} else if (paramDto.getOnGoing() != null) {// 태그분류인 경우
+		} 
+		
+		/*else if (paramDto.getOnGoing() != null) {// 태그분류인 경우
 			if (sort.equals("popular")) {
 				// 인기순, 좋아요 50개 이상
 
@@ -119,8 +124,8 @@ public class ProjectServiceImpl implements ProjectService {
 
 			}
 
-		} else { // 모든 프로젝트
-			System.out.println("모든 프로젝트 가져오기");
+		}*/ else { // 모든 프로젝트
+			System.out.println("모든 프로젝트 가져오기(카테고리 널 x)");
 			projectList = dao.getProjectList(pageDto);
 		}
 

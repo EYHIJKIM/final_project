@@ -49,6 +49,8 @@ public class ProjectController {
 	@GetMapping(value = "/getData", produces = "application/json;charset=utf-8")
 	public String getProjectList(ModelAndView mv,
 					@ModelAttribute ParamDTO paramDto) {
+		System.out.println("비동기con");
+		System.out.println(paramDto.getCategory());
 
 
 		return ps.getProjectList(paramDto);

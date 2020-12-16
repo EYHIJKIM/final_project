@@ -11,14 +11,32 @@
 </head>
 <body>
 <script type="text/javascript">
- function MyFavoritProject(){
-	 $.ajax({
-			type: 'POST',
-			url : '/fund/discover/favorite',
-			contentType : "application/json; charset=utf-8",
-			success : function(data){
-				$("#like").},
-			}
+
+//라이크 버튼은 세션이 존재할때만 보이도록!!!조건문 걸어주자,,!! 세션 이름은 userId
+
+let likeFlag = true;
+var project_id = "${pj.project_id}";
+ function MyFavoritProject(project_id){
+
+		 $.ajax({
+				type: 'POST',
+				url : '/fund/discover/like',
+				data : { //json형식으로 서버에 데이터 전달
+					'project_id' : project_id,
+					'flag' : likeFlag
+				},
+				contentType : "application/json; charset=utf-8",
+				success : function(data){ //통신 성공시 호출됨,,넘겨줄게 있나..??
+					console.log("성공요");
+				
+					$("#like").replaceWith('<p id="like"></p>');
+					likeFlag
+					},
+				error: function(){
+					alert("실패!");
+				}
+					
+			});
 	 
  }
 
@@ -33,7 +51,7 @@
 서브: ${pj.project_sub_category }<br>
 달성률:${pj.project_current_percent}<br>
 좋아요:${pj.project_like}<br>
-<button id="like" onclick="MyFavoritProject()"></button>
+<button onClick="MyFavoritProject()"><p id="like">좋아욘</p></button>
 <hr>
 </c:forEach>
 
@@ -46,7 +64,7 @@
 
 <script>
 
-var page = 0;
+let page = 0;
 
 
 	//document의 height : 전체 스크롤 길이
@@ -59,7 +77,7 @@ var page = 0;
 			page +=1;
 			//list객체에서 page값을 1 올려준다. 
 			
-			var params = "?page="+page;
+			let params = "?page="+page;
 			//param += ${param.cat1egory} ->이렇게 하면 안돼ㅜ
 			
 			//파라미터값이 존재할때만 params에 붇혀줌(ajax로 url에 묻혀줄 변수임)

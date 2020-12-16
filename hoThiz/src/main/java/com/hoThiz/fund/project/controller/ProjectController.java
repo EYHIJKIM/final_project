@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
 import com.hothiz.fund.project.dto.ParamDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
@@ -62,8 +63,13 @@ public class ProjectController {
 	
 	
 	//프로젝트 좋아요 비동기
-	
-	@PostMapping(value="/favorite")
+	@PostMapping(value="/like")
+	public String likeProject(@ModelAttribute Member_likeDTO likeDto) {
+		
+		String viewFlag = ps.chkLike(likeDto);
+		
+		return like;
+	}
 	
 	
 	
@@ -72,7 +78,7 @@ public class ProjectController {
 	public ProjectInfoDTO getAProjectDetail(@PathVariable int project_id, Model model) {
 		
 		
-		ProjectInfoDTO dto;
+		ProjectInfoDTO dto=null;
 
 		return dto;
 	}

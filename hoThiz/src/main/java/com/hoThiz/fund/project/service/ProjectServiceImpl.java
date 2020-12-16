@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import org.springframework.ui.Model;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hothiz.fund.member.dto.MemberDTO;
+import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
 import com.hothiz.fund.project.dto.ParamDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
@@ -182,6 +185,44 @@ public class ProjectServiceImpl implements ProjectService {
 	public ProjectInfoDTO getAProjectDetail(int project_id) {
 	
 		return null;
+	}
+
+
+
+
+	@Override
+	public String chkLike(Member_likeDTO likeDto) {
+		
+		boolean flag = false;
+		String viewFlag = "checked"; //하트가 체크된 상태를 표시. 뷰단으로 리턴할 것.
+		String email = likeDto.getMember_email();
+		int project_id = likeDto.getProject_id();
+	
+		
+		//만약 member_like에서 member_email을 확인해서 해당 id가 있다면
+		ArrayList<Integer> likePrjList = dao.chkMemberLike(email);
+		for(int id : likePrjList) {
+			if(id==project_id) {
+				flag = true; //flag를 true로.
+				
+			}
+		}
+		
+		
+		if(flag) { //이미 해당 프젝을 좋아요 한 경우
+			//좋아요 취소 로직 실행.
+			dao.setLikeMember(likeDto);
+			dao.setLikeProject(project_id);
+			viewFlag = "nonChecked"; //취소했으니 논첵으로 바꿈.
+			
+			
+		} else {//두 테이블에서 삭제함
+			dao.cancelLikeMember(project_id); //좋아요 한 프젝 없앰
+			dao.cancelLikeProject(project_id); //좋아요 -1
+		}
+		
+		return viewFlag;
+		
 	}
 
 	

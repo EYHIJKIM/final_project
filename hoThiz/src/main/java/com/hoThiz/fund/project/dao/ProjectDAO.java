@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import com.hothiz.fund.member.dto.MemberDTO;
+import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dto.ParamDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
 import com.hothiz.fund.project.dto.ProjectPagingDTO;
@@ -43,7 +45,7 @@ public interface ProjectDAO {
 	public ArrayList<TestDTO> testList(ProjectPagingDTO dto);
 
 	
-	///////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////게시글 목록 뽑아냄////////////////////////////////////////////////
 	
 	//1.모든 프로젝트
 	@Select("SELECT B.*" + 
@@ -138,6 +140,47 @@ public interface ProjectDAO {
 	
 	
 	
+	//만약 member_like에서 member_email을 확인해서 해당 id가 없다면
+	//좋아요 누르면 게시판의 좋아요 올라감.
+	@Update("UPDATE project_info SET project_like = project_like+1 WHERE project_id=#{project_id}")
+	public void setLikeProject(int project_id);
+	
+	//그리고 멤버가 좋아하는 프젝에도 올라감.
+	@Update("INSERT INTO member_like project_id = #{project_id} WHERE member_email = #{member_email}")
+	public void setLikeMember(Member_likeDTO dto);
+	
+	
+	
+	
+	//게시판 좋아요를 취소하고
+	@Update("UPDATE project_info SET project_like = project_like-1 WHERE project_id=#{project_id}")
+	public void cancelLikeProject(int project_id);
+	
+	//멤버 좋아요에서 삭제함
+	@Update("DELETE FROM member_like where project_id=#{project}")
+	public void cancelLikeMember(int project_id);
+	
+	
+	//멤버가 그 게시글을 좋아요 했는지를 확인. 멤버의 ID를 보내서 확인해보자
+	@Select("SELECT project_id FROM member_like where member_email =#{email}")
+	public ArrayList<Integer> chkMemberLike(@Param("email") String member_email);
+	
+	
+	
+	
+	
+	/*
+	 멤버가 좋아요를 취소하면 -> 프로젝트 테이블에서 like에서 -1을 함.
+	 그리고 member_like 테이블에서 해당 project_id를 삭제함.
+	 
+	  멤버 아이디    프젝 아이디
+	  1         3
+	  			4
+	 
+	 */
+	
+	
+	
 	
 	
 	
@@ -151,6 +194,12 @@ public interface ProjectDAO {
 	         + " values(#{member_email},#{member_pwd},#{member_name},0,#{member_phnum},#{member_addr},#{member_URL},0,0)")
 	public void insertMember(MemberDTO dto);
 	//메인에서 10개씩 있는거..카테고리별로 where줘야 함.
+
+
+	
+
+
+	
 
 
 	

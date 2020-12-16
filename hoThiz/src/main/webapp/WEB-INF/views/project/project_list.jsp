@@ -10,14 +10,30 @@
 
 </head>
 <body>
+<script type="text/javascript">
+ function MyFavoritProject(){
+	 $.ajax({
+			type: 'POST',
+			url : '/fund/discover/favorite',
+			contentType : "application/json; charset=utf-8",
+			success : function(data){
+				$("#like").},
+			}
+	 
+ }
+
+
+</script>
+
 
 <c:forEach var="pj" items="${firstList}">
 
-${pj.project_title }<br>
-${pj.project_summary }<br>
-${pj.project_current_donated }/${project_current_percent}
-${pj.project_main_category }
-${pj.project_sub_category }
+<a href="discover/${pj.project_id }">${pj.project_title }</a><br>
+메인: ${pj.project_main_category }<br>
+서브: ${pj.project_sub_category }<br>
+달성률:${pj.project_current_percent}<br>
+좋아요:${pj.project_like}<br>
+<button id="like" onclick="MyFavoritProject()"></button>
 <hr>
 </c:forEach>
 
@@ -44,10 +60,17 @@ var page = 0;
 			//list객체에서 page값을 1 올려준다. 
 			
 			var params = "?page="+page;
-			//param += ${param.category} ->이렇게 하면 안돼ㅜ
-				params += "&category=${param.category}";
+			//param += ${param.cat1egory} ->이렇게 하면 안돼ㅜ
 			
-				console.log(params);
+			//파라미터값이 존재할때만 params에 붇혀줌(ajax로 url에 묻혀줄 변수임)
+			if("${param.category}"!=''){params += "&category=${param.category}";}
+			if("${param.ongoing}!"!=''){params += "&ongoing=${param.ongoing}";}
+			if("${param.sort}!"!=''){params += "&sort=${param.sort}";}
+			if("${param.maxAchieveRate}"!=''){params += "&maxAchieveRate=${param.maxAchieveRate}";}
+			if("${param.minAchieveRate}"!=''){params += "&minAchieveRate=${param.minAchieveRate}";}
+			
+	
+			console.log(params);
 		
 				
 			//비동기 실행
@@ -61,7 +84,8 @@ var page = 0;
 							html += "<b>프로젝트넘버 : </b>"+item.project_id+"<br>";
 							html += "<b>메인카테고리: </b>" +item.project_main_category+"<br>";
 							html += "<b>서브카테고리: </b>" +item.project_sub_category+"<br>";
-							html += "<b>제목 : </b>" +item.project_title+"<br>";
+							html += "<b>좋아요:</b>" + item.project_like+"<br>";
+							html += "<b>달성률:</b>" + item.project_current_percent+"<br>";
 						});
 						$("#scrollContent").append(html);
 						

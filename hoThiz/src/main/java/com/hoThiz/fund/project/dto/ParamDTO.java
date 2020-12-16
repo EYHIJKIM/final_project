@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 public class ParamDTO {
 	private String sort;
-	private String onGoing;
+	private String ongoing;
 	private int maxAchieveRate;
 	private int minAchieveRate;
 	private String category;
@@ -30,11 +30,12 @@ public class ParamDTO {
 	public void setSort(String sort) {
 		this.sort = sort;
 	}
-	public String getOnGoing() {
-		return onGoing;
+
+	public String getOngoing() {
+		return ongoing;
 	}
-	public void setOnGoing(String onGoing) {
-		this.onGoing = onGoing;
+	public void setOngoing(String ongoing) {
+		this.ongoing = ongoing;
 	}
 	public int getMaxAchieveRate() {
 		return maxAchieveRate;

@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,6 +33,9 @@ public class ProjectController {
 	@Autowired
 	ProjectService ps;
 	
+	@Autowired
+	ProjectDAO dao;
+	
 	
 	//게시글 화면
 	@GetMapping(value="", produces = "application/json;charset=utf-8")
@@ -47,20 +51,37 @@ public class ProjectController {
 
 	//비동기로 값 끌어오기 로직
 	@GetMapping(value = "/getData", produces = "application/json;charset=utf-8")
-	public String getProjectList(ModelAndView mv,
-					@ModelAttribute ParamDTO paramDto) {
+	public String getProjectList(@ModelAttribute ParamDTO paramDto) {
 		System.out.println("비동기con");
-		System.out.println(paramDto.getCategory());
+		String jsonList = ps.getProjectList(paramDto);
+		System.out.println(jsonList);
+		
+		return jsonList;
+	}
+	
+	
+	
+	//프로젝트 좋아요 비동기
+	
+	@PostMapping(value="/favorite")
+	
+	
+	
+	
+	@GetMapping(value = "/{project_id}")
+	public ProjectInfoDTO getAProjectDetail(@PathVariable int project_id, Model model) {
+		
+		
+		ProjectInfoDTO dto;
 
-
-		return ps.getProjectList(paramDto);
+		return dto;
 	}
 	
 	
 	
 	
 	
-/*
+
 	@RequestMapping("/insert")
 	public void insert() {
 		
@@ -68,18 +89,18 @@ public class ProjectController {
 				ProjectInfoDTO dto = new ProjectInfoDTO();
 				String e = ""+i;
 				dto.setMember_email(e);
-				dto.setProject_like(i);
-				dto.setProject_current_percent(i*10);
+				dto.setProject_like(i*50);
+				dto.setProject_current_percent(i*50);
 				dto.setProject_title(i+"제목");
 				dto.setProject_summary("요약"+i);
 				dto.setProject_target_price(i*1000);
-				dto.setProject_main_category("show");
-				dto.setProject_sub_category("dance");
+				dto.setProject_main_category("video");
+				dto.setProject_sub_category("film");
 				dao.setProjectInfo(dto);
 			}
 		
 	}
-*/
+
 	
 	
 

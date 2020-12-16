@@ -55,32 +55,74 @@ public interface ProjectDAO {
 
 	
 	
-	//2. 카테고리별 게시글
+	
+
+	
+	//2. 인기순 뽑아내기 좋아요 50개 이상	
 		@Select("SELECT B.*" + 
 				" FROM (SELECT rownum rn, A.*" + 
 						" FROM"
 						+" (select * from project_info"
-						+" WHERE (project_main_category=#{c} OR project_sub_category=#{c})"
+						+" WHERE project_like >= 50"
 						+" ORDER BY project_id desc) A" + 
 				") B " + 
-				" WHERE rn BETWEEN #{dto.startRownum} AND #{dto.endRownum}")
-		public ArrayList<ProjectInfoDTO> getCategoryProjectList(
-					@Param("dto") ProjectPagingDTO dto, @Param("c") String category);
-
-	/*
+				" WHERE rn BETWEEN #{startRownum} AND #{endRownum}")
+		public ArrayList<ProjectInfoDTO> getPopularProjectList(ProjectPagingDTO dto);
+		
+		
+		
 	//3. 성공 임박 프로젝트 80~99퍼 사이
 	@Select("SELECT B.*" + 
 			" FROM (SELECT rownum rn, A.*" + 
 					"FROM "
 					+" (select * from project_info"
-					+" WHERE project_current_percent BETWEEN #{minAchieveRate} AND #{maxAchieveRate}"
+					+" WHERE (project_current_percent BETWEEN #{min} AND #{max})"
+					+" ORDER BY project_id desc) A" + 
+			") B " + 
+			" WHERE rn BETWEEN #{dto.startRownum} AND #{dto.endRownum}")
+	public ArrayList<ProjectInfoDTO> getEndedAtProjectList(@Param("dto") ProjectPagingDTO pageDto, @Param("max") int maxAchieveRate,
+								@Param("min") int minAchieveRate);
+   
+	
+	
+	//4. 공개예정 프로젝트
+	@Select("SELECT B.*" + 
+			" FROM (SELECT rownum rn, A.*" + 
+					"FROM "
+					+" (select * from project_info"
+					+" WHERE (project_reg_date < project_release_date)"
 					+" ORDER BY project_id desc) A" + 
 			") B " + 
 			" WHERE rn BETWEEN #{startRownum} AND #{endRownum}")
-	public ArrayList<ProjectInfoDTO> getProjectList(ProjectPagingDTO pageDto, @Param("maxAchieveRate")int maxAchieveRate,
-								@Param("minAchieveRate") int minAchieveRate);
-   */
+	public ArrayList<ProjectInfoDTO> getPrelanchingProjectList(ProjectPagingDTO dto);
 	
+	
+	//5. 신규추천
+	@Select("SELECT B.*" + 
+			" FROM (SELECT rownum rn, A.*" + 
+					"FROM "
+					+" (select * from project_info"
+					+" WHERE project_release_date between("
+					+ "to_date(sysdate, 'YYYYMMDD')-7 AND to_date(sysdate, 'YYYYMMDD'))"
+					+" ORDER BY project_id desc) A" + 
+			") B " + 
+			" WHERE rn BETWEEN #{startRownum} AND #{endRownum}")
+	public ArrayList<ProjectInfoDTO> getNewProjectList(ProjectPagingDTO dto);
+	
+	
+	
+	
+	//6. 카테고리별 게시글
+			@Select("SELECT B.*" + 
+					" FROM (SELECT rownum rn, A.*" + 
+							" FROM"
+							+" (select * from project_info"
+							+" WHERE (project_main_category=#{c} OR project_sub_category=#{c})"
+							+" ORDER BY project_id desc) A" + 
+					") B " + 
+					" WHERE rn BETWEEN #{dto.startRownum} AND #{dto.endRownum}")
+			public ArrayList<ProjectInfoDTO> getCategoryProjectList(
+						@Param("dto") ProjectPagingDTO dto, @Param("c") String category);
 	
 	
 

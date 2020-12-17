@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hothiz.fund.member.dto.MemberDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
-import com.hothiz.fund.project.dto.ParamDTO;
+import com.hothiz.fund.project.dto.ProjectParamDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
 import com.hothiz.fund.project.dto.ProjectPagingDTO;
 import com.hothiz.fund.project.dto.TestDTO;
@@ -32,7 +32,7 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	
 	@Override
-	public ArrayList<ProjectInfoDTO> firstProjectView(ParamDTO paramDto) {
+	public ArrayList<ProjectInfoDTO> firstProjectView(ProjectParamDTO paramDto) {
 		// 페이지 셋팅(db에 넘겨줄 start,end 값)
 		ProjectPagingDTO pageDto = new ProjectPagingDTO(paramDto.getPage());
 
@@ -91,7 +91,7 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	
 	@Override
-	public String getProjectList(ParamDTO paramDto) {
+	public String getProjectList(ProjectParamDTO paramDto) {
 
 		// 맵에 프로퍼티 값을 넣어주는 메소드
 		// Map<String, Object> paramMap = BeanUtils.describe(paramDto);
@@ -164,17 +164,9 @@ public class ProjectServiceImpl implements ProjectService {
 			projectList = dao.getProjectList(pageDto);
 		}
 
-		ObjectMapper mapper = new ObjectMapper();
-		String jsonProjectList = null;
+		
 
-		try {
-			jsonProjectList = mapper.writeValueAsString(projectList);
-		} catch (JsonProcessingException e) {
-			System.out.println("testList 서비스 오류");
-			e.printStackTrace();
-		}
-
-		return jsonProjectList;
+		return jsonMapper(projectList);
 
 	}
 
@@ -192,39 +184,69 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public String chkLike(Member_likeDTO likeDto) {
+		//likeDto에는 project_id와 member_email이 들어있음.
 		
 		boolean flag = false;
-		String viewFlag = "checked"; //하트가 체크된 상태를 표시. 뷰단으로 리턴할 것.
-		String email = likeDto.getMember_email();
+		String msg = "like"; //하트가 체크된 상태를 표시. 뷰단으로 리턴할 것.
+		String member_email = likeDto.getMember_email();
 		int project_id = likeDto.getProject_id();
-	
+		System.out.println("project_id");
+		System.out.println("기존 라이크:"+dao.getAProject(project_id).getProject_like());
 		
-		//만약 member_like에서 member_email을 확인해서 해당 id가 있다면
-		ArrayList<Integer> likePrjList = dao.chkMemberLike(email);
+		
+		//한 멤버의 좋아요 한 프로젝트 목록
+		ArrayList<Integer> likePrjList = dao.chkMemberLike(member_email);
+		
+		//하나씩 빼서 확인함.
 		for(int id : likePrjList) {
-			if(id==project_id) {
+			if(id==project_id) { //넘겨받은 프로젝트id와 동일한 id가 테이블에 존재하면
 				flag = true; //flag를 true로.
-				
+				break;	
 			}
 		}
 		
 		
-		if(flag) { //이미 해당 프젝을 좋아요 한 경우
+		if(flag) { //이미 좋아요 했던 프로젝트인 경우
 			//좋아요 취소 로직 실행.
+			System.out.println("좋아요 취소할거임");
+			dao.cancelLikeMember(likeDto); //좋아요 한 프젝 없앰
+			dao.cancelLikeProject(project_id); //좋아요 -1
+			msg = "cancelLike"; //취소했으니 캔슬라이크
+			System.out.println("취소한 후 라이크:"+dao.getAProject(project_id).getProject_like());
+			
+			
+		} else {//좋아요 안한 프로젝트인경우
+			System.out.println("좋아요 하겠읍니다");
+			//만약 좋아요를 첨 누른 회원이라면 member_like 테이블에 없을 것임.
+			//그걸 판별해서 두개의 sql문을 사용해야 할듯..
+			
 			dao.setLikeMember(likeDto);
 			dao.setLikeProject(project_id);
-			viewFlag = "nonChecked"; //취소했으니 논첵으로 바꿈.
-			
-			
-		} else {//두 테이블에서 삭제함
-			dao.cancelLikeMember(project_id); //좋아요 한 프젝 없앰
-			dao.cancelLikeProject(project_id); //좋아요 -1
-		}
+			System.out.println("좋아요한후 라이크:"+dao.getAProject(project_id).getProject_like());
+		}	
 		
-		return viewFlag;
+		System.out.println(msg);
+		
+		
+		return jsonMapper(msg);
 		
 	}
 
+	
+	public String jsonMapper(Object obj) {
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonStr = null;
+
+		try {
+			jsonStr = mapper.writeValueAsString(obj);
+		} catch (JsonProcessingException e) {
+			System.out.println("jsonMapper 메소드 오류");
+			e.printStackTrace();
+		}
+		
+		return jsonStr;	
+	}
 	
 
 	

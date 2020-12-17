@@ -2,7 +2,7 @@ package com.hothiz.fund.project.dto;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-public class ParamDTO {
+public class ProjectParamDTO {
 	private String sort;
 	private String ongoing;
 	private int maxAchieveRate;

@@ -1,5 +1,7 @@
 <%@ page contentType = "text/html;charset=utf-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%//String userId = (String)session.getAttribute("userId"); %>
+<%String userId = "1"; %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,25 +14,52 @@
 <body>
 <script type="text/javascript">
 
-//라이크 버튼은 세션이 존재할때만 보이도록!!!조건문 걸어주자,,!! 세션 이름은 userId
+//세션 email을 값으로 보내줘야 함.
 
 let likeFlag = true;
-var project_id = "${pj.project_id}";
+
  function MyFavoritProject(project_id){
+	 
+	 var id = project_id;
+	 
+	 //console.log($("#btn224").val());
+
+	
+	 var likeDto = {
+			 project_id : project_id,
+			 member_email : <%=userId%>
+			 
+	 };
+	
+	 console.log(likeDto.project_id);
+	 console.log(likeDto.member_email);
+	 
+
 
 		 $.ajax({
 				type: 'POST',
 				url : '/fund/discover/like',
-				data : { //json형식으로 서버에 데이터 전달
-					'project_id' : project_id,
-					'flag' : likeFlag
-				},
-				contentType : "application/json; charset=utf-8",
-				success : function(data){ //통신 성공시 호출됨,,넘겨줄게 있나..??
+				data : likeDto,
+				success : function(data){ //통신 성공시 호출됨,,msg를 담자.
+					//data.msg = like 혹은 cancelLike 들음.
+					
 					console.log("성공요");
+					
+					var like_img = '';
+
+										
+					alert(data);	
+					console.log(data);
+					
+					if(data == '"cancelLike"'){ //좋아요 취소함
+						//like_img = "images/cancelLike.png"
+						$("#btn"+id).html("좋아요 눌렀다!")
+						
+					} else{ //좋아요 함
+						//like_img = "images/like.png"
+						$("#btn"+id).html("좋아요 이미 누름")
+					}
 				
-					$("#like").replaceWith('<p id="like"></p>');
-					likeFlag
 					},
 				error: function(){
 					alert("실패!");
@@ -51,7 +80,10 @@ var project_id = "${pj.project_id}";
 서브: ${pj.project_sub_category }<br>
 달성률:${pj.project_current_percent}<br>
 좋아요:${pj.project_like}<br>
-<button onClick="MyFavoritProject()"><p id="like">좋아욘</p></button>
+
+<button id="likeBtn" onClick="MyFavoritProject('${pj.project_id}')">
+	<p id="btn${pj.project_id}" value="의 값">좋아욘</p>
+</button>
 <hr>
 </c:forEach>
 

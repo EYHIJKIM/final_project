@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.hothiz.fund.member.dto.MemberDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
-import com.hothiz.fund.project.dto.ParamDTO;
+import com.hothiz.fund.project.dto.ProjectParamDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
 import com.hothiz.fund.project.dto.ProjectPagingDTO;
 import com.hothiz.fund.project.dto.TestDTO;
@@ -19,31 +19,10 @@ import com.hothiz.fund.project.dto.TestDTO;
 public interface ProjectDAO {
 	
 	
-	//모든 게시글을 가져옴
-	@Select("select * from test order by project_id desc")
-	public ArrayList<TestDTO> allList();
+	///////////////////////게시글 하나 뽑아냄
+	@Select("SELECT * FROM project_info WHERE project_id = #{project_id}")
+	public ProjectInfoDTO getAProject(int project_id);
 	
-	
-	//게시글 상세정보
-	@Select("select * from test where project_id=#{project_id}")
-	public TestDTO selectOne(Integer project_id);
-
-	
-	//test용 프로젝트 올리기
-	@Insert("INSERT INTO test values(#{project_id},#{member_name},#{project_title},#{project_content})")
-	public void insert(TestDTO dto);
-	
-	
-	
-	
-	//30게시글 갯수(메뉴탭들)
-	@Select("SELECT B.*" + 
-			"FROM (SELECT rownum rn, A.*" + 
-					"FROM (select * from test order by project_id desc) A" + 
-			")B " + 
-			"WHERE rn between #{startRownum} and #{endRownum}")
-	public ArrayList<TestDTO> testList(ProjectPagingDTO dto);
-
 	
 	///////////////////////////////게시글 목록 뽑아냄////////////////////////////////////////////////
 	
@@ -126,9 +105,11 @@ public interface ProjectDAO {
 			public ArrayList<ProjectInfoDTO> getCategoryProjectList(
 						@Param("dto") ProjectPagingDTO dto, @Param("c") String category);
 	
-	
-
-
+	/////////////////////////////////////////////////////////////////////////////
+			
+			
+			
+	//테스트용으로 프젝에 값넣은거
 	@Insert("insert into project_info" + 
 			" value(project_id,member_email,project_title,project_summary,"
 				+ "project_target_price,project_like,project_current_percent,"
@@ -137,7 +118,7 @@ public interface ProjectDAO {
 	public void setProjectInfo(ProjectInfoDTO dto);
 	
 	
-	
+	///////////////////////////////좋아요 로직
 	
 	
 	//만약 member_like에서 member_email을 확인해서 해당 id가 없다면
@@ -145,9 +126,9 @@ public interface ProjectDAO {
 	@Update("UPDATE project_info SET project_like = project_like+1 WHERE project_id=#{project_id}")
 	public void setLikeProject(int project_id);
 	
-	//그리고 멤버가 좋아하는 프젝에도 올라감.
-	@Update("INSERT INTO member_like project_id = #{project_id} WHERE member_email = #{member_email}")
-	public void setLikeMember(Member_likeDTO dto);
+	//좋아요 누르면 삽입.
+	@Insert("INSERT INTO member_like value(project_id,member_email) values(#{project_id},#{member_email})")
+	public void setLikeMember(Member_likeDTO likeDto);
 	
 	
 	
@@ -157,26 +138,21 @@ public interface ProjectDAO {
 	public void cancelLikeProject(int project_id);
 	
 	//멤버 좋아요에서 삭제함
-	@Update("DELETE FROM member_like where project_id=#{project}")
-	public void cancelLikeMember(int project_id);
+	@Update("DELETE FROM member_like where project_id=#{project_id} AND member_email=#{member_email}")
+	public void cancelLikeMember(Member_likeDTO likeDto);
 	
 	
 	//멤버가 그 게시글을 좋아요 했는지를 확인. 멤버의 ID를 보내서 확인해보자
-	@Select("SELECT project_id FROM member_like where member_email =#{email}")
-	public ArrayList<Integer> chkMemberLike(@Param("email") String member_email);
-	
-	
-	
+	@Select("SELECT project_id FROM member_like where member_email =#{member_email}")
+	public ArrayList<Integer> chkMemberLike(String member_email);
 	
 	
 	/*
 	 멤버가 좋아요를 취소하면 -> 프로젝트 테이블에서 like에서 -1을 함.
 	 그리고 member_like 테이블에서 해당 project_id를 삭제함.
-	 
 	  멤버 아이디    프젝 아이디
 	  1         3
 	  			4
-	 
 	 */
 	
 	

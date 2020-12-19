@@ -33,6 +33,7 @@
 				</div>
 				<video autoplay loop muted playsinline src="images/banner.mp4"></video>
 			</section>
+			
 
 		<!-- Highlights -->
 			<section class="wrapper">

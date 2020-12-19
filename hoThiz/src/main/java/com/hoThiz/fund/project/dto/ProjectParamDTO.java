@@ -9,9 +9,16 @@ public class ProjectParamDTO {
 	private int minAchieveRate;
 	private String category;
 	private int page;
+	private String query;
 
 
 
+	public String getQuery() {
+		return query;
+	}
+	public void setQuery(String query) {
+		this.query = query;
+	}
 	public int getPage() {
 		return page;
 	}

@@ -7,7 +7,7 @@
 
 	var	$window = $(window),
 		$banner = $('#banner'),
-		$body = $('body');
+		$body = $('body')
 
 	// Breakpoints.
 		breakpoints({
@@ -41,5 +41,10 @@
 				resetForms: true,
 				side: 'right'
 			});
+			
+
+		
+			
+			
 
 })(jQuery);

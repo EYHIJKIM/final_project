@@ -14,45 +14,82 @@
 <meta name="description" content="" />
 <meta name="keywords" content="" />
 <link rel="stylesheet" href="assets/css/main.css" />
+<link rel="stylesheet" href="assets/css/myCss.css" />
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 <body class="is-preload">
 <%String jspPath = "/fund/WebContent/WEB-INF/views/"; %>
+<script>
+			$(".more").click(function(){
+				if($(this).find(".sub").is(":visible")){
+					//$(".list").css("display","none");
+					$(this).find(".sub").slideUp();
+				} 
+				else{
+					//$(".list").css("display","block");	
+					$(this).find(".sub").slideDown();
+				}
+				
+				
+			});	
+			
+		
+			
 
-
+</script>
+	
 	<header id="header">
+		
+		
 		<a class="logo" href="/fund/">Industrious</a>
+		<nav>
+			<a href="#search"><i class="fa fa-search"></i></a>	
+		</nav>
 		<nav>
 			<a href="#menu">Menu</a>
 		</nav>
-		
-		
 		
 		<!-- 
 			여기 로그인 버튼, 세션 처리 해야됨..(로그인한경우 버튼 달라지게)
 		
 		 -->
-		
-		
 	</header>
+
+	<nav id="search">
+		
+	</nav>
+
 
 	<nav id="menu">
 		<ul class="links">
 			
 			<!-- 프로젝트마다 태그를 파라미터로 묻혀서 보내줌. -->
-			<li><a href="/fund/discover">모든 프로젝트</a>
-			<a href="/fund/discover?sort=popular&ongoing=onGoing">인기 추천 프로젝트</a>
-			<a href="/fund/discover?maxAchieveRate=99&minAchieveRate=80&sort=endedAt&ongoing=onGoing">성공 임박 프로젝트</a>
-			<a href="/fund/sort=publishedAt&ongoing=onGoing">신규 추천 프로젝트</a>
-			<a href="/fund/ongoing=prelaunching">공개예정 프로젝트</a>
-			</li>
-			
 			<li>
-			<a>게임-접고펼침</a>
-			<a href="/fund/discover?category=games">모든 게임</a>
-			<a href="/fund/discover?category=mobile-games">모바일 게임</a>
-			<a href="/fund/discover?category=video-games">비디오 게임</a>
-			<a href="/fund/discover?category=board-games">보드게임</a>
+			
+				<a href="/fund/discover">모든 프로젝트</a>
+				<a href="/fund/discover?sort=popular&ongoing=onGoing">인기 추천 프로젝트</a>
+				<a href="/fund/discover?maxAchieveRate=99&minAchieveRate=80&sort=endedAt&ongoing=onGoing">성공 임박 프로젝트</a>
+				<a href="/fund/discover?sort=publishedAt&ongoing=onGoing">신규 추천 프로젝트</a>
+				<a href="/fund/discover?ongoing=prelaunching">공개예정 프로젝트</a>
+			
 			</li>
+		</ul>
+		<hr>
+		<ul class="links">
+			<li class="more">
+				<a href="#">게임</a>
+				<ul class="sub" style="display:none; text-decoration: none;">
+					<li><a href="/fund/discover?category=games">모든 게임</a></li>
+					<li><a href="/fund/discover?category=mobile-games">모바일 게임</a></li>
+					<li><a href="/fund/discover?category=video-games">비디오 게임</a></li>
+					<li><a href="/fund/discover?category=board-games">보드게임</a></li>
+				</ul>
+				
+			</li>
+		</ul>
+			
+			
+			<!-- 
 			
 			
 			<li><a>공연</a>
@@ -164,11 +201,12 @@
 			
 		</ul>
 		
-		
+		 -->
 		
 		
 		
 	</nav>
+
 	<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>

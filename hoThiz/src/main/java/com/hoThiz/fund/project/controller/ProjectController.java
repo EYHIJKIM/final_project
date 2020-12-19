@@ -2,8 +2,11 @@ package com.hothiz.fund.project.controller;
 
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
@@ -34,16 +38,20 @@ public class ProjectController {
 	
 	@Autowired
 	ProjectService ps;
-	
-	@Autowired
-	ProjectDAO dao;
+
 	
 	
+	
+	///////////////////////////게시글 목록///////////////////////
 	//게시글 화면
 	@GetMapping(value="", produces = "application/json;charset=utf-8")
 	public ModelAndView projectList(ModelAndView mv,
-			ProjectParamDTO paramDto) {
+			ProjectParamDTO paramDto, HttpSession session) {
+
+
 		
+		
+		mv.addObject("lOAList",ps.likeOrAlarmProjectList(session,paramDto));
 		mv.addObject("firstList", ps.firstProjectView(paramDto));
 		mv.setViewName("project/project_list");
 		
@@ -69,7 +77,7 @@ public class ProjectController {
 	 */
 	
 	//프로젝트 좋아요 비동기
-	//post로 받을땐 text로 매핑을 해줘야한다ㅜㅜ시발 겨우풀엇다
+	//post의 값을 보낼땐 text로 매핑을 해줘야한다ㅜㅜ 겨우풀엇다
 	@PostMapping(value="/like", produces="application/text;charset=utf-8")
 	public String likeProject(Member_likeDTO likeDto) {
 		System.out.println("좋아요 로직 con");
@@ -82,21 +90,59 @@ public class ProjectController {
 	}
 	
 	
+	//프로젝트 알림
+	@PostMapping(value="/alarm", produces="application/text;charset=utf-8" )
+	public String chkAlarm(Member_alarmDTO alarmDto) {
+		System.out.println("알림신청 들어옴");
+		String msg = ps.chkAlarm(alarmDto);
+		
+		return msg;
+		
+	}
 	
 	
+	/////////게시글 상세보기////////////////////////
 	@GetMapping(value = "/{project_id}")
-	public ProjectInfoDTO getAProjectDetail(@PathVariable int project_id, Model model) {
+	public ModelAndView getAProjectDetail(@PathVariable int project_id, ModelAndView mv) {
+		
+		//프로젝트 전체 값을 준다음에, 상세보기 페이지에서 받는다.
+		//그다음 특정 부분만 출력 -> 버튼 누르면 상세 출력되도록 한다.(비동기)
+		
+		ProjectInfoDTO dto=ps.getAProjectDetail(project_id);
+		System.out.println(dto.getProject_id());
+		mv.addObject("projectInfo", dto);
+		//mv에 후원자 몇명인지, 프로필사진 꺼내오는 오브젝트도 set해줘야함..
 		
 		
-		ProjectInfoDTO dto=null;
+		mv.setViewName("project/project_content/story");
 
-		return dto;
+		
+		
+		return mv;
+	}
+	
+	@GetMapping(value = "/{project_id}/community")
+	public ModelAndView getAProjectLive(@PathVariable int project_id, ModelAndView mv) {
+		
+		//해당 프젝 라이브 꺼내와야함.
+		mv.setViewName("project/project_content/community");
+		return mv;
+	}
+	
+	
+	@GetMapping(value = "/{project_id}/notice")
+	public ModelAndView getAProjectNotice(@PathVariable int project_id, ModelAndView mv) {
+		
+		//해당 프젝 라이브 꺼내와야함.
+		mv.setViewName("project/project_content/notice");
+		return mv;
 	}
 	
 
 	
 	
 	
+	/*
 
 	@RequestMapping("/insert")
 	public void insert() {
@@ -116,11 +162,14 @@ public class ProjectController {
 			}
 		
 	}
+*/
 
-	
+	//날짜 넣장
+	@RequestMapping("/update")
+	public void update() {
 	
 
-	
+	}
 	
 	
 

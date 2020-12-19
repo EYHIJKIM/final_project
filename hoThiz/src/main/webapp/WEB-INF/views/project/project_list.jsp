@@ -7,23 +7,25 @@
 <head>
 <meta charset="UTF-8">
 
-<title>제목 나중에 if문처리</title>
+
+
+<title>핫디즈 :: hoThiz</title>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 </head>
 <body>
 <script type="text/javascript">
-
 //세션 email을 값으로 보내줘야 함.
 
-let likeFlag = true;
-
  function MyFavoritProject(project_id){
+	 
+	 if(<%=userId%>==null){
+		 location.href="/fund" //이거 로그인창으로 바꾸셈**//////////////////////
+	 }
 	 
 	 var id = project_id;
 	 
 	 //console.log($("#btn224").val());
-
 	
 	 var likeDto = {
 			 project_id : project_id,
@@ -34,8 +36,6 @@ let likeFlag = true;
 	 console.log(likeDto.project_id);
 	 console.log(likeDto.member_email);
 	 
-
-
 		 $.ajax({
 				type: 'POST',
 				url : '/fund/discover/like',
@@ -46,18 +46,17 @@ let likeFlag = true;
 					console.log("성공요");
 					
 					var like_img = '';
-
 										
 					alert(data);	
 					console.log(data);
 					
 					if(data == '"cancelLike"'){ //좋아요 취소함
 						//like_img = "images/cancelLike.png"
-						$("#btn"+id).html("좋아요 눌렀다!")
+						$("#likeBtn"+id).html("좋아요 누르기!")
 						
 					} else{ //좋아요 함
 						//like_img = "images/like.png"
-						$("#btn"+id).html("좋아요 이미 누름")
+						$("#likeBtn"+id).html("좋아요 이미 누름")
 					}
 				
 					},
@@ -68,37 +67,135 @@ let likeFlag = true;
 			});
 	 
  }
+ 
+ 
+ 
+ 
+ function MyNotificationProject(project_id){
+	 
 
-
+	 if(<%=userId%>==""){
+		 location.href="/fund" //이거 로그인창으로 바꾸셈**
+	 }
+	 
+	 
+	 var id = project_id;
+	 var alarmDto = {
+			 project_id : project_id,
+			 member_email : <%=userId%>
+			 
+	 };
+	
+	 console.log(likeDto.project_id);
+	 console.log(likeDto.member_email);
+	 
+		 $.ajax({
+				type: 'POST',
+				url : '/fund/discover/alarm',
+				data : alarmDto,
+				success : function(data){ //통신 성공시 호출됨,,msg를 담자.
+					//data = alarm // cancelAlarm
+					
+					console.log("성공요");
+					
+					//var like_img = '';
+										
+					alert(data);	
+					console.log(data);
+					
+					if(data == '"cancelAlarm"'){ //좋아요 취소함
+						//like_img = "images/cancelLike.png"
+						$("#notiBtn"+id).html("알림신청하기")
+						
+					} else{ //좋아요 함
+						//like_img = "images/like.png"
+						$("#notiBtn"+id).html("알림신청완료")
+					}
+				
+					},
+				error: function(){
+					alert("실패!");
+				}
+					
+			});
+	 
+	 
+ }
+ 
+ 
 </script>
 
+<%@ include file="../default/project/project_list_header.jsp" %>
 
+
+
+
+총 게시글 :...<br>
 <c:forEach var="pj" items="${firstList}">
 
 <a href="discover/${pj.project_id }">${pj.project_title }</a><br>
-메인: ${pj.project_main_category }<br>
-서브: ${pj.project_sub_category }<br>
-달성률:${pj.project_current_percent}<br>
-좋아요:${pj.project_like}<br>
+	
+	프젝 번호: ${pj.project_id}<br>
+	메인: ${pj.project_main_category }<br>
+	서브: ${pj.project_sub_category }<br>
+	달성률:${pj.project_current_percent}<br>
+	좋아요:${pj.project_like}<br>
 
-<button id="likeBtn" onClick="MyFavoritProject('${pj.project_id}')">
-	<p id="btn${pj.project_id}" value="의 값">좋아욘</p>
-</button>
+
+<c:if test="${param.ongoing ne 'prelanching'}">
+	<c:set var="msg" value="좋아요 누르기!"/><!-- 이부분은 나중에 이미지로 바꿀것. -->
+
+<!-- 만약 세션의 아이디가 가진 like목록에 해당 pj가 존재하면 좋아요 눌렀음으로 표시해야함. -->	
+		<c:forEach var="projectId" items="${lOAList}">
+				${projectId}
+				<c:if test="${projectId eq pj.project_id}">	
+					<c:set var="msg" value="좋아요 이미 누름!" />
+				</c:if>	
+		</c:forEach>
+
+
+	<!-- 좋아요 버튼 출력 -->
+	<button id="likeBtn" onClick="MyFavoritProject('${pj.project_id}')">	
+		<p id="likeBtn${pj.project_id}">${msg}</p>
+	</button>
+</c:if>
+
+
+
+
+<!-- ///////////////////////////////////공개예정인 경우. 알림신청으로 나타나야함///////////////////////// -->
+<!-- 프리런치일때만 찜목록 ...이부분 아직 확인을 못함...ㅜ-->
+<c:if test="${param.ongoing eq 'prelanching'}">
+	<c:set var="msg" value="알림신청"/>
+	<c:forEach var="projectId" items="${lOAList}">
+
+			<c:if test="${projectId eq pj.project_id}">	
+				<c:set var="msg" value="알림신청했음" />
+			</c:if>	
+	</c:forEach>
+
+
+	<button id="notificationBtn" onClick="MyNotificationProject('${pj.project_id}')">
+		<p id="notiBtn${pj.project_id}">${msg}</p>
+	</button>
+</c:if>
+
 <hr>
+
+
 </c:forEach>
 
 
 
+
+
+
 <div id="scrollContent">
-내용쓰
 </div>
 
 
 <script>
-
 let page = 0;
-
-
 	//document의 height : 전체 스크롤 길이
 	//window의 height: 스크롤 바의 길이
 	//window의 scrollTop: 내려온 스크롤 길이(스크롤 바 기준으로 위쪽 공간)
@@ -147,7 +244,6 @@ let page = 0;
 				
 			});//ajax 실행
 			
-
 			
 		}
 	}//infiniteScroll함수

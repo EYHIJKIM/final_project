@@ -2,14 +2,16 @@
 
 	/**
 	 * Generate an indented list of links from a nav. Meant for use with panel().
+		nav에 들여 쓴 링크 목록을 생성합니다. panel ()과 함께 사용함
 	 * @return {jQuery} jQuery object.
 	 */
+	 //링크목록 생성
 	$.fn.navList = function() {
 
 		var	$this = $(this);
 			$a = $this.find('a'),
 			b = [];
-
+		//<a>태그를 찾아서..? 빼내가지고...나열하는듯??
 		$a.each(function() {
 
 			var	$this = $(this),
@@ -17,6 +19,7 @@
 				href = $this.attr('href'),
 				target = $this.attr('target');
 
+			//list b에 넣는다.
 			b.push(
 				'<a ' +
 					'class="link depth-' + indent + '"' +
@@ -28,25 +31,27 @@
 				'</a>'
 			);
 
-		});
+		}); //a.each 끝
 
 		return b.join('');
 
 	};
 
+
 	/**
 	 * Panel-ify an element.
+	 	요소를 패널화 함.
 	 * @param {object} userConfig User config.
 	 * @return {jQuery} jQuery object.
 	 */
 	$.fn.panel = function(userConfig) {
 
-		// No elements?
+		// No elements? 요소가 없을경우?
 			if (this.length == 0)
 				return $this;
 
-		// Multiple elements?
-			if (this.length > 1) {
+		// Multiple elements? 요소가 여러개이면?
+			if (this.length > 1) { //요소가 존재하므로 길이가 1보다 큼.
 
 				for (var i=0; i < this.length; i++)
 					$(this[i]).panel(userConfig);

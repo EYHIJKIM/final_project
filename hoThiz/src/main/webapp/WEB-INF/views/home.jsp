@@ -5,10 +5,12 @@
 	<title>Home</title>
 </head>
 <body>
-<h1>
-	Hello world!  
-</h1>
+<!-- 배너에 가져올 프로젝트 5개 움직이게-->
 
-<P>  The time on the server is ${serverTime}. </P>
+
+
+
+
+
 </body>
 </html>

@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+.more {
+	display:block;
+	width: 55px;
+	height: 16px;
+
+	
+	
+}
+
+
+.blind{
+	position: absolute;
+	overflow:hidden;
+	clip: rect(0 0 0 0);
+	margin: -1px;
+	width: 1plx;
+	height: 1px;
+	
+}
+
+
+.more:hover, .close:hover{
+	cursor:pointer;
+}
+
+.close{
+	display:block;
+	
+	
+}

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.ui.Model;
 
+import com.hothiz.fund.member.dto.MemberDTO;
 import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
@@ -32,6 +33,12 @@ public interface ProjectService {
 	public ArrayList<Integer> likeOrAlarmProjectList(HttpSession session, ProjectParamDTO paramDto);
 
 	public void getMainProjectList(Model model);
+
+	public ArrayList<MemberDTO> getMemberInfoList();
+
+	public MemberDTO getAMemberDetail(String member_email);
+
+	 int getMemberCount(int project_id);
 
 	
 	

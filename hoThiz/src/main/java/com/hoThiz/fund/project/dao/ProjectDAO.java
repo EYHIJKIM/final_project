@@ -658,10 +658,18 @@ OR project_summary LIKE CONCAT('%',#{param.keyword},'%')) A
 	*/
 	
 	
+//////////////////멤버정보 뽑아옴////////////////////////////////	
+@Select("SELECT * FROM member_info")
+public ArrayList<MemberDTO> getMemberInfoList();
 	
+@Select("SELECT * FROM member_info WHERE member_email=#{member_email}")
+public MemberDTO getAMemberInfo(String member_email);
+	
+@Select("SELECT COUNT(*) FROM member_donated_project WHERE project_id = #{project_id}")
+public int getDonatedMemberCnt(int project_id);
 	
 //메인에서 10개씩 있는거..카테고리별로 where줘야 함.
-	
+
 	
 	
 	//=================멤버

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%
 	//String userId = (String)session.getAttribute("userId");
 %>
@@ -71,7 +72,8 @@
 
 		}
 
-		function MyAlarmProject(project_id) {
+function MyAlarmProject(project_id) {
+		alert("알림신청 할거임")
 
 			if (<%=userId%> == "") {
 				location.href = "/fund" //이거 로그인창으로 바꾸셈**
@@ -119,9 +121,12 @@
 		}
 	</script>
 
-	<%@ include file="../default/project/project_list_header.jsp"%>
+	<%@ include file="../default/main_header.jsp"%>
 
 
+	<section class="wrapper">
+				<div class="inner">
+					<div class="highlights">
 	<form action="/fund/discover" method="GET">
 		<input type="search" name="query"> <input type="submit" />
 	</form>
@@ -130,15 +135,43 @@
 	총 게시글 :...
 	<br>
 	<c:forEach var="pj" items="${firstList}">
-
+<!--  <a href="discover/${pj.project_id}">
+		<img class="thumbnail" src="project/${pj.project_id}.jpg"></a>
 		<a href="discover/${pj.project_id }">${pj.project_title }</a>
 		<br>
-	
-	프젝 번호: ${pj.project_id}<br>
-	메인: ${pj.project_main_category }<br>
+	메인: ${pj.project_main_category }<br> | 
 	서브: ${pj.project_sub_category }<br>
-	달성률:${pj.project_current_percent}<br>
-	좋아요:${pj.project_like}<br>
+	${pj.project_current_donated }원 / ${pj.project_current_percent}%-->
+	
+
+	
+
+						
+				<div class="col-md-2 column productbox" style="position:relative;">
+					<a href="discover/${pj.project_id}">	
+						<img src="project/${pj.project_id}.jpg" class="img-responsive"></a>
+						<div class="producttitle">
+						<a href="discover/${pj.project_id }"><h3>${pj.project_title }</h3></a></div>
+						<div class="productprice">
+							${pj.project_sub_category } | 
+							<c:forEach var="mem" items="${memberList}">
+								<c:if test="${pj.member_email eq mem.member_email}">
+									${mem.member_name}
+								</c:if>
+							</c:forEach>
+							<div class="pull-right">
+								<a href="#" class="btn btn-danger btn-sm" role="button">BUY</a>
+							</div>
+							<div class="pricetext">${pj.project_summary }</div>
+							
+							
+						${pj.project_current_donated }원 / ${pj.project_current_percent}%
+						<c:out value="${dateDiff}"/>
+
+						</div>
+						
+				</div>	
+
 
 
 		<c:if test="${param.ongoing ne 'prelaunching'}">
@@ -181,7 +214,7 @@
 			</button>
 		</c:if>
 
-		<hr>
+
 
 
 	</c:forEach>
@@ -193,6 +226,9 @@
 
 	<div id="scrollContent"></div>
 
+</div>
+</div>
+</section>
 
 	<script>
 		let page = 0;

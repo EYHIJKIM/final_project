@@ -64,11 +64,11 @@
 
 							<div class="content">
 							
-							<div class="col-md-2 column productbox" style="position:relative;">
-							    <img src="images/test.jpg" class="img-responsive">
-							    <div class="producttitle">Product 2</div>
-							    <div class="productprice"><div class="pull-right"><a href="#" class="btn btn-danger btn-sm" role="button">BUY</a></div><div class="pricetext">£8.95</div></div>
-							</div>	
+								<div class="col-md-2 column productbox" style="position:relative;">
+								    <img src="images/test.jpg" class="img-responsive">
+								    <div class="producttitle">Product 2</div>
+								    <div class="productprice"><div class="pull-right"><a href="#" class="btn btn-danger btn-sm" role="button">BUY</a></div><div class="pricetext">£8.95</div></div>
+								</div>	
 							</div>		
 
 							

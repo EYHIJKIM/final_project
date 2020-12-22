@@ -173,6 +173,15 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Override
 	public String getProjectList(ProjectParamDTO paramDto) {
 
@@ -416,6 +425,28 @@ public class ProjectServiceImpl implements ProjectService {
 		model.addAttribute("publishedList", dao.getProjectList(pageDto));
 		
 		
+	}
+
+
+
+
+
+	//멤버 정보 리스트(게시글 리스트에서 닉네임 뽑아내야됨)
+	@Override
+	public ArrayList<MemberDTO> getMemberInfoList() {
+		return dao.getMemberInfoList();
+	}
+
+	//한 멤버 디테일(프로필 정보)
+	@Override
+	public MemberDTO getAMemberDetail(String member_email) {
+		return dao.getAMemberInfo(member_email);
+	}
+
+	//후원자 몇명인지 세부내용에서 출력해야됨.
+	@Override
+	public int getMemberCount(int project_id) {
+		return dao.getDonatedMemberCnt(project_id);
 	}
 
 

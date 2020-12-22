@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.hothiz.fund.member.dto.MemberDTO;
 import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
@@ -48,7 +49,8 @@ public class ProjectController {
 	public ModelAndView projectList(ModelAndView mv,
 			ProjectParamDTO paramDto, HttpSession session) {
 
-	
+		
+		mv.addObject("memberList",ps.getMemberInfoList());
 		mv.addObject("lOAList",ps.likeOrAlarmProjectList(session,paramDto));
 		mv.addObject("firstList", ps.firstProjectView(paramDto));
 		mv.setViewName("project/project_list");
@@ -104,9 +106,18 @@ public class ProjectController {
 		//프로젝트 전체 값을 준다음에, 상세보기 페이지에서 받는다.
 		//그다음 특정 부분만 출력 -> 버튼 누르면 상세 출력되도록 한다.(비동기)
 		
-		ProjectInfoDTO dto=ps.getAProjectDetail(project_id);
-		System.out.println(dto.getProject_id());
-		mv.addObject("projectInfo", dto);
+		ProjectInfoDTO prjDto=ps.getAProjectDetail(project_id);
+		//해당 프로젝트의 이메일과 일치하는 유저정보를 가져온다.
+		MemberDTO memberDto = ps.getAMemberDetail(prjDto.getMember_email());
+		
+		//후원한 인원수
+		int donatedMemberCnt = ps.getMemberCount(project_id);
+		
+		//시간 계산해주는 메소드..시간 DTO를 만들자.
+		
+		mv.addObject("donatedMemberCnt", donatedMemberCnt);
+		mv.addObject("memberInfo", memberDto);
+		mv.addObject("projectInfo", prjDto);
 		//mv에 후원자 몇명인지, 프로필사진 꺼내오는 오브젝트도 set해줘야함..
 		
 		

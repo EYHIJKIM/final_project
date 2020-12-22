@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <%@ page contentType = "text/html;charset=utf-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!--
 	Industrious by TEMPLATED
@@ -38,20 +39,53 @@
 		<!-- Highlights -->
 			<section class="wrapper">
 				<div class="inner">
+					
 					<header class="special">
-						<h2>Sem turpis amet semper</h2>
-						<p>In arcu accumsan arcu adipiscing accumsan orci ac. Felis id enim aliquet. Accumsan ac integer lobortis commodo ornare aliquet accumsan erat tempus amet porttitor.</p>
+						<h2>주목할만한 프로젝트</h2>
 					</header>
 					<div class="highlights">
+					
+					
 						<section>
 							<div class="content">
 								<header>
-									<a href="#" class="icon fa-vcard-o"><span class="label">Icon</span></a>
-									<h3>Feugiat consequat</h3>
+									<a href="#해당 게시글로 고" class="icon fa-vcard-o">
+										<span class="label">Icon</span></a>
+									<h3>냠냠</h3>
 								</header>
-								<p>Nunc lacinia ante nunc ac lobortis ipsum. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus.</p>
+								<p>콜미메이비</p>
 							</div>
 						</section>
+						
+						<c:forEach var="prj" items="${popularList}" end="1">
+						
+						<section>
+							
+
+							<div class="content">
+							
+							<div class="col-md-2 column productbox" style="position:relative;">
+							    <img src="images/test.jpg" class="img-responsive">
+							    <div class="producttitle">Product 2</div>
+							    <div class="productprice"><div class="pull-right"><a href="#" class="btn btn-danger btn-sm" role="button">BUY</a></div><div class="pricetext">£8.95</div></div>
+							</div>	
+							</div>		
+
+							
+							
+						</section>
+						
+						<div class="col-md-2 column productbox">
+							    <img src="images/test.jpg" class="img-responsive">
+							    <div class="producttitle">Product 2</div>
+							    <div class="productprice"><div class="pull-right"><a href="#" class="btn btn-danger btn-sm" role="button">BUY</a></div><div class="pricetext">£8.95</div></div>
+						</div>
+							
+						</c:forEach>
+						<a href="/fund/discover?ongoing=popular">프로젝트 더보기</a>
+						
+						
+						<!--  
 						<section>
 							<div class="content">
 								<header>
@@ -97,6 +131,7 @@
 								<p>Nunc lacinia ante nunc ac lobortis ipsum. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus.</p>
 							</div>
 						</section>
+						-->
 					</div>
 				</div>
 			</section>

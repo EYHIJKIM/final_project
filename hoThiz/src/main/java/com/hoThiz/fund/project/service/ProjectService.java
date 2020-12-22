@@ -31,6 +31,8 @@ public interface ProjectService {
 
 	public ArrayList<Integer> likeOrAlarmProjectList(HttpSession session, ProjectParamDTO paramDto);
 
+	public void getMainProjectList(Model model);
+
 	
 	
 	

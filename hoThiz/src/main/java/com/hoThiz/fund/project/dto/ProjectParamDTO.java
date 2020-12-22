@@ -5,14 +5,117 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class ProjectParamDTO {
 	private String sort;
 	private String ongoing;
-	private int maxAchieveRate;
-	private int minAchieveRate;
+
 	private String category;
 	private int page;
 	private String query;
+	
+	
+	public int getMaxMoney() {
+		return maxMoney;
+	}
 
 
 
+
+	public void setMaxMoney(int maxMoney) {
+		this.maxMoney = maxMoney;
+	}
+
+
+
+
+	public int getMinMoney() {
+		return minMoney;
+	}
+
+
+
+
+	public void setMinMoney(int minMoney) {
+		this.minMoney = minMoney;
+	}
+	private int currentMoney;
+	private int maxMoney;
+	private int minMoney;
+	
+	
+	private int achieveRate;
+	private int maxAchieveRate;
+	private int minAchieveRate;
+
+
+	public int getCurrentMoney() {
+		return currentMoney;
+	}
+
+
+
+
+	public void setCurrentMoney(int currentMoney) {
+		this.currentMoney = currentMoney;
+	}
+
+
+
+
+	public int getAchieveRate() {
+		return achieveRate;
+	}
+
+
+
+
+	public void setAchieveRate(int achieveRate) {
+		this.achieveRate = achieveRate;
+	}
+
+
+
+
+	public ProjectParamDTO() {
+		if(this.sort==null || sort.equals("")) {this.sort="none";}
+		if(this.ongoing==null || ongoing.equals("")) {this.ongoing="none";}
+		if(this.category==null || category.equals("")) {this.category="none";}
+		if(this.query==null || query.equals("")) {this.query="none";}
+		
+		if(achieveRate==1) {
+			this.maxAchieveRate = 75;
+		} else if(achieveRate==2) {
+			this.minAchieveRate=75;
+			this.maxAchieveRate=100;
+		} else if(achieveRate==3) {
+			this.minAchieveRate=100;
+			
+		}
+		
+		if(currentMoney==1) {
+			maxMoney = 1000000;
+			
+		} else if(currentMoney==2) {
+			minMoney = 1000000;
+			maxMoney = 10000000;
+			
+		} else if(currentMoney==3) {
+			minMoney = 10000000;
+			maxMoney = 50000000;
+			
+		}else if(currentMoney==4) {
+			minMoney = 50000000;
+			maxMoney = 100000000;
+			
+		}else if(currentMoney==5) {
+			
+			minMoney = 100000000;
+		}
+		
+		
+		
+	}
+	
+	
+	
+	
 	public String getQuery() {
 		return query;
 	}

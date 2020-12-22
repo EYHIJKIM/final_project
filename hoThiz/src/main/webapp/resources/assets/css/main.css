@@ -129,8 +129,8 @@ p {
   margin: 0 0 2rem 0; }
 
 header.special {
-  text-align: center;
-  margin-bottom: 4rem; }
+  text-align:left;
+  margin-bottom: 1rem; }
   header.special p {
     max-width: 75%;
     margin-left: auto;
@@ -701,12 +701,19 @@ table.alt tbody tr td {
   .highlights .content {
     border-radius: 4px;
     height: 100%;
+    width: 30%;
     padding: 3rem;
     text-align: center; }
     .highlights .content .icon {
       font-size: 5rem; }
   .highlights > div > :last-child {
     margin-bottom: 0; }
+    .thumbnail{
+     	position:relative;
+
+
+    }
+ 
   @media screen and (max-width: 980px) {
     .highlights > * {
       width: 50%; }
@@ -2821,5 +2828,29 @@ body.is-menu-visible #menu {
   box-shadow: 0 0 1.5rem 0 rgba(0, 0, 0, 0.2);
   visibility: visible; }
 
+
+.productbox {
+    background-color:#ffffff;
+	padding:10px;
+	margin-bottom:10px;
+	-webkit-box-shadow: 0 8px 6px -6px  #999;
+	   -moz-box-shadow: 0 8px 6px -6px  #999;
+	        box-shadow: 0 8px 6px -6px #999;
+}
+
+.producttitle {
+    font-weight:bold;
+	padding:5px 0 5px 0;
+}
+
+.productprice {
+	border-top:1px solid #dadada;
+	padding-top:5px;
+}
+
+.pricetext {
+	font-weight:bold;
+	font-size:1.4em;
+}
 
   

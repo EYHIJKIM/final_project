@@ -48,9 +48,7 @@ public class ProjectController {
 	public ModelAndView projectList(ModelAndView mv,
 			ProjectParamDTO paramDto, HttpSession session) {
 
-
-		
-		
+	
 		mv.addObject("lOAList",ps.likeOrAlarmProjectList(session,paramDto));
 		mv.addObject("firstList", ps.firstProjectView(paramDto));
 		mv.setViewName("project/project_list");
@@ -81,8 +79,6 @@ public class ProjectController {
 	@PostMapping(value="/like", produces="application/text;charset=utf-8")
 	public String likeProject(Member_likeDTO likeDto) {
 		System.out.println("좋아요 로직 con");
-		System.out.println(likeDto.getMember_email());
-		System.out.println(likeDto.getProject_id());
 		String msg = ps.chkLike(likeDto);
 		System.out.println("매핑한 메시지"+msg);
 		

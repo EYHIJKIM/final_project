@@ -15,6 +15,9 @@
 <meta name="keywords" content="" />
 <link rel="stylesheet" href="assets/css/main.css" />
 <link rel="stylesheet" href="assets/css/myCss.css" />
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 <body class="is-preload">
@@ -79,7 +82,7 @@
 			<li class="more">
 				<a href="#">게임</a>
 				<ul class="sub" style="display:none; text-decoration: none;">
-					<li><a href="/fund/discover?category=games">모든 게임</a></li>
+					<li><a href="/fund/discover?category=games">게임 전체</a></li>
 					<li><a href="/fund/discover?category=mobile-games">모바일 게임</a></li>
 					<li><a href="/fund/discover?category=video-games">비디오 게임</a></li>
 					<li><a href="/fund/discover?category=board-games">보드게임</a></li>

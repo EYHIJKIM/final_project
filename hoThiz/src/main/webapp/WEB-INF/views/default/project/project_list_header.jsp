@@ -75,8 +75,7 @@ body{
 
 </head>
   <body>
-  
-  <%@include file="../main_header.jsp" %>
+
   
 <!------ Include the above in your HEAD tag ---------->
 
@@ -90,76 +89,37 @@ body{
           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
            	 카테고리
           </button>
-          
-          <ul class="dropdown-menu" role="menu" style="text-decoration: none;">
+          <ul class="dropdown-menu" role="menu">
             
             
             <li class="dropdown-submenu"><a href="#">게임</a>
             	<ul class="dropdown-menu">
-            		<li><a href="#">시발</a></li>
-            		
-            	
-            	
-            	
+            		<li><a href="/fund/discover?category=games&query=${param.query}">게임 전체</a></li>
+					<li><a href="/fund/discover?category=mobile-games&query=${param.query}">모바일 게임</a></li>
+					<li><a href="/fund/discover?category=video-games&query=${param.query}">비디오 게임</a></li>
+					<li><a href="/fund/discover?category=board-games&query=${param.query}">보드게임</a></li>            	
             	</ul>
-            
             </li>
             
-            
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Separated link</a></li>
+           
           </ul>
         </div>
 	</div>
 </div>
 
-
-
-
-        
-        
-        
-        
-        
+      
+<div class="container">
+	<div class="row">
         <div class="dropdown">
             <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-primary" data-target="#" href="/page.html">
                 Dropdown <span class="caret"></span>
             </a>
     		<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-           
-              
-              <li class="dropdown-submenu"> <!-- 이게 이중 드랍 상위 클래스-->
-                <a tabindex="-1" href="#">Hover me for more options</a>
-                <ul class="dropdown-menu"> <!-- 이중드랍 하위 클라스 -->
-                  <li><a tabindex="-1" href="#">Second level</a></li>
-                  
-			                  <!--  
-			                  <li class="dropdown-submenu">
-			                    <a href="#">Even More..</a>
-			                    
-			                    <ul class="dropdown-menu">
-			                        <li><a href="#">3rd level</a></li>
-			                    	<li><a href="#">3rd level</a></li>
-			                    </ul>
-			                    
-			                  </li>
-			                  
-			                  -->
-                  <li><a href="#">Second level</a></li>
-                  <li><a href="#">Second level</a></li>
-                </ul>
-              </li><!-- 이중드랍으로 묶음 -->
-              
-              
+            
             </ul>
         </div>
 	</div>
 </div>
-   
-
-      
       
 </body>
 </html>

@@ -11,7 +11,17 @@
 
 <!--  -->
 <h2>이런 프로젝트 어떠세요?</h2>
-<!-- 프로젝트 4개 목록 띄워놓는다. -->
+<footer id="footer">
+				<div class="inner">
+					<div class="content">
+					 
+						
+					</div>
+					<div class="copyright">
+						&copy; Untitled. Photos <a href="https://unsplash.co">Unsplash</a>, Video <a href="https://coverr.co">Coverr</a>.
+					</div>
+				</div>
+</footer>
 
 
 

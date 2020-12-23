@@ -232,7 +232,7 @@ function sendLink(){
 	<hr>
 	-->	
 
-	<button class="kakao-link-btn" onclick="sendLink()">카톡 공유</button>
+	
 
 
 
@@ -256,7 +256,7 @@ function sendLink(){
 2. 스토리 /커뮤니티/ 펀딩안내 탭  -> 이때부터 주소값 바뀜<br>
 
 
-결제창 넘어갈때의 파라미터 이름
+결제창 넘어갈때의 파라미터 이름 => 이거 로그인 안해있으면 로그인창으로 넘겨야함
 money=10000&project_id=5&project_title=%`
 
 
@@ -270,9 +270,11 @@ money=10000&project_id=5&project_title=%`
 
 
 
-밀어주기 버트만 알림신청으로 ㄱ
+
 </c:if>
 
+<!-- 공유 버튼은 둘다 있음~ -->
+<button class="kakao-link-btn" onclick="sendLink()">카톡 공유</button>
 
 
 <h2>이런 프로젝트 어떠세요?</h2>

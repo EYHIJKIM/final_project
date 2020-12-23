@@ -1,12 +1,8 @@
 <%@ page contentType="text/html;charset=utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%
-	//String userId = (String)session.getAttribute("userId");
-%>
-<%
-	String userId = "1";
-%>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,15 +22,16 @@
 
 </style>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
+<script src="/fund/resources/myjsFunction/projectFunction.js"></script>
 </head>
 <body>
+<!--  
 	<script type="text/javascript">
 		//세션 email을 값으로 보내줘야 함.
 
 		function MyFavoritProject(project_id) {
 			console.log("좋아요 자바스크립트 실행")
-			if (<%=userId%> == null) {
+			if (== null) {
 				location.href = "/fund" //이거 로그인창으로 바꾸셈**//////////////////////
 			}
 
@@ -44,7 +41,7 @@
 
 			var likeDto = {
 				project_id : project_id,
-				member_email :<%=userId%>
+				member_email :
 			};
 
 			console.log(likeDto.project_id);
@@ -85,14 +82,14 @@
 function MyAlarmProject(project_id) {
 		alert("알림신청 할거임")
 
-			if (<%=userId%> == "") {
+			if ( == "") {
 				location.href = "/fund" //이거 로그인창으로 바꾸셈**
 			}
 
 			var id = project_id;
 			var alarmDto = {
 				project_id : project_id,
-				member_email : <%=userId%>
+				member_email :
 		     };
 
 			console.log(alarmDto.project_id);
@@ -130,7 +127,7 @@ function MyAlarmProject(project_id) {
 
 		}
 	</script>
-
+-->
 	<%@ include file="../default/main_header.jsp"%>
 
 

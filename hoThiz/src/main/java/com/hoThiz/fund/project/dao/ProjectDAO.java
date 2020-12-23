@@ -1,6 +1,7 @@
 package com.hothiz.fund.project.dao;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -13,7 +14,8 @@ import com.hothiz.fund.member.dto.MemberDTO;
 import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
-
+import com.hothiz.fund.project.dto.ProjectStateDTO;
+import com.hothiz.fund.project.dto.ProjectDateDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
 import com.hothiz.fund.project.dto.ProjectPagingDTO;
 import com.hothiz.fund.project.dto.TestDTO;
@@ -597,6 +599,11 @@ OR project_summary LIKE CONCAT('%',#{param.keyword},'%')) A
 	@Select("SELECT project_id from member_alarm where member_email = #{userId}")
 	public ArrayList<Integer> getAlarmProjectList(String userId);
 
+	
+	//알림신청 몇명?
+	@Select("SELECT COUNT(*) FROM member_alarm where project_id=#{project_id} ")
+	public int getAlarmMemCount(int project_id);
+	
 /*
 	
 	//sort, ongoing, category, query 존재,,,ㅋ
@@ -668,7 +675,19 @@ public MemberDTO getAMemberInfo(String member_email);
 @Select("SELECT COUNT(*) FROM member_donated_project WHERE project_id = #{project_id}")
 public int getDonatedMemberCnt(int project_id);
 	
-//메인에서 10개씩 있는거..카테고리별로 where줘야 함.
+///////////////////날짜차이 뽑아주기//////////////////////////////
+@Select("select project_id, to_char(to_date(project_deadline,'yyyy-MM-DD')-to_date(sysdate,'yyyy-MM-DD')) AS \"d_day\" "
+		+ ", to_number(to_date(sysdate,'yyyy-MM-DD')-to_date(project_release_date,'yyyy-MM-DD')) AS \"chk\" " + 
+				" from project_info")
+public ArrayList<ProjectDateDTO> getDDayList();
+
+
+//프리런칭한 경우 언제 진행되는지 뽑음 or 공개하는 경우는 날짜 얼마나 남았는지 (dday)
+@Select("SELECT project_id, to_char(project_release_date,'yyyy\"년 \"MM\"월\" DD\"일\" HH\"시\" MI\"분\" \"공개예정') AS \"prelaunching_day\" " + 
+		" ,to_char(to_date(project_deadline,'yyyy-MM-DD')-to_date(sysdate,'yyyy-MM-DD')) AS \"d_day\""
+		+" FROM project_info WHERE project_id = #{project_id}")
+public ProjectDateDTO getADDay(int project_id);
+
 
 	
 	

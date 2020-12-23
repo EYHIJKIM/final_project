@@ -15,6 +15,16 @@
 
 
 <title>핫디즈 :: hoThiz</title>
+
+<style type="text/css">
+.thumbnail{
+	height: 30%;
+	width: 30%;
+
+}
+
+
+</style>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 </head>
@@ -23,7 +33,7 @@
 		//세션 email을 값으로 보내줘야 함.
 
 		function MyFavoritProject(project_id) {
-
+			console.log("좋아요 자바스크립트 실행")
 			if (<%=userId%> == null) {
 				location.href = "/fund" //이거 로그인창으로 바꾸셈**//////////////////////
 			}
@@ -124,9 +134,7 @@ function MyAlarmProject(project_id) {
 	<%@ include file="../default/main_header.jsp"%>
 
 
-	<section class="wrapper">
-				<div class="inner">
-					<div class="highlights">
+	
 	<form action="/fund/discover" method="GET">
 		<input type="search" name="query"> <input type="submit" />
 	</form>
@@ -134,7 +142,11 @@ function MyAlarmProject(project_id) {
 
 	총 게시글 :...
 	<br>
-	<c:forEach var="pj" items="${firstList}">
+	
+<c:forEach var="prj" items="${firstList}">
+<c:set var="chk" value="${dDayMap[prj.project_id].chk}"/>
+ <h2>${prj.project_id}번 게시물 일수: ${chk}</h2>
+ 
 <!--  <a href="discover/${pj.project_id}">
 		<img class="thumbnail" src="project/${pj.project_id}.jpg"></a>
 		<a href="discover/${pj.project_id }">${pj.project_title }</a>
@@ -143,38 +155,34 @@ function MyAlarmProject(project_id) {
 	서브: ${pj.project_sub_category }<br>
 	${pj.project_current_donated }원 / ${pj.project_current_percent}%-->
 	
-
-	
-
-						
-				<div class="col-md-2 column productbox" style="position:relative;">
-					<a href="discover/${pj.project_id}">	
-						<img src="project/${pj.project_id}.jpg" class="img-responsive"></a>
+<!-- 프리런칭 아닌 경우의 뷰. 이걸 구별해주기 위해 dao에서 뽑아내서 음수인 경우->프리런칭 / 아니면 온고윙으로 구분. -->
+	<c:if test="${chk >= '0' && param.ongoing ne 'prelaunching' }">
+		<div class="col-md-2 column productbox" style="position:relative;">
+					<a href="${prj.project_id}">	
+						<img src="/fund/resources/project/${prj.project_id}.jpg" class="img-responsive"></a>
 						<div class="producttitle">
-						<a href="discover/${pj.project_id }"><h3>${pj.project_title }</h3></a></div>
+						<a href="discover/${prj.project_id}"><h3>${prj.project_title}</h3></a></div>
 						<div class="productprice">
-							${pj.project_sub_category } | 
+							${prj.project_sub_category } | 
 							<c:forEach var="mem" items="${memberList}">
-								<c:if test="${pj.member_email eq mem.member_email}">
+								<c:if test="${prj.member_email eq mem.member_email}">
 									${mem.member_name}
 								</c:if>
 							</c:forEach>
 							<div class="pull-right">
 								<a href="#" class="btn btn-danger btn-sm" role="button">BUY</a>
 							</div>
-							<div class="pricetext">${pj.project_summary }</div>
+							<div class="pricetext">${prj.project_summary }</div>
 							
 							
-						${pj.project_current_donated }원 / ${pj.project_current_percent}%
-						<c:out value="${dateDiff}"/>
+						${pj.project_current_donated }원 / ${prj.project_current_percent}%
+						
+						<h2><c:out value="${dDayMap[prj.project_id].d_day}"/>일 남음</h2>
 
 						</div>
 						
 				</div>	
-
-
-
-		<c:if test="${param.ongoing ne 'prelaunching'}">
+		
 			<c:set var="msg" value="좋아요 누르기!" />
 			<!-- 이부분은 나중에 이미지로 바꿀것. -->
 
@@ -182,35 +190,55 @@ function MyAlarmProject(project_id) {
 			<c:forEach var="likeId" items="${lOAList}">
 				${projectId}
 
-				<c:if test="${likeId eq pj.project_id}">
+				<c:if test="${likeId eq prj.project_id}">
 					<c:set var="msg" value="좋아요 이미 누름!" />
 				</c:if>
 			</c:forEach>
 
 
 			<!-- 좋아요 버튼 출력 -->
-			<button class="button small" id="likeBtn" onClick="MyFavoritProject('${pj.project_id}')">
-				<p id="likeBtn${pj.project_id}">${msg}</p>
+			<button class="button small" id="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
+				<p id="likeBtn${prj.project_id}">${msg}</p>
 			</button>
 		</c:if>
 
 
 
 
-		<!-- ///////////////////////////////////공개예정인 경우. 알림신청으로 나타나야함///////////////////////// -->
-		<!-- 프리런치일때만 찜목록 ...이부분 아직 확인을 못함...ㅜ-->
-		<c:if test="${param.ongoing eq 'prelaunching'}">
+<!-- ///////////////////////////////////공개예정인 경우. 알림신청으로 나타나야함///////////////////////// -->
+	<c:if test="${chk < '0' && param.ongoing eq 'prelaunching'}">
+		<div class="col-md-2 column productbox" style="position:relative;">
+					<a href="/discover/${prj.project_id}?ongoing=prelaunching">	
+						<img src="/fund/resources/project/${prj.project_id}.jpg" class="img-responsive"></a>
+						<div class="producttitle">
+						<a href="/discover/${prj.project_id}?ongoing=prelaunching"><h3>${prj.project_title}</h3></a></div>
+						<div class="productprice">
+							${prj.project_sub_category } | 
+							<c:forEach var="mem" items="${memberList}">
+								<c:if test="${prj.member_email eq mem.member_email}">
+									${mem.member_name}
+								</c:if>
+							</c:forEach>
+							<div class="pull-right">
+								<a href="#" class="btn btn-danger btn-sm" role="button">BUY</a>
+							</div>
+							<div class="pricetext">${prj.project_summary }</div>
+						</div>
+		</div>
+			<h2><c:out value="${dDayMap[prj.project_id].prelaunching_day}"/>일 남음</h2>
+
+		
 			<c:set var="msg" value="알림신청" />
 			<c:forEach var="alarmId" items="${lOAList}">
 			 
-				<c:if test="${alarmId eq pj.project_id}">
+				<c:if test="${alarmId eq prj.project_id}">
 					<c:set var="msg" value="알림신청했음" />
 				</c:if>
 			</c:forEach>
 
 
-			<button id="notificationBtn" onClick="MyAlarmProject('${pj.project_id}')">
-				<p id="notiBtn${pj.project_id}">${msg}</p>
+			<button id="notificationBtn" onClick="MyAlarmProject('${prj.project_id}')">
+				<p id="notiBtn${prj.project_id}">${msg}</p>
 			</button>
 		</c:if>
 
@@ -226,9 +254,7 @@ function MyAlarmProject(project_id) {
 
 	<div id="scrollContent"></div>
 
-</div>
-</div>
-</section>
+
 
 	<script>
 		let page = 0;

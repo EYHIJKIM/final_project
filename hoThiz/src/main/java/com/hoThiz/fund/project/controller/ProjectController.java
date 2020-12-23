@@ -2,9 +2,12 @@ package com.hothiz.fund.project.controller;
 
 
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpSession;
 
@@ -27,6 +30,7 @@ import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
+import com.hothiz.fund.project.dto.ProjectDateDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
 import com.hothiz.fund.project.dto.ProjectPagingDTO;
 import com.hothiz.fund.project.dto.TestDTO;
@@ -39,7 +43,9 @@ public class ProjectController {
 	
 	@Autowired
 	ProjectService ps;
-
+	
+	@Autowired
+	ProjectDAO dao;
 	
 	
 	
@@ -49,11 +55,15 @@ public class ProjectController {
 	public ModelAndView projectList(ModelAndView mv,
 			ProjectParamDTO paramDto, HttpSession session) {
 
+
+		mv.addObject("dDayMap",ps.getDDayMap()); //프젝id__dto(프젝id,d_day,prelaunching_day)
+		mv.addObject("memberList",ps.getMemberInfoList());//멤버 정보들(닉네임 빼낼라고)
+		mv.addObject("lOAList",ps.likeOrAlarmProjectList(session,paramDto));//좋아하는 게시글/ 혹은 알람신청한 게시글
+		mv.addObject("firstList", ps.firstProjectView(paramDto));//게시글 목록
 		
-		mv.addObject("memberList",ps.getMemberInfoList());
-		mv.addObject("lOAList",ps.likeOrAlarmProjectList(session,paramDto));
-		mv.addObject("firstList", ps.firstProjectView(paramDto));
 		mv.setViewName("project/project_list");
+		
+		//12월 20일 12일 - 12월 20일 18시
 		
 		return mv;
 	}
@@ -79,10 +89,9 @@ public class ProjectController {
 	//프로젝트 좋아요 비동기
 	//post의 값을 보낼땐 text로 매핑을 해줘야한다ㅜㅜ 겨우풀엇다
 	@PostMapping(value="/like", produces="application/text;charset=utf-8")
-	public String likeProject(Member_likeDTO likeDto) {
-		System.out.println("좋아요 로직 con");
+	public String likeProject(Member_likeDTO likeDto) {	
 		String msg = ps.chkLike(likeDto);
-		System.out.println("매핑한 메시지"+msg);
+		
 		
 		return msg;
 	}
@@ -101,27 +110,38 @@ public class ProjectController {
 	
 	/////////게시글 상세보기////////////////////////
 	@GetMapping(value = "/{project_id}")
-	public ModelAndView getAProjectDetail(@PathVariable int project_id, ModelAndView mv) {
-		
+	public ModelAndView getAProjectDetail(@PathVariable int project_id, 
+			ModelAndView mv, ProjectParamDTO paramDto) {
+		String path = "project/project_content/story";
 		//프로젝트 전체 값을 준다음에, 상세보기 페이지에서 받는다.
-		//그다음 특정 부분만 출력 -> 버튼 누르면 상세 출력되도록 한다.(비동기)
+		//근데 이거...프리런칭인지/아닌지 구분해줘야 됨
+		
+		//프리런칭인 경우 alaram신청멤버 뽑아서 더해줌
+		if(paramDto.getOngoing().equals("prelaunching")) {
+			System.out.println("프리런칭임");
+			path = "project/project_content/story?ongoing=prelaunching";
+			int alarmMemberCnt = ps.getAlarmMemCount(project_id);
+			mv.addObject("alarmMemberCnt", alarmMemberCnt);
+		}
 		
 		ProjectInfoDTO prjDto=ps.getAProjectDetail(project_id);
 		//해당 프로젝트의 이메일과 일치하는 유저정보를 가져온다.
 		MemberDTO memberDto = ps.getAMemberDetail(prjDto.getMember_email());
 		
 		//후원한 인원수
-		int donatedMemberCnt = ps.getMemberCount(project_id);
+		int donatedMemberCnt = ps.getDonatedMemCount(project_id);
+		ProjectDateDTO dateDto = ps.getADDay(project_id);
 		
-		//시간 계산해주는 메소드..시간 DTO를 만들자.
 		
+		
+		mv.addObject("dDayInfo", dateDto );
 		mv.addObject("donatedMemberCnt", donatedMemberCnt);
 		mv.addObject("memberInfo", memberDto);
 		mv.addObject("projectInfo", prjDto);
 		//mv에 후원자 몇명인지, 프로필사진 꺼내오는 오브젝트도 set해줘야함..
 		
 		
-		mv.setViewName("project/project_content/story");
+		mv.setViewName(path);
 
 		
 		
@@ -147,6 +167,17 @@ public class ProjectController {
 	
 
 	
+	
+	@GetMapping(value="/time")
+	public ModelAndView time(ModelAndView mv) {
+		
+		
+		
+		
+		
+		mv.setViewName("time");
+		return mv;
+	}
 	
 	
 	/*

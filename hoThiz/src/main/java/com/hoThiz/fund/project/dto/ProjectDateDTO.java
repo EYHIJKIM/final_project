@@ -4,54 +4,41 @@ import java.sql.Date;
 
 public class ProjectDateDTO {
 	
-	//공개예정날짜 
-	private Date relaseDate;
 	
-	//지금 날짜
-	private Date nowDate;
-	
-	//남은 날짜
-	private Date dDay;
-	
-	//마감일
-	private Date deadLine;
-	
-
+	//
+	private int project_id;
+	private String prelaunching_day;
+	private String d_day;
+	private int chk; //음수면 예정
 	
 	
-
-	public Date getRelaseDate() {
-		return relaseDate;
+	
+	public int getChk() {
+		return chk;
 	}
-
-	public void setRelaseDate(Date relaseDate) {
-		this.relaseDate = relaseDate;
+	public void setChk(int chk) {
+		this.chk = chk;
 	}
-
-	public Date getNowDate() {
-		return nowDate;
+	public int getProject_id() {
+		return project_id;
 	}
-
-	public void setNowDate(Date nowDate) {
-		this.nowDate = nowDate;
+	public void setProject_id(int project_id) {
+		this.project_id = project_id;
 	}
-
-	public Date getdDay() {
-		return dDay;
+	public String getPrelaunching_day() {
+		return prelaunching_day;
 	}
-
-	public void setdDay(Date dDay) {
-		this.dDay = dDay;
+	public void setPrelaunching_day(String prelaunching_day) {
+		this.prelaunching_day = prelaunching_day;
 	}
-
-	public Date getDeadLine() {
-		return deadLine;
+	public String getD_day() {
+		return d_day;
 	}
-
-	public void setDeadLine(Date deadLine) {
-		this.deadLine = deadLine;
+	public void setD_day(String d_day) {
+		this.d_day = d_day;
 	}
-
+	
+	
 	
 	
 	//만약 지금날짜<공개예정 이면 남은날짜에는 공예 - 지금날짜 가 들어오겠지...

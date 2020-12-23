@@ -70,54 +70,124 @@ display:flex;
 
 <body>
 
+
+
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script type="text/javascript">
-	$(document).ready(function(){
-		$('#modalBtn').click(function(){
-			console.log("안녕하삼");
+<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script>
+/*
+import Vue from 'vue'
+import App from './App.vue'
+Kakao.init("4a910cfb1ef1434f4c361ae507d1375a");
 
-			$('.modalWrap').show();
-			$('.blackBg').show();
-			
-			$('.modalClose').click(function(){
-				$('.modalWrap').hide();
-				$('.blackBg').hide();
-				
-			});
-			
-		});	
-	});
+new Vue({
+	render: h => h(App),
+}).$mount('#app')
 	
+	export default {
+		  name: "App",
+		  data(){
+			  return{
+				  feedSettings:{
+					  objectType: "feed",
+					  content:{
+						  title: '전소연 천재',
+						  description: '전소연 천재입니다 아십니까??당장 아이들 앨범을 사십시오 ',
+						  imageUrl: "http://localhost:8086/fund/resources/project/224.jpg",
+						  link: {
+						      mobileWebUrl: 'https://localhost:8086/fund/discover/${prj.project_id}',
+					 	  },
+				  		},
+		  
+		  social: {
+		    likeCount: ${prj.project_like},
+		    commentCount: 20,
+		    sharedCount: 30,
+		  },
+		  buttons: [
+		    {
+		      title: '웹으로 이동',
+		      link: {
+		        mobileWebUrl: 'https://localhost:8086/fund/discover/${prj.project_id}',
+		      },
+		    },
+		    {
+		      title: '앱으로 이동',
+		      link: {
+		        mobileWebUrl: 'https://localhost:8086/fund/discover/${prj.project_id}',
+		      },
+		    },
+		  ],
+		},
+	  };
+    },
+	mounted(){
+    	Kakao.Link.createDefaultButton(
+    		Object.assign({},this.feedSettings,{container:".kakao-link"}) 
+    		//이거는 버튼사용하는 법. 이걸로 할 경우 container를 settings부분에 추가해준다.
+  
+    	);  
+    },
+	methods:{
+		share(){
+			Kakao.Link.sendDefault(this.feedSettings);
+		},	
+	},	  
+};
+*/
+Kakao.init("4a910cfb1ef1434f4c361ae507d1375a");
+function sendLink(){
+	console.log("샌드링크 들어옴");
+	var like = '${prj.project_like}';
+	var id = '${prj.project_id}';
+	
+	Kakao.Link.createDefaultButton({
+		
+		  container: '.kakao-link-btn',
+		  objectType: 'feed',
+		  content: {
+		    title: '${prj.project_title}',
+		    description: '${prj.project_summary}',
+		    imageUrl:
+		      'http://localhost:8086/fund/resources/project/224.jpg',
+		    link: {
+		      mobileWebUrl: "http://localhost:8086/fund/discover/224",
+		      androidExecParams: 'test',
+		    },
+		  },
+		  social: {
+		    likeCount: like,
+		    commentCount: 20,
+		    sharedCount: 30,
+		  },
+		  buttons: [
+		    {
+		      title: '웹으로 이동',
+		      link: {
+		        mobileWebUrl: "http://localhost:8086/fund/discover/224",
+		      },
+		    },
+		    {
+		      title: '앱으로 이동',
+		      link: {
+		        mobileWebUrl: "http://localhost:8086/fund/discover/224",
+		      },
+		    },
+		  ]
+		});
+	
+}
 
-	
-	$(window).scroll(function(event){
-		
-		var winTop = $(window).scrollTop();
-		var bgTop = $(".blackBg").offset().top;
-		
-		if(winTop > bgTop){
-			
-			$(".blackBg").css("position", "fixed");
-			$(".modalWrap").css("position", "fixed");
-		}
-		else if(winTop < bgTop){
-			$(".blackBg").css("position", "static");
-			$(".modalWrap").css("position", "static");
-		}
-		
-		
-	});
-	
-	
+
 </script>
-
-
 
 <c:set var="path" value="/fund/resources" />
 <c:set var="mem" value="${memberInfo}"/>
 <c:set var="prj" value="${projectInfo}" />
 
-	<h1>이게 프로젝트 상세보기 첫화면</h1>
+
+<c:if test="${param.ongoing ne prelaunching}">
+	<h1>이건 진행중인 프로젝트 상세보기 첫화면</h1>
 	<a href="/discover?category=${prj.project_main_category}">
 	<c:if test="${prj.project_main_category eq 'video'}">
 		비디오
@@ -136,28 +206,31 @@ display:flex;
 	
 	
 	모인금액<br>${prj.project_current_donated}원<br>
-	남은 시간<br>${prj.project_deadline - p }
+	남은 시간<br>${prj.project_deadline}
 	
 	<br>
 	후원자${donatedMemberCnt}<br>
 	<button id="pushPrj">프로젝트 밀어주기</button><br><!-- 비동기로 내려가서 선물선택 보도록. -->
 	<button id="likeBtn">좋아요 버튼</button><br>
 	
+	<!--  
 	
 	<button id="modalBtn">공유 버튼</button>
 	<div class="blackBg"></div>
 	<div class="modalWrap">
 			<div class="modalClose"><a herf="#">close</a></div>
 			<div class="shredContent">
-				카카오톡
+				
 				뭐시기
 				저시기
 			</div>
 	</div>
-	
+	<hr>
+	-->	
 
-	
-			공유합시당
+	<button class="kakao-link-btn" onclick="sendLink()">카톡 공유</button>
+
+
 
 
 
@@ -175,8 +248,8 @@ display:flex;
 	->배너 사진은 pj에서 뽑아온 picture로 해야한다.
 
 
-1. 처음 상세정보 들어오면 주소값 ___/게시글번호/ref=discover,,,추천프로젝트..이런거 뜸.
-2. 스토리 /커뮤니티/ 펀딩안내 탭  -> 이때부터 주소값 바뀜
+1. 처음 상세정보 들어오면 주소값 ___/게시글번호/ref=discover,,,추천프로젝트..이런거 뜸.<br>
+2. 스토리 /커뮤니티/ 펀딩안내 탭  -> 이때부터 주소값 바뀜<br>
 
 
 결제창 넘어갈때의 파라미터 이름
@@ -186,12 +259,12 @@ money=10000&project_id=5&project_title=%`
 
 
 아래 푸터에는 해당 동일 대분류 뽑아냄.-> popular기준으로 할까싶음...<br>
+</c:if>
 
-
-
-============================공개예정인 경우===================
+<c:if test="${param.ongoing eq prelaunching}">
+<h1>공개예정인 경우</h1>
 밀어주기 버트만 알림신청으로 ㄱ
-
+</c:if>
 
 
 

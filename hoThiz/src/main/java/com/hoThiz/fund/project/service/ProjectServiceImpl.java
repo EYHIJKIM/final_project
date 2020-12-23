@@ -1,6 +1,8 @@
 package com.hothiz.fund.project.service;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +10,8 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -19,6 +23,8 @@ import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
+import com.hothiz.fund.project.dto.ProjectStateDTO;
+import com.hothiz.fund.project.dto.ProjectDateDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
 import com.hothiz.fund.project.dto.ProjectPagingDTO;
 import com.hothiz.fund.project.dto.TestDTO;
@@ -31,7 +37,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 	
 	
-	
+	//동기식 게시글 정보 가져오기(첫 화면)
 	@Override
 	public ArrayList<ProjectInfoDTO> firstProjectView(ProjectParamDTO paramDto) {
 		
@@ -181,7 +187,7 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	
 	
-	
+	//비동기식 게시글 가져오기(스크롤)
 	@Override
 	public String getProjectList(ProjectParamDTO paramDto) {
 
@@ -276,14 +282,60 @@ public class ProjectServiceImpl implements ProjectService {
 
 
 
-	@Override
-	public ProjectInfoDTO getAProjectDetail(int project_id) {
+
 	
-		ProjectInfoDTO dto = dao.getAProject(project_id);
+	
+	//해당 게시글의 좋아요 유무 확인을 위한 리스트
+		@Override
+		public ArrayList<Integer> likeOrAlarmProjectList(HttpSession session, ProjectParamDTO paramDto) {
+			//이거 맵에 해도 될거같긴 한데,,,
+			System.out.println("좋아요 or 찜한 목록 가지러 옴");
+			String chkParam = paramDto.getOngoing();	
+			String userId = (String)session.getAttribute("userId");
+			ArrayList<Integer> list = null;
+			
+			if(chkParam==null) {chkParam = "ongoing";}
+			
+			if(chkParam.equals("prelaunching")) { //진행중 펀딩
+				/////////////여기 파라미터 고쳐////userId로//////////////////////////////////
+				System.out.println("공개예정 찜목록");
+				list = dao.getAlarmProjectList("1");
+				
+			} else {
+				System.out.println("좋아요 목록");
+				list = dao.getLikeProjectList("1");
+			}
+
+			
+			return list;
+		}
 		
-		return dto;
 		
-	}
+		
+		//멤버 정보 리스트(게시글 리스트에서 닉네임 뽑아내야됨)
+			@Override
+			public ArrayList<MemberDTO> getMemberInfoList() {		
+				return dao.getMemberInfoList();
+			}
+			
+			
+			
+		//남은날짜 리스트
+			@Override
+			public Map<Integer, ProjectDateDTO> getDDayMap(){ 
+				Map<Integer, ProjectDateDTO> map = new HashMap<>();
+				ArrayList<ProjectDateDTO> list = dao.getDDayList();
+				
+				for(ProjectDateDTO dto : list) {
+					map.put(dto.getProject_id(), dto);
+					System.out.println(dto.getProject_id()+"번게시글 :"+dto.getChk());
+				}
+				
+				return map;
+			}
+			
+		
+		///////////////////////////////////////////////////////////////////////////
 
 
 
@@ -364,51 +416,13 @@ public class ProjectServiceImpl implements ProjectService {
 		return jsonMapper(msg);
 	}
 	
-	//게시글 리스트 뽑아낼때, 해당 게시글의 좋아요 유무 확인을 위한 리스트 뽑아냄
-	@Override
-	public ArrayList<Integer> likeOrAlarmProjectList(HttpSession session, ProjectParamDTO paramDto) {
-		
-		System.out.println("좋아요 or 찜한 목록 가지러 옴");
-		String chkParam = paramDto.getOngoing();	
-		String userId = (String)session.getAttribute("userId");
-		ArrayList<Integer> list = null;
-		
-		if(chkParam==null) {chkParam = "ongoing";}
-		
-		if(chkParam.equals("prelaunching")) { //진행중 펀딩
-			/////////////여기 파라미터 고쳐////userId로//////////////////////////////////
-			System.out.println("공개예정 찜목록");
-			list = dao.getAlarmProjectList("1");
-			
-		} else {
-			System.out.println("좋아요 목록");
-			list = dao.getLikeProjectList("1");
-		}
-
-		
-		return list;
-	}
+	//////////////////////게시물이 공개예정인지 아닌지 체크함
 	
-	
-	//JSON으로 파싱하는 메소드(비동기시 필수)====================================
-	public String jsonMapper(Object obj) {
-		
-		ObjectMapper mapper = new ObjectMapper();
-		String jsonStr = null;
-
-		try {
-			jsonStr = mapper.writeValueAsString(obj);
-		} catch (JsonProcessingException e) {
-			System.out.println("jsonMapper 메소드 오류");
-			e.printStackTrace();
-		}
-		
-		return jsonStr;	
-	}
 
 
 
-	//메인에 있는거 
+
+	/////////////////////메인에 있는거 ////////////////////////////////
 	@Override
 	public void getMainProjectList(Model model) {
 		ProjectPagingDTO pageDto = new ProjectPagingDTO(0);
@@ -428,15 +442,21 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 
+	////////////////////////////////////////////////////////////////////
 
 
+	
 
-	//멤버 정보 리스트(게시글 리스트에서 닉네임 뽑아내야됨)
+	
+	
+	////////////////////////////게시글 상세보기 필요 객체들///////////////////////////
+	
+	//게시글 상세정보
 	@Override
-	public ArrayList<MemberDTO> getMemberInfoList() {
-		return dao.getMemberInfoList();
+	public ProjectInfoDTO getAProjectDetail(int project_id) {
+		return dao.getAProject(project_id);
+		
 	}
-
 	//한 멤버 디테일(프로필 정보)
 	@Override
 	public MemberDTO getAMemberDetail(String member_email) {
@@ -445,13 +465,28 @@ public class ProjectServiceImpl implements ProjectService {
 
 	//후원자 몇명인지 세부내용에서 출력해야됨.
 	@Override
-	public int getMemberCount(int project_id) {
+	public int getDonatedMemCount(int project_id) {
 		return dao.getDonatedMemberCnt(project_id);
 	}
 
+	
+	
+	
+	//////////////////////프리런칭/////////////////////////
+	
+	//세부에서 필요한 날짜
+	public ProjectDateDTO getADDay(int project_id) {
+		return dao.getADDay(project_id);
+	}
+	
+	//알람신청한 인원
+	public int getAlarmMemCount(int project_id) {
+		return dao.getAlarmMemCount(project_id);
+	}
+	
+	
+	//////////////////////////////////////////////////////
 
-
-	//후원자 몇명인지 뽑기 -> 
 
 	
 
@@ -459,7 +494,22 @@ public class ProjectServiceImpl implements ProjectService {
 
 
 
-	
+	//JSON으로 파싱하는 메소드(비동기시 필수)====================================
+	public String jsonMapper(Object obj) {
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonStr = null;
+
+		try {
+			jsonStr = mapper.writeValueAsString(obj);
+		} catch (JsonProcessingException e) {
+			System.out.println("jsonMapper 메소드 오류");
+			e.printStackTrace();
+		}
+		
+		return jsonStr;	
+	}
+
 
 	
 

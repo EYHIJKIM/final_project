@@ -7,9 +7,9 @@ public class ProjectDateDTO {
 	
 	//
 	private int project_id;
-	private String prelaunching_day;
-	private String d_day;
-	private int chk; //음수면 예정
+	private String prelaunching_day; //공개예정 날짜 출력
+	private String d_day; //진행~끝나는 날 까지 남은 일수
+	private int chk; //음수면 공개예정, 양수면 진행중
 	
 	
 	

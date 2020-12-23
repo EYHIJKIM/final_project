@@ -683,9 +683,10 @@ public ArrayList<ProjectDateDTO> getDDayList();
 
 
 //프리런칭한 경우 언제 진행되는지 뽑음 or 공개하는 경우는 날짜 얼마나 남았는지 (dday)
-@Select("SELECT project_id, to_char(project_release_date,'yyyy\"년 \"MM\"월\" DD\"일\" HH\"시\" MI\"분\" \"공개예정') AS \"prelaunching_day\" " + 
-		" ,to_char(to_date(project_deadline,'yyyy-MM-DD')-to_date(sysdate,'yyyy-MM-DD')) AS \"d_day\""
-		+" FROM project_info WHERE project_id = #{project_id}")
+@Select("SELECT project_id, to_char(project_release_date,'yyyy\"년 \" MM\"월\" DD\"일\" HH\"시\" MI\"분\" \"공개예정\" ') AS \"prelaunching_day\" " + 
+		", to_char(to_date(project_deadline,'yyyy-MM-DD')-to_date(sysdate,'yyyy-MM-DD')) AS \"d_day\" " +
+		", to_number(to_date(sysdate,'yyyy-MM-DD')-to_date(project_release_date,'yyyy-MM-DD')) AS \"chk\" " +
+		" FROM project_info WHERE project_id = #{project_id}")
 public ProjectDateDTO getADDay(int project_id);
 
 

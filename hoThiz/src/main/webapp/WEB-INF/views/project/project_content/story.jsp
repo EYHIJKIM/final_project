@@ -184,11 +184,15 @@ function sendLink(){
 <c:set var="path" value="/fund/resources" />
 <c:set var="mem" value="${memberInfo}"/>
 <c:set var="prj" value="${projectInfo}" />
+<c:set var="day" value="${dDayInfo}"/>
 
 
-<c:if test="${param.ongoing ne prelaunching}">
+<h2>${prj.project_id}번 게시물 일수: ${day.chk}</h2>
+
+<c:if test="${day.chk>='0'}">
 	<h1>이건 진행중인 프로젝트 상세보기 첫화면</h1>
 	<a href="/discover?category=${prj.project_main_category}">
+	
 	<c:if test="${prj.project_main_category eq 'video'}">
 		비디오
 	</c:if>
@@ -261,8 +265,11 @@ money=10000&project_id=5&project_title=%`
 아래 푸터에는 해당 동일 대분류 뽑아냄.-> popular기준으로 할까싶음...<br>
 </c:if>
 
-<c:if test="${param.ongoing eq prelaunching}">
+<c:if test="${day.chk<'0'}">
 <h1>공개예정인 경우</h1>
+
+
+
 밀어주기 버트만 알림신청으로 ㄱ
 </c:if>
 

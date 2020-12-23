@@ -142,12 +142,7 @@ function MyAlarmProject(project_id) {
 
 	총 게시글 :...
 	<br>
-	
-<c:forEach var="prj" items="${firstList}">
-<c:set var="chk" value="${dDayMap[prj.project_id].chk}"/>
- <h2>${prj.project_id}번 게시물 일수: ${chk}</h2>
- 
-<!--  <a href="discover/${pj.project_id}">
+	<!--  <a href="discover/${pj.project_id}">
 		<img class="thumbnail" src="project/${pj.project_id}.jpg"></a>
 		<a href="discover/${pj.project_id }">${pj.project_title }</a>
 		<br>
@@ -155,8 +150,14 @@ function MyAlarmProject(project_id) {
 	서브: ${pj.project_sub_category }<br>
 	${pj.project_current_donated }원 / ${pj.project_current_percent}%-->
 	
+<c:forEach var="prj" items="${firstList}">
+
+<c:set var="chk" value="${dDayMap[prj.project_id].chk}"/>
+ <h2>${prj.project_id}번 게시물 일수: ${chk}</h2>
+	
 <!-- 프리런칭 아닌 경우의 뷰. 이걸 구별해주기 위해 dao에서 뽑아내서 음수인 경우->프리런칭 / 아니면 온고윙으로 구분. -->
-	<c:if test="${chk >= '0' && param.ongoing ne 'prelaunching' }">
+	<c:if test="${chk >= '0' and param.ongoing ne 'prelaunching' }">
+	
 		<div class="col-md-2 column productbox" style="position:relative;">
 					<a href="${prj.project_id}">	
 						<img src="/fund/resources/project/${prj.project_id}.jpg" class="img-responsive"></a>
@@ -206,7 +207,7 @@ function MyAlarmProject(project_id) {
 
 
 <!-- ///////////////////////////////////공개예정인 경우. 알림신청으로 나타나야함///////////////////////// -->
-	<c:if test="${chk < '0' && param.ongoing eq 'prelaunching'}">
+	<c:if test="${chk < '0' and param.ongoing eq 'prelaunching'}">
 		<div class="col-md-2 column productbox" style="position:relative;">
 					<a href="/discover/${prj.project_id}?ongoing=prelaunching">	
 						<img src="/fund/resources/project/${prj.project_id}.jpg" class="img-responsive"></a>

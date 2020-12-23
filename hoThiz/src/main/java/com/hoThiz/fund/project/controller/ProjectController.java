@@ -116,12 +116,14 @@ public class ProjectController {
 		//프로젝트 전체 값을 준다음에, 상세보기 페이지에서 받는다.
 		//근데 이거...프리런칭인지/아닌지 구분해줘야 됨
 		
+		
 		//프리런칭인 경우 alaram신청멤버 뽑아서 더해줌
 		if(paramDto.getOngoing().equals("prelaunching")) {
 			System.out.println("프리런칭임");
 			path = "project/project_content/story?ongoing=prelaunching";
 			int alarmMemberCnt = ps.getAlarmMemCount(project_id);
 			mv.addObject("alarmMemberCnt", alarmMemberCnt);
+			
 		}
 		
 		ProjectInfoDTO prjDto=ps.getAProjectDetail(project_id);
@@ -157,28 +159,17 @@ public class ProjectController {
 	}
 	
 	
+	
 	@GetMapping(value = "/{project_id}/notice")
 	public ModelAndView getAProjectNotice(@PathVariable int project_id, ModelAndView mv) {
 		
-		//해당 프젝 라이브 꺼내와야함.
+		//그냥 펀딩 주의사항이요
 		mv.setViewName("project/project_content/notice");
 		return mv;
 	}
 	
 
-	
-	
-	@GetMapping(value="/time")
-	public ModelAndView time(ModelAndView mv) {
-		
-		
-		
-		
-		
-		mv.setViewName("time");
-		return mv;
-	}
-	
+
 	
 	/*
 

@@ -328,7 +328,6 @@ public class ProjectServiceImpl implements ProjectService {
 				
 				for(ProjectDateDTO dto : list) {
 					map.put(dto.getProject_id(), dto);
-					System.out.println(dto.getProject_id()+"번게시글 :"+dto.getChk());
 				}
 				
 				return map;

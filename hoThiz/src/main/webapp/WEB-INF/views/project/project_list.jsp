@@ -243,7 +243,7 @@ ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}
 			
 			
 			console.log("붙여줄 파람값:");
-			console.log(params);
+			
 
 			//비동기 실행
 			//여기서 보내줘야할것...은...필요한거 똑같이 보내줘야됨. if문도 걸어줘야 됨.(prelaunchig or not?)
@@ -258,13 +258,15 @@ ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}
 					//console.log(data["prj"]);
 					//console.log(data["day"]);
 					//console.log(data["member"]);
+					var state = '${state}' ;
 					
 					$.each(data["prj"], function(index, proj) { //i배열이 들어온다.
 						
-						html += '<c:set var=\"projId\" value=\"${proj.project_id}\"/>'
+						html += '<c:set var="projId" value="'+proj.project_id+'"/>'
 						html += "<div class='aProject'>";
 						html += proj.project_id;
 						html += "<img src='proj.project_main_image'><br>";
+						html += '<a href="/fund/discover/"'+proj.project_id+'>'+proj.project_title+'</a>';
 						html += proj.project_sub_category+"|";
 						$.each(data["member"],function(index, mem){
 							if(mem.member_email == proj.member_email){
@@ -272,11 +274,38 @@ ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}
 							}
 						});
 						html += proj.project_current_percent+"퍼 달성";
-						html +='<button class=\"button small\" id=\"likeBtn\" onClick=\"MyFavoritProject(\'${projId}\')\" >'
-						html +=	'<p id=\"likeBtn\'proj.project_id\'\" > ${msg} </p> </button>';
-						html += "<br><hr></div>";
-						
-						console.log(html);
+						if(state == 'ongoing'){
+							
+							var msg ="좋아요 누르기!";
+							$.each(data['likeOrAlarm'],function(index,like){//project id가 들어있는 리스트
+								if(like==proj.project_id){
+									console.log(like);
+									msg = "좋아요 이미 누름";
+								} 
+							});
+							
+							html +='<button class=\"button small\" id=\"likeBtn\" onClick=\"MyFavoritProject(\'${projId}\')\" >';
+							html +=	'<p id="likeBtn'+proj.project_id+'">'+msg+' </p> </button>';
+							html += "<br><hr></div>";
+							
+						} else if(state=='prelaunching'){
+							var msg ="알림신청하기!";
+							$.each(data['likeOrAlarm'],function(index,alarm){//project id가 들어있는 리스트
+								if(alarm==proj.project_id){
+									console.log(alarm);
+									msg = "알림신청됨";
+								} 
+							});
+							
+							html +='<button class=\"button small\" id=\"notificationBtn\" onClick=\"MyAlarmProject(\'${projId}\')\" >';
+							html +=	'<p id="notiBtn'+proj.project_id+'">'+msg+' </p> </button>';
+							html += "<br><hr></div>";
+
+							
+						} else if(state=='confirm'){
+							
+						}
+
 						/*
 								+ "<br>";
 						html += "<b>메인카테고리: </b>"

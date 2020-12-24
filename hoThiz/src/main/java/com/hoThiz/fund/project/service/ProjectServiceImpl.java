@@ -293,13 +293,12 @@ public class ProjectServiceImpl implements ProjectService {
 		public ArrayList<Integer> likeOrAlarmProjectList(HttpSession session, ProjectParamDTO paramDto) {
 			//이거 맵에 해도 될거같긴 한데,,,
 			System.out.println("좋아요 or 찜한 목록 가지러 옴");
-			String chkParam = paramDto.getOngoing();	
+			String ongoing = paramDto.getOngoing();	
 			String userId = (String)session.getAttribute("userId");
 			ArrayList<Integer> list = null;
+
 			
-			if(chkParam==null) {chkParam = "ongoing";}
-			
-			if(chkParam.equals("prelaunching")) { //진행중 펀딩
+			if(ongoing.equals("prelaunching")) { //진행중 펀딩
 				/////////////여기 파라미터 고쳐////userId로//////////////////////////////////
 				System.out.println("공개예정 찜목록");
 				list = dao.getAlarmProjectList("1");

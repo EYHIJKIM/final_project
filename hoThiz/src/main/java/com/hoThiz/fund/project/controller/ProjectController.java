@@ -54,12 +54,19 @@ public class ProjectController {
 	@GetMapping(value="", produces = "application/json;charset=utf-8")
 	public ModelAndView projectList(ModelAndView mv,
 			ProjectParamDTO paramDto, HttpSession session) {
+		
+		System.out.println(paramDto.getPage());
+		System.out.println(paramDto.getOngoing());
+		System.out.println(paramDto.getCategory());
+		System.out.println(paramDto.getSort());
+	
 
+		//ArrayList<ProjectInfoDTO> dto = ps.getParamProjectList(paramDto);
 
-		mv.addObject("dDayMap",ps.getDDayMap()); //프젝id__dto(프젝id,d_day,prelaunching_day)
-		mv.addObject("memberList",ps.getMemberInfoList());//멤버 정보들(닉네임 빼낼라고)
-		mv.addObject("lOAList",ps.likeOrAlarmProjectList(session,paramDto));//좋아하는 게시글/ 혹은 알람신청한 게시글
-		mv.addObject("firstList", ps.firstProjectView(paramDto));//게시글 목록
+		mv.addObject("dDayMap",ps.getDDayMap()); 			//프젝id__dto(프젝id,d_day,prelaunching_day)
+		mv.addObject("memberMap",ps.getMemberInfoList());  //멤버 정보들(닉네임 빼낼라고)
+		mv.addObject("likeOrAlarmList",ps.likeOrAlarmProjectList(session,paramDto));//좋아하는 게시글/ 혹은 알람신청한 게시글
+		mv.addObject("firstList", ps.getParamProjectList(paramDto)); //게시글 목록
 		
 		mv.setViewName("project/project_list");
 		
@@ -71,12 +78,14 @@ public class ProjectController {
 
 	//비동기로 값 끌어오기 로직
 	@GetMapping(value = "/getData", produces = "application/json;charset=utf-8")
-	public String getProjectList(ProjectParamDTO paramDto) {
+	public String getProjectList(ProjectParamDTO paramDto, HttpSession session) {
 		System.out.println("비동기con");
-		String jsonList = ps.getProjectList(paramDto);
-		System.out.println(jsonList);
 		
-		return jsonList;
+		//서비스딴에서 위에서 얻어온것들 다 jsonList안에 넣어준다. ㄷㅅㄷ
+		String list = ps.syncGetData(paramDto,session);
+
+		
+		return list;
 	}
 	
 	/*
@@ -196,10 +205,23 @@ public class ProjectController {
 	//날짜 넣장
 	@RequestMapping("/update")
 	public void update() {
-	
-
+		for(int i=1;i<80;i++) {
+			dao.updateProject1(i);
+		}
 	}
 	
+	@RequestMapping("/update2")
+	public void update2() {
+		for(int i=103;i<160;i++) {
+			dao.updateProject2(i);
+		}
+	}
 	
+	@RequestMapping("/update3")
+	public void update3() {
+		for(int i=160;i<225;i++) {
+			dao.updateProject3(i);
+		}
+	}
 
 }

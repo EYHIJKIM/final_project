@@ -264,14 +264,18 @@ money=10000&project_id=5&project_title=%`
 
 아래 푸터에는 해당 동일 대분류 뽑아냄.-> popular기준으로 할까싶음...<br>
 </c:if>
-
+${day.prelaunching_dat}
 <c:if test="${day.chk<'0'}">
 <h1>공개예정인 경우</h1>
 
-
-
-
 </c:if>
+
+
+<c:if test="${day.dead<'0'}">
+<h1>펀딩 끝남!!</h1>
+${prj.project_release_date}에 결제 진행됨
+</c:if>
+
 
 <!-- 공유 버튼은 둘다 있음~ -->
 <button class="kakao-link-btn" onclick="sendLink()">카톡 공유</button>

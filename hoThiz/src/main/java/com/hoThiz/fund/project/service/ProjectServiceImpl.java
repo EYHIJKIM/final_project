@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale.Category;
 
 import javax.servlet.http.HttpSession;
 
@@ -35,7 +36,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Autowired
 	ProjectDAO dao;
 
-	
+
 	
 	//동기식 게시글 정보 가져오기(첫 화면)
 	@Override
@@ -55,8 +56,8 @@ public class ProjectServiceImpl implements ProjectService {
 		 
 		 ==>이거 그냥 sql문을 합쳐야 할듯..
 		 
-		 
-		 */
+		  */
+		
 		
 		System.out.println("첫화면 가지러 옴");
 		
@@ -67,6 +68,7 @@ public class ProjectServiceImpl implements ProjectService {
 		// select값 넣는 list
 		ArrayList<ProjectInfoDTO> projectList = null;
 		
+		/*
 		//어떤걸 기준으로 뽑아낼건지 sort
 		String sort = paramDto.getSort();			 	//4가지 경우의 수.. order by로 정렬 순서 정하면됨
 		String category = paramDto.getCategory(); 		//이건 걍 where로 뽑으면 되고..
@@ -75,15 +77,15 @@ public class ProjectServiceImpl implements ProjectService {
 		int achieveRate = paramDto.getAchieveRate();    //3가지 경우수
 		int currentMoney = paramDto.getCurrentMoney();  //5가지 경우수
 		
-		/*
+	
 			if(ongoing==null || ongoing.equals("")) {ongoing="none";}
 			if(category==null || category.equals("")) { category="none";}
 			if(query==null || query.equals("")) {query="none";}
 			if(sort==null || sort.equals("")) {sort="none";}
-		 */
 		
 		
-		/*
+		
+
 		if(!query.equals("none") && !category.equals("none") 
 				&& !sort.equals("none") && !ongoing.equals("none")) { //쿼리,소트,카테고리,온고윙
 			projectList = dao.allCondition(paramDto,pageDto);
@@ -128,7 +130,7 @@ public class ProjectServiceImpl implements ProjectService {
 		}else if(!ongoing.equals("none")) {//온고윙
 			
 			
-			*/
+			
 			
 			
 		if(!sort.equals("none")) {//소트
@@ -172,8 +174,9 @@ public class ProjectServiceImpl implements ProjectService {
 				projectList = dao.getProjectList(pageDto);
 			}
 		} //쿼리 if문
-
+		*/	
 		return projectList;
+		
 	}
 	
 	
@@ -201,7 +204,7 @@ public class ProjectServiceImpl implements ProjectService {
 		ArrayList<ProjectInfoDTO> projectList = null;
 		
 		
-
+		/*
 		// 파람에 따라 프로젝트 로직 조절
 		String sort = paramDto.getSort();
 		
@@ -210,11 +213,11 @@ public class ProjectServiceImpl implements ProjectService {
 		String ongoing = paramDto.getOngoing();
 		String query = paramDto.getQuery();
 		
-		/*
+		
 		 상위 5분류 -> ongoing을 가짐 즉 category는 "" 이 됨. 
 		  
 		 
-		 */
+		 
 		
 		//파라미터 값이 없다면 none을 넣어줌.
 		if(ongoing==null || ongoing.equals("")) {ongoing="none";}
@@ -274,7 +277,7 @@ public class ProjectServiceImpl implements ProjectService {
 			}
 
 		}
-
+		 */
 		return jsonMapper(projectList);
 
 	}
@@ -313,11 +316,26 @@ public class ProjectServiceImpl implements ProjectService {
 		
 		
 		//멤버 정보 리스트(게시글 리스트에서 닉네임 뽑아내야됨)
+		//멤버 뽑아서..map으로 넣을까 싶다... key는 프젝아디로...그럼 jsp서 걍 뽑아낼수 있잖아...
+		//이거 오버플로 터짐
+		/*
 			@Override
-			public ArrayList<MemberDTO> getMemberInfoList() {		
-				return dao.getMemberInfoList();
+			public Map<Integer, MemberDTO> getPrjMemberInfoMap() {		
+				ArrayList<MemberDTO> list =  dao.getMemberInfoList();
+				ArrayList<ProjectInfoDTO> prjList = dao.getAllProjectList();
+				Map<Integer, MemberDTO> map = new HashMap<>();
+				//project_info의 member_email과 일치하면 -> pj_id : mebmerDTO 일케 묶기
+				for (ProjectInfoDTO dto : prjList) {
+					for(MemberDTO mDto : list) {
+						if(dto.getMember_email().equals(mDto.getMember_email())) {
+							map.put(dto.getProject_id(), mDto);
+						}
+					}
+				}	
+				return map;
+				
 			}
-			
+			*/
 			
 			
 		//남은날짜 리스트
@@ -381,6 +399,13 @@ public class ProjectServiceImpl implements ProjectService {
 		
 	}
 	
+	@Override
+	public ArrayList<MemberDTO> getMemberInfoList() {
+		return dao.getMemberInfoList();
+	}
+
+
+
 	
 	
 	//알림처리하는 매소드===========================
@@ -424,6 +449,7 @@ public class ProjectServiceImpl implements ProjectService {
 	/////////////////////메인에 있는거 ////////////////////////////////
 	@Override
 	public void getMainProjectList(Model model) {
+		/*
 		ProjectPagingDTO pageDto = new ProjectPagingDTO(0);
 		
 		System.out.println(dao.getPopularProjectList(pageDto));
@@ -436,7 +462,7 @@ public class ProjectServiceImpl implements ProjectService {
 		model.addAttribute("endedAtList",dao.getEndedAtProjectList(pageDto, 80, 99));
 		model.addAttribute("prelanchingList", dao.getPrelanchingProjectList(pageDto));
 		model.addAttribute("publishedList", dao.getProjectList(pageDto));
-		
+		*/
 		
 	}
 
@@ -493,6 +519,108 @@ public class ProjectServiceImpl implements ProjectService {
 
 
 
+
+
+
+
+
+
+
+
+	@Override
+	public ArrayList<ProjectInfoDTO> getParamProjectList(ProjectParamDTO paramDto) {
+		ProjectPagingDTO pageDto = new ProjectPagingDTO(0);
+		int currentMoney = paramDto.getCurrentMoney();
+		int achieveRate = paramDto.getAchieveRate();
+		String sort = paramDto.getSort();
+		String onString = paramDto.getOngoing();
+		paramDto.setting();
+
+		
+		
+		
+		System.out.println("파람 가지러왔다");
+		System.out.println("어치브비율값:"+paramDto.getAchieveRate());
+		System.out.println("최저퍼센트"+paramDto.getMinAchieveRate());
+		System.out.println("최대퍼센트"+paramDto.getMaxAchieveRate());
+		System.out.println(paramDto.getCategory());
+		System.out.println("지금돈"+paramDto.getCurrentMoney());
+		System.out.println("최대머니:"+paramDto.getMaxMoney());
+		System.out.println("최저머니:"+paramDto.getMinMoney());
+
+		System.out.println(paramDto.getOngoing());
+		System.out.println(paramDto.getSort());
+		
+		// 페이지 셋팅(db에 넘겨줄 start,end 값)
+		
+		// select값 넣는 list
+		ArrayList<ProjectInfoDTO> projectList = dao.getParamProjectList(paramDto, pageDto);
+		
+		
+		System.out.println(dao.countProjectList(paramDto));
+		
+		
+		return projectList;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+	@Override
+	public String syncGetData(ProjectParamDTO paramDto, HttpSession session) {
+		
+
+		System.out.println("비동기로 가지러옴");
+		System.out.println("페이지:"+paramDto.getPage());
+		// 페이지 셋팅
+		ProjectPagingDTO pageDto = new ProjectPagingDTO(paramDto.getPage());
+		
+		paramDto.setting();
+
+		System.out.println(paramDto.getAchieveRate());
+		System.out.println("최저퍼센트"+paramDto.getMinAchieveRate());
+		System.out.println("최대퍼센트"+paramDto.getMaxAchieveRate());
+		System.out.println(paramDto.getCategory());
+		System.out.println(paramDto.getCurrentMoney());
+		System.out.println("최대머니:"+paramDto.getMaxMoney());
+		System.out.println("최저머니:"+paramDto.getMaxMoney());
+
+		System.out.println(paramDto.getOngoing());
+		System.out.println(paramDto.getSort());
+		//day에 대한 정보 가져오는 맵
+		Map<Integer, ProjectDateDTO> dDayMap = getDDayMap();
+		
+		//멤버 정보들.
+		ArrayList<MemberDTO> memberList = dao.getMemberInfoList();
+		
+		//좋아하는 게시글, 알람신청하는 게시글.
+		ArrayList<Integer> likeOrAlarmList = likeOrAlarmProjectList(session, paramDto);
+		
+		//게시글 목록..
+		ArrayList<ProjectInfoDTO> prjList = dao.getParamProjectList(paramDto, pageDto);
+		//map..뽑아낼수있게 키값을 넣어줄거임..
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("day", dDayMap);
+		map.put("member", memberList);
+		map.put("prj", prjList);
+		map.put("likeOrAlarm", likeOrAlarmList);
+		
+		System.out.println(map.get("day"));
+		
+		
+		return jsonMapper(map);
+	}
+
 	//JSON으로 파싱하는 메소드(비동기시 필수)====================================
 	public String jsonMapper(Object obj) {
 		
@@ -510,9 +638,15 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 
-	
 
-	
+
+
+
+
+
+
+
+
 	
 	
 	

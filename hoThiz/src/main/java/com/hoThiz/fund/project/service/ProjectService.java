@@ -40,6 +40,8 @@ public interface ProjectService {
 
 	//게시글 상세정보
 	public ArrayList<MemberDTO> getMemberInfoList();
+	
+	//public Map<Integer, MemberDTO> getPrjMemberInfoMap();
 
 	//멤버 한명 상세정보
 	public MemberDTO getAMemberDetail(String member_email);
@@ -55,6 +57,10 @@ public interface ProjectService {
 	
 	//상세 알람 인원
 	public int getAlarmMemCount(int project_id);
+
+	public ArrayList<ProjectInfoDTO> getParamProjectList(ProjectParamDTO paramDto);
+	
+	public String syncGetData(ProjectParamDTO paramDto, HttpSession session);
 
 	
 }

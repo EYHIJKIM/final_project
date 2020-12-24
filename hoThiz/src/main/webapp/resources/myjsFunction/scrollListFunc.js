@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 
 var page = 0;
 	//document의 height : 전체 스크롤 길이

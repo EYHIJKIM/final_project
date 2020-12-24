@@ -31,7 +31,7 @@ public interface ProjectDAO {
 	
 	///////////////////////////////게시글 목록 뽑아냄////////////////////////////////////////////////
 	
-	//1.모든 프로젝트
+	//1.페이징 프로젝트
 	@Select("SELECT B.*" + 
 			" FROM (SELECT rownum rn, A.*" + 
 					" FROM (select * from project_info order by project_id desc) A" + 
@@ -40,10 +40,13 @@ public interface ProjectDAO {
 	public ArrayList<ProjectInfoDTO> getProjectList(ProjectPagingDTO dto);
 
 	
+	//모든 프로젝트
+	@Select("SELECT * FROM project_info")
+	public ArrayList<ProjectInfoDTO> getAllProjectList();
 	
 	
 
-	
+	/*
 	//2. 인기순 뽑아내기 좋아요 50개 이상	
 		@Select("SELECT B.*" + 
 				" FROM (SELECT rownum rn, A.*" + 
@@ -109,8 +112,91 @@ public interface ProjectDAO {
 					" WHERE rn BETWEEN #{dto.startRownum} AND #{dto.endRownum}")
 			public ArrayList<ProjectInfoDTO> getCategoryProjectList(
 						@Param("dto") ProjectPagingDTO dto, @Param("c") String category);
+*/
+	
+@Select("SELECT complete.* " + 
+		"FROM (" + 
+		"    SELECT rownum rn, condition.* " + 
+		"    FROM( " + 
+		"            SELECT sort.* FROM( " + 
+		"                SELECT * " + 
+		"                FROM project_info " + 
+		"                ORDER BY  " + 
+		"                    case when #{param.sort} = 'publishedAt' THEN project_id " + 
+		"                         when #{param.sort} = 'popular' THEN project_like " + 
+		"                         when #{param.sort} = 'amount' THEN project_current_donated " + 
+		"                    END desc, " + 
+		"                    case when #{param.sort} = 'endedAt' THEN project_deadline end asc " + 
+		"            ) sort  " + 
+		"    ) condition " + 
+		"            WHERE (  " + 
+		"              case when 'ongoing' = 'prelaunching' then sysdate " + 
+		"                   WHEN 'ongoing' = 'ongoing' THEN project_release_date " + 
+		"                   WHEN 'ongoing' = 'confirm' THEN project_release_date " + 
+		"              END < " + 
+		"                case when 'ongoing' = 'prelaunching' THEN project_release_date " + 
+		"                     when 'ongoing' = 'ongoing' THEN sysdate " + 
+		"                     when 'ongoing' = 'confirm' THEN project_deadline " + 
+		"                END  " + 
+		"              AND " + 
+		"              case when 'ongoing' = 'prelaunching' then project_release_date " + 
+		"                   WHEN 'ongoing' = 'ongoing' THEN sysdate " + 
+		"                   WHEN 'ongoing' = 'confirm' THEN project_deadline " + 
+		"                END < " + 
+		"              case when 'ongoing' = 'prelaunching' then project_deadline " + 
+		"                   WHEN 'ongoing' = 'ongoing' THEN project_deadline " + 
+		"                   WHEN 'ongoing' = 'confirm' THEN sysdate " + 
+		"              END " + 
+		"            ) AND " + 
+		"                 project_current_donated BETWEEN #{param.minMoney} and  " + 
+		"                 case when #{param.currentMoney}=5 or (#{param.currentMoney}=0 and #{param.maxMoney}=0) THEN (select max(project_current_donated) from project_info) " + 
+		"                      ELSE #{param.maxMoney}" + 
+		"                 END " + 
+		") complete " + 
+		"WHERE rn BETWEEN #{page.startRownum} AND #{page.endRownum}")
+public ArrayList<ProjectInfoDTO> getParamProjectList(@Param("param") ProjectParamDTO paramDto, @Param("page") ProjectPagingDTO pageDto);
 			
-			
+
+@Select("SELECT count(*) " + 
+	"FROM (" + 
+	"    SELECT rownum rn, condition.* " + 
+	"    FROM( " + 
+	"            SELECT sort.* FROM( " + 
+	"                SELECT * " + 
+	"                FROM project_info " + 
+	"                ORDER BY  " + 
+	"                    case when #{param.sort} = 'publishedAt' THEN project_id " + 
+	"                         when #{param.sort} = 'popular' THEN project_like " + 
+	"                         when #{param.sort} = 'amount' THEN project_current_donated " + 
+	"                    END desc, " + 
+	"                    case when #{param.sort} = 'endedAt' THEN project_deadline end asc " + 
+	"            ) sort  " + 
+	"    ) condition " + 
+	"            WHERE (  " + 
+	"              case when 'ongoing' = 'prelaunching' then sysdate " + 
+	"                   WHEN 'ongoing' = 'ongoing' THEN project_release_date " + 
+	"                   WHEN 'ongoing' = 'confirm' THEN project_release_date " + 
+	"              END < " + 
+	"                case when 'ongoing' = 'prelaunching' THEN project_release_date " + 
+	"                     when 'ongoing' = 'ongoing' THEN sysdate " + 
+	"                     when 'ongoing' = 'confirm' THEN project_deadline " + 
+	"                END  " + 
+	"              AND " + 
+	"              case when 'ongoing' = 'prelaunching' then project_release_date " + 
+	"                   WHEN 'ongoing' = 'ongoing' THEN sysdate " + 
+	"                   WHEN 'ongoing' = 'confirm' THEN project_deadline " + 
+	"                END < " + 
+	"              case when 'ongoing' = 'prelaunching' then project_deadline " + 
+	"                   WHEN 'ongoing' = 'ongoing' THEN project_deadline " + 
+	"                   WHEN 'ongoing' = 'confirm' THEN sysdate " + 
+	"              END " + 
+	"            ) AND " + 
+	"                 project_current_donated BETWEEN #{param.minMoney} and  " + 
+	"                 case when #{param.currentMoney}=5 or (#{param.currentMoney}=0 and #{param.maxMoney}=0) THEN (select max(project_current_donated) from project_info) " + 
+	"                      ELSE #{param.maxMoney}" + 
+	"                 END " + 
+	") complete " )
+public int countProjectList(@Param("param") ProjectParamDTO paramDto);
 			
 
 	//7. 검색해서 게시글 뽑기
@@ -676,38 +762,41 @@ public MemberDTO getAMemberInfo(String member_email);
 public int getDonatedMemberCnt(int project_id);
 	
 ///////////////////날짜차이 뽑아주기//////////////////////////////
-@Select("select project_id, to_char(to_date(project_deadline,'yyyy-MM-DD')-to_date(sysdate,'yyyy-MM-DD')) AS \"d_day\" "
+@Select("select project_id, to_number(to_date(project_deadline,'yyyy-MM-DD')-to_date(sysdate,'yyyy-MM-DD')) AS \"d_day\" "
 		+ ", to_number(to_date(sysdate,'yyyy-MM-DD')-to_date(project_release_date,'yyyy-MM-DD')) AS \"chk\" " + 
+		"" +
 				" from project_info")
 public ArrayList<ProjectDateDTO> getDDayList();
 
 
 //프리런칭한 경우 언제 진행되는지 뽑음 or 공개하는 경우는 날짜 얼마나 남았는지 (dday)
 @Select("SELECT project_id, to_char(project_release_date,'yyyy\"년 \" MM\"월\" DD\"일\" HH\"시\" MI\"분\" \"공개예정\" ') AS \"prelaunching_day\" " + 
-		", to_char(to_date(project_deadline,'yyyy-MM-DD')-to_date(sysdate,'yyyy-MM-DD')) AS \"d_day\" " +
+		", to_number(to_date(project_deadline,'yyyy-MM-DD')-to_date(sysdate,'yyyy-MM-DD')) AS \"d_day\" " +
 		", to_number(to_date(sysdate,'yyyy-MM-DD')-to_date(project_release_date,'yyyy-MM-DD')) AS \"chk\" " +
+		"" +
 		" FROM project_info WHERE project_id = #{project_id}")
 public ProjectDateDTO getADDay(int project_id);
 
 
 	
 	
-	//=================멤버
-	/*
+
 	@Insert("insert into member_info"
 	         + " value(member_email,member_pwd,member_name,member_profile_pic,member_phnum,member_addr,member_URL,member_admin,member_email_verify)"
 	         + " values(#{member_email},#{member_pwd},#{member_name},0,#{member_phnum},#{member_addr},#{member_URL},0,0)")
 	public void insertMember(MemberDTO dto);
 	
-*/
+@Update("update project_info set project_current_donated = 0 where project_id=#{project_id}")
+public void updateProject1(int project_id);
+
+	
+@Update("update project_info set project_current_donated = 1000 where project_id=#{project_id}")
+public void updateProject2(int project_id);
 
 	
 
-
-	
-
-
-	
+@Update("update project_info set project_current_donated = 100000000 where project_id=#{project_id}")
+public void updateProject3(int project_id);
 
 
 	

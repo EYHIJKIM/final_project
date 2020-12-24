@@ -3,6 +3,7 @@ package com.hothiz.fund.project.dto;
 import java.sql.Date;
 
 public class ProjectInfoDTO {
+	private int countProject;
 	private int project_id;
 	private String member_email;
 	private String project_title;
@@ -20,7 +21,16 @@ public class ProjectInfoDTO {
 	private String project_main_category;
 	private String project_sub_category;
 	private int project_check;
+	private int project_prelaunching_check;//0이면 ㄴㄴ 1이면 프리런치
 	
+	
+	
+	public int getProject_prelaunching_check() {
+		return project_prelaunching_check;
+	}
+	public void setProject_prelaunching_check(int project_prelaunching_check) {
+		this.project_prelaunching_check = project_prelaunching_check;
+	}
 	public int getProject_id() {
 		return project_id;
 	}
@@ -93,18 +103,19 @@ public class ProjectInfoDTO {
 	public void setProject_deadline(Date project_deadline) {
 		this.project_deadline = project_deadline;
 	}
-	public int getProject_like() {
-		return project_like;
-	}
-	public void setProject_like(int project_like) {
-		this.project_like = project_like;
-	}
 	public int getProject_current_donated() {
 		return project_current_donated;
 	}
 	public void setProject_current_donated(int project_current_donated) {
 		this.project_current_donated = project_current_donated;
 	}
+	public int getProject_like() {
+		return project_like;
+	}
+	public void setProject_like(int project_like) {
+		this.project_like = project_like;
+	}
+
 	public int getProject_current_percent() {
 		return project_current_percent;
 	}

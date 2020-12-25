@@ -22,6 +22,43 @@ public class ProjectParamDTO {
 
 	
 	
+	public void setting() {
+		if(sort==null || sort.equals("")) {this.sort="popular";}
+		if(ongoing==null || ongoing.equals("")) {this.ongoing="ongoing";}
+		if(category==null || category.equals("")) {this.category="none";}
+		if(query==null || query.equals("")) {this.query="none";}
+		
+		//디폴트라면
+
+		if(achieveRate==1) { this.minAchieveRate=0; this.maxAchieveRate =75;}
+		else if(achieveRate==2) { this.minAchieveRate=75; this.maxAchieveRate=100; } 
+		else if(achieveRate==3) { this.minAchieveRate=100; }
+		
+		
+		//직접 입력한게 아니라면, 즉 current도 없고 max도 없으면.. -> 디폴트로
+
+		if(currentMoney==1) {this.minMoney=0; this.maxMoney = 1000000;} 
+		
+		else if(currentMoney==2) {
+			this.minMoney = 1000000;
+			this.maxMoney = 10000000;
+			
+		} else if(currentMoney==3) {
+			this.minMoney = 10000000;
+			this.maxMoney = 50000000;
+			
+		}else if(currentMoney==4) {
+			this.minMoney = 50000000;
+			this.maxMoney = 100000000;
+			
+		}else if(currentMoney==5) {
+			
+			this.minMoney = 100000000;
+		}
+	}
+	
+	
+	
 	public String getSort() {
 		return sort;
 	}
@@ -154,40 +191,7 @@ public class ProjectParamDTO {
 
 
 
-	public void setting() {
-		if(sort==null || sort.equals("")) {this.sort="popular";}
-		if(ongoing==null || ongoing.equals("")) {this.ongoing="ongoing";}
-		if(category==null || category.equals("")) {this.category="none";}
-		if(query==null || query.equals("")) {this.query="none";}
-		
-		//디폴트라면
-
-		if(achieveRate==1) { this.minAchieveRate=0; this.maxAchieveRate =75;}
-		else if(achieveRate==2) { this.minAchieveRate=75; this.maxAchieveRate=100; } 
-		else if(achieveRate==3) { this.minAchieveRate=100; }
-		
-		
-		//직접 입력한게 아니라면, 즉 current도 없고 max도 없으면.. -> 디폴트로
-
-		if(currentMoney==1) {this.minMoney=0; this.maxMoney = 1000000;} 
-		
-		else if(currentMoney==2) {
-			this.minMoney = 1000000;
-			this.maxMoney = 10000000;
-			
-		} else if(currentMoney==3) {
-			this.minMoney = 10000000;
-			this.maxMoney = 50000000;
-			
-		}else if(currentMoney==4) {
-			this.minMoney = 50000000;
-			this.maxMoney = 100000000;
-			
-		}else if(currentMoney==5) {
-			
-			this.minMoney = 100000000;
-		}
-	}
+	
 		
 	
 

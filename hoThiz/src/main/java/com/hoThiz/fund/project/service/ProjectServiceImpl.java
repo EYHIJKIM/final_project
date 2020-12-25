@@ -293,12 +293,13 @@ public class ProjectServiceImpl implements ProjectService {
 		public ArrayList<Integer> likeOrAlarmProjectList(HttpSession session, ProjectParamDTO paramDto) {
 			//이거 맵에 해도 될거같긴 한데,,,
 			System.out.println("좋아요 or 찜한 목록 가지러 옴");
-			String ongoing = paramDto.getOngoing();	
+			String chkParam = paramDto.getOngoing();	
 			String userId = (String)session.getAttribute("userId");
 			ArrayList<Integer> list = null;
-
 			
-			if(ongoing.equals("prelaunching")) { //진행중 펀딩
+			if(chkParam==null) {chkParam = "ongoing";}
+			
+			if(chkParam.equals("prelaunching")) { //진행중 펀딩
 				/////////////여기 파라미터 고쳐////userId로//////////////////////////////////
 				System.out.println("공개예정 찜목록");
 				list = dao.getAlarmProjectList("1");
@@ -543,6 +544,7 @@ public class ProjectServiceImpl implements ProjectService {
 		System.out.println("최저퍼센트"+paramDto.getMinAchieveRate());
 		System.out.println("최대퍼센트"+paramDto.getMaxAchieveRate());
 		System.out.println(paramDto.getCategory());
+		System.out.println("쿼리"+paramDto.getQuery());
 		System.out.println("지금돈"+paramDto.getCurrentMoney());
 		System.out.println("최대머니:"+paramDto.getMaxMoney());
 		System.out.println("최저머니:"+paramDto.getMinMoney());
@@ -550,13 +552,15 @@ public class ProjectServiceImpl implements ProjectService {
 		System.out.println(paramDto.getOngoing());
 		System.out.println(paramDto.getSort());
 		
+		
+		
 		// 페이지 셋팅(db에 넘겨줄 start,end 값)
 		
 		// select값 넣는 list
 		ArrayList<ProjectInfoDTO> projectList = dao.getParamProjectList(paramDto, pageDto);
+		//System.out.println(dao.countProjects(paramDto));
 		
-		
-		System.out.println(dao.countProjectList(paramDto));
+		//System.out.println(dao.countProjectList(paramDto));
 		
 		
 		return projectList;

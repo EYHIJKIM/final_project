@@ -55,22 +55,14 @@ public class ProjectController {
 	public ModelAndView projectList(ModelAndView mv,
 			ProjectParamDTO paramDto, HttpSession session) {
 		
-		System.out.println(paramDto.getPage());
-		System.out.println(paramDto.getOngoing());
-		System.out.println(paramDto.getCategory());
-		System.out.println(paramDto.getSort());
-	
-
-		//ArrayList<ProjectInfoDTO> dto = ps.getParamProjectList(paramDto);
-
+		
 		mv.addObject("dDayMap",ps.getDDayMap()); 			//프젝id__dto(프젝id,d_day,prelaunching_day)
 		mv.addObject("memberMap",ps.getMemberInfoList());  //멤버 정보들(닉네임 빼낼라고)
 		mv.addObject("likeOrAlarmList",ps.likeOrAlarmProjectList(session,paramDto));//좋아하는 게시글/ 혹은 알람신청한 게시글
 		mv.addObject("firstList", ps.getParamProjectList(paramDto)); //게시글 목록
 		
 		mv.setViewName("project/project_list");
-		
-		//12월 20일 12일 - 12월 20일 18시
+
 		
 		return mv;
 	}

@@ -29,12 +29,13 @@
 <%@ include file="../default/main_header.jsp" %>
 
 	
-	<form action="/fund/discover" method="GET">
-		<input type="search" name="query"> <input type="submit" />
-	</form>
+
 
 
 	총 게시글 :...
+	<form action="/fund/discover" method="GET">
+		<input type="search" name="query"> <input type="submit" />
+	</form>
 	<br>
 	<!--  <a href="discover/${pj.project_id}">
 		<img class="thumbnail" src="project/${pj.project_id}.jpg"></a>
@@ -55,14 +56,16 @@ ongoing : ${state}
 
 
 <c:forEach var="prj" items="${firstList}">
-${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}
+${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}<br>
 	<c:choose>
 		<c:when test="${state eq 'ongoing'}">
-			<c:if test="${prj.project_prelaunching_check eq '0' and dDayMap[prj.project_id].d_day >='0' and dDayMap[prj.project_id].chk >='0'}">
+			<c:if test="${dDayMap[prj.project_id].d_day >='0' and dDayMap[prj.project_id].chk >='0'}">
 				
-				<h2>진행중인 모든 프로젝트</h2>
+				
 				
 				${prj.project_id }는 진행중입니다. <br>
+				<h3>${prj.project_title }</h3>
+				${prj.project_summary}<br>
 				d_day : ${dDayMap[prj.project_id].d_day}<br>
 				chk : ${dDayMap[prj.project_id].chk}<br>
 				${prj.project_sub_category } | 
@@ -122,8 +125,8 @@ ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}
 
 <%-- ///////////////////////////////////공개예정인 경우. 알림신청으로 나타나야함///////////////////////// --%>
 
-	<c:when test="${state eq 'prelaunching'}">
-		<c:if test="${prj.project_prelaunching_check eq '1'}">
+	<c:when test="${state eq 'prelaunching' and prj.project_prelaunching_check eq '1'}">
+		
 			<h2>공개예정인 경우</h2>
 				
 				${prj.project_id }는 공개예정입니다. <br>
@@ -170,15 +173,14 @@ ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}
 					<p id="notiBtn${prj.project_id}">${msg}</p>
 				</button>
 				
-			</c:if>
+
 		</c:when>
 
 		
 	
-		<c:when test="${state eq 'confirm'}">
-		<c:if test="${day < '0'}">	
+	<c:when test="${state eq 'confirm'}">
 			<h2>끝난 프로젝트 입니다</h2>
-			${prj.project_id }는 공개예정입니다. <br>
+		
 				d_day : ${dDayMap[prj.project_id].d_day}<br>
 				chk : ${dDayMap[prj.project_id].chk}<br>
 				${prj.project_sub_category } | 
@@ -188,7 +190,6 @@ ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}
 											</c:if>
 										</c:forEach>
 
-			</c:if>
 		</c:when>
 </c:choose>
 
@@ -222,10 +223,10 @@ ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}
 				params += "&category="+urlParam('category');
 			}
 			if (urlParam('ongoing') != null) {
-				params += urlParam('ongoing');
+				params += "&ongoing="+urlParam('ongoing');
 			}
 			if (urlParam('sort') != null) {
-				params += "&sort=${param.sort}";
+				params += "&sort="+urlParam('sort');
 			}if (urlParam('maxAchieveRate') != null) {
 				params += "&maxAchieveRate="+urlParam('maxAchieveRate');
 			} if (urlParam('minAchieveRate') != null) {
@@ -234,10 +235,10 @@ ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}
 				params += "&query="+urlParam('query');
 			
 			}if (urlParam('currentMoney') != null) {
-				params += "&query="+urlParam('currentMoney');
+				params += "&currentMoney="+urlParam('currentMoney');
 			}
 			if (urlParam('achieveRate') != null) {
-				params += "&query="+urlParam('achieveRate');
+				params += "&achieveRate="+urlParam('achieveRate');
 			}
 			
 			

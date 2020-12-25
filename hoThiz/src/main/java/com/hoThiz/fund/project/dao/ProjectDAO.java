@@ -46,74 +46,7 @@ public interface ProjectDAO {
 	
 	
 
-	/*
-	//2. 인기순 뽑아내기 좋아요 50개 이상	
-		@Select("SELECT B.*" + 
-				" FROM (SELECT rownum rn, A.*" + 
-						" FROM"
-						+" (select * from project_info"
-						+" WHERE project_like >= 50"
-						+" ORDER BY project_id desc) A" + 
-				") B " + 
-				" WHERE rn BETWEEN #{startRownum} AND #{endRownum}")
-		public ArrayList<ProjectInfoDTO> getPopularProjectList(ProjectPagingDTO dto);
-		
-		
-		
-	//3. 성공 임박 프로젝트 80~99퍼 사이
-	@Select("SELECT B.*" + 
-			" FROM (SELECT rownum rn, A.*" + 
-					"FROM "
-					+" (select * from project_info"
-					+" WHERE (project_current_percent BETWEEN #{min} AND #{max})"
-					+" ORDER BY project_id desc) A" + 
-			") B " + 
-			" WHERE rn BETWEEN #{dto.startRownum} AND #{dto.endRownum}")
-	public ArrayList<ProjectInfoDTO> getEndedAtProjectList(@Param("dto") ProjectPagingDTO pageDto, @Param("max") int maxAchieveRate,
-								@Param("min") int minAchieveRate);
-   
-	
-	
-	//4. 공개예정 프로젝트
-	@Select("SELECT B.*" + 
-			" FROM (SELECT rownum rn, A.*" + 
-					"FROM "
-					+" (select * from project_info"
-					+" WHERE (project_reg_date < project_release_date)"
-					+" ORDER BY project_id desc) A" + 
-			") B " + 
-			" WHERE rn BETWEEN #{startRownum} AND #{endRownum}")
-	public ArrayList<ProjectInfoDTO> getPrelanchingProjectList(ProjectPagingDTO dto);
-	
-	
-	//5. 신규추천
-	@Select("SELECT B.*" + 
-			" FROM (SELECT rownum rn, A.*" + 
-					"FROM "
-					+" (select * from project_info"
-					+" WHERE project_release_date between("
-					+ "to_date(sysdate, 'YYYYMMDD')-7 AND to_date(sysdate, 'YYYYMMDD'))"
-					+" ORDER BY project_id desc) A" + 
-			") B " + 
-			" WHERE rn BETWEEN #{startRownum} AND #{endRownum}")
-	public ArrayList<ProjectInfoDTO> getNewProjectList(ProjectPagingDTO dto);
-	
-	
-	
-	
-	//6. 카테고리별 게시글
-			@Select("SELECT B.*" + 
-					" FROM (SELECT rownum rn, A.*" + 
-							" FROM"
-							+" (select * from project_info"
-							+" WHERE ( =#{c} OR project_sub_category=#{c})"
-							+" ORDER BY project_id desc) A" + 
-					") B " + 
-					" WHERE rn BETWEEN #{dto.startRownum} AND #{dto.endRownum}")
-			public ArrayList<ProjectInfoDTO> getCategoryProjectList(
-						@Param("dto") ProjectPagingDTO dto, @Param("c") String category);
-*/
-	
+//////////////////////////////////////**파라미터 조건으로 게시글 목록 뽑아내기//////////////////////////////////	
 @Select("SELECT complete.* " + 
 		"FROM (" + 
 		"    SELECT rownum rn, condition.* " + 
@@ -128,76 +61,121 @@ public interface ProjectDAO {
 		"                    END desc, " + 
 		"                    case when #{param.sort} = 'endedAt' THEN project_deadline end asc " + 
 		"            ) sort  " + 
-		"    ) condition " + 
-		"            WHERE (  " + 
-		"              case when 'ongoing' = 'prelaunching' then sysdate " + 
-		"                   WHEN 'ongoing' = 'ongoing' THEN project_release_date " + 
-		"                   WHEN 'ongoing' = 'confirm' THEN project_release_date " + 
+		"     )condition " + 
+		"     WHERE (  " + 
+		"              case WHEN #{param.ongoing} = 'prelaunching' then sysdate " + 
+		"                   WHEN #{param.ongoing} = 'ongoing' THEN project_release_date " + 
+		"                   WHEN #{param.ongoing} = 'confirm' THEN project_release_date " + 
 		"              END < " + 
-		"                case when 'ongoing' = 'prelaunching' THEN project_release_date " + 
-		"                     when 'ongoing' = 'ongoing' THEN sysdate " + 
-		"                     when 'ongoing' = 'confirm' THEN project_deadline " + 
+		"                case when #{param.ongoing} = 'prelaunching' THEN project_release_date " + 
+		"                     when #{param.ongoing} = 'ongoing' THEN sysdate " + 
+		"                     when #{param.ongoing} = 'confirm' THEN project_deadline " + 
 		"                END  " + 
-		"              AND " + 
-		"              case when 'ongoing' = 'prelaunching' then project_release_date " + 
-		"                   WHEN 'ongoing' = 'ongoing' THEN sysdate " + 
-		"                   WHEN 'ongoing' = 'confirm' THEN project_deadline " + 
+		"             AND " + 
+		"              case when #{param.ongoing} = 'prelaunching' then project_release_date " + 
+		"                   WHEN #{param.ongoing} = 'ongoing' THEN sysdate " + 
+		"                   WHEN #{param.ongoing} = 'confirm' THEN project_deadline " + 
 		"                END < " + 
-		"              case when 'ongoing' = 'prelaunching' then project_deadline " + 
-		"                   WHEN 'ongoing' = 'ongoing' THEN project_deadline " + 
-		"                   WHEN 'ongoing' = 'confirm' THEN sysdate " + 
+		"              CASE WHEN #{param.ongoing} = 'prelaunching' then project_deadline " + 
+		"                   WHEN #{param.ongoing} = 'ongoing' THEN project_deadline " + 
+		"                   WHEN #{param.ongoing} = 'confirm' THEN sysdate " + 
 		"              END " + 
-		"            ) AND " + 
+		"           ) AND " + 
 		"                 project_current_donated BETWEEN #{param.minMoney} and  " + 
-		"                 case when #{param.currentMoney}=5 or (#{param.currentMoney}=0 and #{param.maxMoney}=0) THEN (select max(project_current_donated) from project_info) " + 
+		"                 CASE WHEN #{param.currentMoney}=5 or (#{param.currentMoney}=0 and #{param.maxMoney}=0) THEN (select max(project_current_donated) from project_info) " + 
 		"                      ELSE #{param.maxMoney}" + 
-		"                 END " + 
+		"                 END " +
+"					  AND  project_current_percent BETWEEN #{param.minAchieveRate} and " + 
+	"                 	  case when #{param.achieveRate}=3 or (#{param.achieveRate}=0 and #{param.maxAchieveRate}=0) THEN (select max(project_current_percent) from project_info)" + 
+	"                     ELSE #{param.maxAchieveRate} " + 
+	"                 END"+
+					
+	"             AND  " + 
+	"                (project_main_category LIKE " + 
+	"                    CASE WHEN #{param.category}='none' then '%' " + 
+	"                         ELSE #{param.category} " + 
+	"                         END " + 
+	"                 OR " + 
+	"                 project_sub_category LIKE " + 
+	"                    CASE WHEN #{param.category}='none' then '%' " + 
+	"                         ELSE #{param.category} " + 
+	"                         END " + 
+	"                )"+
 		") complete " + 
 		"WHERE rn BETWEEN #{page.startRownum} AND #{page.endRownum}")
 public ArrayList<ProjectInfoDTO> getParamProjectList(@Param("param") ProjectParamDTO paramDto, @Param("page") ProjectPagingDTO pageDto);
 			
-
+/*
+//갯수 세기
 @Select("SELECT count(*) " + 
-	"FROM (" + 
-	"    SELECT rownum rn, condition.* " + 
-	"    FROM( " + 
-	"            SELECT sort.* FROM( " + 
-	"                SELECT * " + 
-	"                FROM project_info " + 
-	"                ORDER BY  " + 
-	"                    case when #{param.sort} = 'publishedAt' THEN project_id " + 
-	"                         when #{param.sort} = 'popular' THEN project_like " + 
-	"                         when #{param.sort} = 'amount' THEN project_current_donated " + 
-	"                    END desc, " + 
-	"                    case when #{param.sort} = 'endedAt' THEN project_deadline end asc " + 
-	"            ) sort  " + 
-	"    ) condition " + 
-	"            WHERE (  " + 
-	"              case when 'ongoing' = 'prelaunching' then sysdate " + 
-	"                   WHEN 'ongoing' = 'ongoing' THEN project_release_date " + 
-	"                   WHEN 'ongoing' = 'confirm' THEN project_release_date " + 
-	"              END < " + 
-	"                case when 'ongoing' = 'prelaunching' THEN project_release_date " + 
-	"                     when 'ongoing' = 'ongoing' THEN sysdate " + 
-	"                     when 'ongoing' = 'confirm' THEN project_deadline " + 
-	"                END  " + 
-	"              AND " + 
-	"              case when 'ongoing' = 'prelaunching' then project_release_date " + 
-	"                   WHEN 'ongoing' = 'ongoing' THEN sysdate " + 
-	"                   WHEN 'ongoing' = 'confirm' THEN project_deadline " + 
-	"                END < " + 
-	"              case when 'ongoing' = 'prelaunching' then project_deadline " + 
-	"                   WHEN 'ongoing' = 'ongoing' THEN project_deadline " + 
-	"                   WHEN 'ongoing' = 'confirm' THEN sysdate " + 
-	"              END " + 
-	"            ) AND " + 
-	"                 project_current_donated BETWEEN #{param.minMoney} and  " + 
-	"                 case when #{param.currentMoney}=5 or (#{param.currentMoney}=0 and #{param.maxMoney}=0) THEN (select max(project_current_donated) from project_info) " + 
-	"                      ELSE #{param.maxMoney}" + 
-	"                 END " + 
-	") complete " )
-public int countProjectList(@Param("param") ProjectParamDTO paramDto);
-			
+		"FROM (" + 
+		"    SELECT rownum rn, condition.* " + 
+		"    FROM( " + 
+		"            SELECT sort.* FROM( " + 
+		"                SELECT * " + 
+		"                FROM project_info " + 
+		"                ORDER BY  " + 
+		"                    case when #{param.sort} = 'publishedAt' THEN project_id " + 
+		"                         when #{param.sort} = 'popular' THEN project_like " + 
+		"                         when #{param.sort} = 'amount' THEN project_current_donated " + 
+		"                    END desc, " + 
+		"                    case when #{param.sort} = 'endedAt' THEN project_deadline end asc " + 
+		"            ) sort  " + 
+		"     )condition " + 
+		"     WHERE (  " + 
+		"              case WHEN #{param.ongoing} = 'prelaunching' then sysdate " + 
+		"                   WHEN #{param.ongoing} = 'ongoing' THEN project_release_date " + 
+		"                   WHEN #{param.ongoing} = 'confirm' THEN project_release_date " + 
+		"              END < " + 
+		"                case when #{param.ongoing} = 'prelaunching' THEN project_release_date " + 
+		"                     when #{param.ongoing} = 'ongoing' THEN sysdate " + 
+		"                     when #{param.ongoing} = 'confirm' THEN project_deadline " + 
+		"                END  " + 
+		"             AND " + 
+		"              case when #{param.ongoing} = 'prelaunching' then project_release_date " + 
+		"                   WHEN #{param.ongoing} = 'ongoing' THEN sysdate " + 
+		"                   WHEN #{param.ongoing} = 'confirm' THEN project_deadline " + 
+		"                END < " + 
+		"              case when #{param.ongoing} = 'prelaunching' then project_deadline " + 
+		"                   WHEN #{param.ongoing} = 'ongoing' THEN project_deadline " + 
+		"                   WHEN #{param.ongoing} = 'confirm' THEN sysdate " + 
+		"              END " + 
+		"           ) AND " + 
+		"                 project_current_donated BETWEEN #{param.minMoney} and  " + 
+		"                 case when #{param.currentMoney}=5 or (#{param.currentMoney}=0 and #{param.maxMoney}=0) THEN (select max(project_current_donated) from project_info) " + 
+		"                      ELSE #{param.maxMoney}" + 
+		"                 END " +
+"					  AND  project_current_percent BETWEEN #{param.minAchieveRate} and " + 
+	"                 	  case when #{param.achieveRate}=3 or (#{param.achieveRate}=0 and #{param.maxAchieveRate}=0) THEN (select max(project_current_percent) from project_info)" + 
+	"                     ELSE #{param.maxAchieveRate} " + 
+	"                 END"+
+					"AND (" + 
+	"                    project_title LIKE " + 
+	"                    CASE WHEN #{param.query}='none' THEN '%' " + 
+	"                    ELSE '%'||#{param.query} ||'%' " + 
+	"                    end " + 
+	"                    OR project_summary LIKE " + 
+	"                    CASE WHEN #{param.query}='none' THEN '%' " + 
+	"                    ELSE '%'||#{param.query}||'%' " + 
+	"                    end " + 
+	"                    OR project_summary LIKE " + 
+	"                    CASE WHEN #{param.query}='none' THEN '%' " + 
+	"                    ELSE '%'||#{param.query}||'%' " + 
+	"                    end " + 
+	"                )      " + 
+	"             AND  " + 
+	"                (project_main_category LIKE " + 
+	"                    CASE WHEN #{param.category}='none' then '%' " + 
+	"                         ELSE #{param.category} " + 
+	"                         end " + 
+	"                 OR " + 
+	"                 project_sub_category LIKE " + 
+	"                    CASE WHEN #{param.category}='none' then '%' " + 
+	"                         ELSE #{param.category} " + 
+	"                         end " + 
+	"                )"+
+		") complete ")
+	public int countProjects(@Param("param") ProjectParamDTO paramDto);		*/
 
 	//7. 검색해서 게시글 뽑기
 /*
@@ -352,6 +330,7 @@ CASE WHEN 온고윙 있으면
 		 	 		AND category=#{param.category}			
 		 	 	)
 		 	 ELSE
+		 	 
 		 	  	project_title LIKE CONCAT('%'|| #{param.query},'%') OR project_summary LIKE CONCAT('%'|| #{param.query},'%')
 						  				
 			)
@@ -367,96 +346,7 @@ WHERE rn between #{page.startRownum} and #{page.endRownum}
 					
 					
 					
-					
-					
 			
-					 CASE WHEN #{param.category} != 'none' THEN 				 
-	 					 WHERE category=#{param.category}
-						  		AND (project_title LIKE CONCAT('%'|| #{param.query},'%')
-						  				OR project_summary LIKE CONCAT('%'|| #{param.query},'%') )
-					) 
-
-			    
-					  WHEN #{param.sort} = 'endedAt' THEN
-					  (SELECT C.*
-					   FROM (select * from project_info 
-					   		 where (project_current_percent BETWEEN #{param.minAchieveRate} AND #{param.maxAchieveRate}) 
-					   		 ORDER BY project_id desc) C
-					   WHERE category=#{param.category}
-					  		AND (project_title LIKE CONCAT('%'|| #{param.query},'%')
-					  				OR project_summary LIKE CONCAT('%'|| #{param.query},'%') )
-					  )  
-					 
-			    
-			    	  WHEN #{param.sort} = 'publishedAt' THEN
-					  (SELECT C.*
-					   FROM (select * from project_info ORDER BY project_id desc) C
-					   WHERE category=#{param.category}
-					  		AND (project_title LIKE CONCAT('%'|| #{param.query},'%')
-					  				OR project_summary LIKE CONCAT('%'|| #{param.query},'%') )
-					 )	  
-					  
-				
-					 WHEN #{param.sort} = 'amount' THEN
-					  (SELECT C.*
-					   FROM (select * from project_info ORDER BY project_current_donated desc) C
-					   WHERE category=#{param.category}
-					  		AND (project_title LIKE CONCAT('%'|| #{param.query},'%')
-					  				OR project_summary LIKE CONCAT('%'|| #{param.query},'%') )
-					)  
-				END
-		ELSE 
- 			 
-				CASE WHEN #{param.sort} = 'popular' THEN 
-					(SELECT C.* 
-					 FROM ( select * from project_info WHERE project_like >= 50 ORDER BY project_id desc) C
- 					 WHERE project_title LIKE CONCAT('%'|| #{param.query},'%')
-					  				OR project_summary LIKE CONCAT('%'|| #{param.query},'%')
-					)	  
-
-			    
-					  WHEN #{param.sort} = 'endedAt' THEN
-					  (SELECT C.*
-					   FROM (select * from project_info 
-					   		 where (project_current_percent BETWEEN #{param.minAchieveRate} AND #{param.maxAchieveRate}) 
-					   		 ORDER BY project_id desc) C
-					   WHERE project_title LIKE CONCAT('%'|| #{param.query},'%')
-					  				OR project_summary LIKE CONCAT('%'|| #{param.query},'%')
-					  )  
-					 
-			    
-			    	  WHEN #{param.sort} = 'publishedAt' THEN
-					  (SELECT C.*
-					   FROM (select * from project_info ORDER BY project_id desc) C
-					   WHERE project_title LIKE CONCAT('%'|| #{param.query},'%')
-					  				OR project_summary LIKE CONCAT('%'|| #{param.query},'%')
-					 )	  
-					  
-				
-					 WHEN #{param.sort} = 'amount' THEN
-					  (SELECT C.*
-					   FROM (select * from project_info ORDER BY project_current_donated desc) C
-					   WHERE project_title LIKE CONCAT('%'|| #{param.query},'%')
-					  				OR project_summary LIKE CONCAT('%',#{param.query},'%') 
-					  )
- 		
- 		END
-ELSE
-		CASE WHEN #{param.category} != 'none' THEN
-		   (SELECT * FROM project_info 
-		   	WHERE category = #{param.category} 
-		   		AND (project_title LIKE CONCAT('%'|| #{param.query},'%')
-							OR project_summary LIKE CONCAT('%'|| #{param.query},'%'))
-		   )
-		   
-		   
-		ELSE (SELECT * from project_info WHERE (project_title LIKE CONCAT('%'|| #{param.query},'%')
-							OR project_summary LIKE CONCAT('%'|| #{param.query},'%')))
-		END
-END 	
- 	) A
-
- ) B
 WHERE rn between #{page.startRownum} and #{page.endRownum}
   
 소트 존재하면
@@ -689,66 +579,7 @@ OR project_summary LIKE CONCAT('%',#{param.keyword},'%')) A
 	//알림신청 몇명?
 	@Select("SELECT COUNT(*) FROM member_alarm where project_id=#{project_id} ")
 	public int getAlarmMemCount(int project_id);
-	
-/*
-	
-	//sort, ongoing, category, query 존재,,,ㅋ
-	//카테고리, 소트는 where문에 걸어주면 됨. 
-	@Select(
-			
-			SELECT ALL.* FROM(
-				SELECT A.* FROM(
-						(select * from project_info 
-							
-							where
-								category=#{param.category} AND (project_title LIKE CONCAT('%'|| #{param.query},'%')
-																OR project_summary LIKE CONCAT('%'|| #{param.query},'%')) 
-								AND								
-									CASE WHEN ongoing='ongoing' THEN to_date(sysdate, 'YYYYMMDD') < project_deadline
-										 WHEN ongoing='confirm' THEN project_funding_success = 1
-										 WHEN ongoing='prelanching' THEN project_reg_date < project_release_date
-									END
-									
-								AND
-									CASE WHEN #{param.achieveRate}=0 THEN 1=1
-										
-								    ELSE 
-										CASE WHEN #{param.achieveRate}=3 THEN project_current_percent >= #{param.minAchieveRate}
-										     WHEN #{param.achieveRate}=2 THEN project_current_percent BETWEEN #{param.minAchieveRate} AND #{param.maxAchieveRate} 
-										     WHEN #{param.achieveRate}=1 THEN project_current_percent <= #{param.maxAchieveRate} 
-										END
-									END
-								AND
-								   CASE WHEN #{param.currentMoney}=0 THEN 1=1
-								   ELSE
-								   	   CASE WHEN #{param.currentMoney}=1 THEN project_current_donated <=#{param.maxMoney}
-								   	  		WHEN #{param.currentMoney}=5 THEN #{param.minMoney} <= project_current_donated
-								   	   ELSE  #{param.minMoney}<=project_current_donated <=#{param.maxMoney}
-								   	   END
-								   END	 
-							order by
-								CASE WHEN sort='popular' THEN project_like desc
-								     WHEN sort='publishedAt' THEN project_id desc
-									 WHEN sort='amount' THEN project_current_donated desc
-									 WHEN sort='endedAt' THEN project_deadline asc
-								END	 	
-						)
-						
-						
-				) A
-			  	
-			  	WHERE
-			  
-			  ) ALL 
-			WHERE rn between #{page.startRownum} and #{page.endRownum} 
-			   페이징 ALL
-			
-			
-			
-			)
-	public ArrayList<ProjectInfoDTO> allCondition(ProjectParamDTO paramDto, ProjectPagingDTO pageDto);
-	
-	*/
+
 	
 	
 //////////////////멤버정보 뽑아옴////////////////////////////////	

@@ -56,5 +56,32 @@ FROM (
                  case when #{param.currentMoney}=5 or (#{param.currentMoney}=0 and #{param.maxMoney}=0) THEN (select max(project_current_donated) from project_info)
                       ELSE #{param.maxMoney}
                  END
+                 
+             AND (
+                    project_title LIKE
+                    CASE WHEN #{param.query}='none' THEN '%'
+                    ELSE '%'||#{param.query} ||'%'
+                    end
+                    OR project_summary LIKE
+                    CASE WHEN #{param.query}='none' THEN '%'
+                    ELSE '%'||#{param.query}||'%'
+                    end
+                    OR project_summary LIKE
+                    CASE WHEN #{param.query}='none' THEN '%'
+                    ELSE '%'||#{param.query}||'%'
+                    end
+                )     
+             AND 
+                (project_main_category LIKE
+                    CASE WHEN #{param.category}='none' then '%'
+                         ELSE #{param.category}
+                         end
+                 OR
+                 project_sub_category LIKE
+                    CASE WHEN #{param.category}='none' then '%'
+                         ELSE #{param.category}
+                         end
+                )    
+                 
 )complete
 WHERE rn BETWEEN #{page.startRownum} AND #{page.endRownum}

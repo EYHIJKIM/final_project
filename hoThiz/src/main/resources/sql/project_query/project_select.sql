@@ -36,16 +36,16 @@ FROM (
             )sort 
     )condition
             
-            WHERE 
-              case when #{param.ongoing} = 'ongoing' then sysdate
-                   WHEN #{param.ongoing} = 'prelaunching' THEN sysdate
-                   WHEN #{param.ongoing} = 'confirm' THEN project_deadline
-              END <
-                case when #{param.ongoing} = 'ongoing' THEN project_deadline
-                     when #{param.ongoing} = 'prelaunching' THEN project_release_date
-                     when #{param.ongoing} = 'confirm' THEN sysdate
+     WHERE 
+           CASE WHEN #{param.ongoing} = 'ongoing' then sysdate
+                WHEN #{param.ongoing} = 'prelaunching' THEN sysdate
+                WHEN #{param.ongoing} = 'confirm' THEN project_deadline
+           END <
+           CASE WHEN #{param.ongoing} = 'ongoing' THEN project_deadline
+                WHEN #{param.ongoing} = 'prelaunching' THEN project_release_date
+                WHEN #{param.ongoing} = 'confirm' THEN sysdate
                 END
-            AND
+           AND
                project_current_percent BETWEEN #{param.minAchieveRate} and
                  case WHEN #{param.achieveRate} = 3 or (#{param.achieveRate}=0 and #{param.maxAchieveRate}=0) THEN (select max(project_current_percent) from project_info)
                       ELSE #{param.maxAchieveRate}
@@ -58,18 +58,17 @@ FROM (
                  END
                  
              AND (
-                    project_title LIKE
+                    project_title LIKE '%' ||
                     CASE WHEN #{param.query}='none' THEN '%'
-                    ELSE '%'||#{param.query} ||'%'
-                    end
-                    OR project_summary LIKE
+                    ELSE #{param.query} END ||'%'
+                   
+                    OR project_summary LIKE '%' ||
                     CASE WHEN #{param.query}='none' THEN '%'
-                    ELSE '%'||#{param.query}||'%'
-                    end
-                    OR project_summary LIKE
+                    ELSE #{param.query} END ||'%'
+             
+                    OR project_tag LIKE '%' ||
                     CASE WHEN #{param.query}='none' THEN '%'
-                    ELSE '%'||#{param.query}||'%'
-                    end
+                    ELSE #{param.query} END ||'%'
                 )     
              AND 
                 (project_main_category LIKE

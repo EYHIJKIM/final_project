@@ -101,12 +101,24 @@ public interface ProjectDAO {
 	"                         ELSE #{param.category} " + 
 	"                         END " + 
 	"                )"+
+" 			AND ( " + 
+"                    project_title LIKE '%' || " + 
+"                    CASE WHEN #{param.query}='none' THEN '%' " + 
+"                    ELSE #{param.query} END ||'%' " + 
+"                    " + 
+"                    OR project_summary LIKE '%' || " + 
+"                    CASE WHEN #{param.query}='none' THEN '%' " + 
+"                    ELSE #{param.query} END ||'%' " + 
+"              " + 
+"                    OR project_tag LIKE '%' || " + 
+"                    CASE WHEN #{param.query}='none' THEN '%' " + 
+"                    ELSE #{param.query} END ||'%' " + 
+"                )"+
 		") complete " + 
 		"WHERE rn BETWEEN #{page.startRownum} AND #{page.endRownum}")
 public ArrayList<ProjectInfoDTO> getParamProjectList(@Param("param") ProjectParamDTO paramDto, @Param("page") ProjectPagingDTO pageDto);
 			
-/*
-//갯수 세기
+
 @Select("SELECT count(*) " + 
 		"FROM (" + 
 		"    SELECT rownum rn, condition.* " + 
@@ -136,46 +148,46 @@ public ArrayList<ProjectInfoDTO> getParamProjectList(@Param("param") ProjectPara
 		"                   WHEN #{param.ongoing} = 'ongoing' THEN sysdate " + 
 		"                   WHEN #{param.ongoing} = 'confirm' THEN project_deadline " + 
 		"                END < " + 
-		"              case when #{param.ongoing} = 'prelaunching' then project_deadline " + 
+		"              CASE WHEN #{param.ongoing} = 'prelaunching' then project_deadline " + 
 		"                   WHEN #{param.ongoing} = 'ongoing' THEN project_deadline " + 
 		"                   WHEN #{param.ongoing} = 'confirm' THEN sysdate " + 
 		"              END " + 
 		"           ) AND " + 
 		"                 project_current_donated BETWEEN #{param.minMoney} and  " + 
-		"                 case when #{param.currentMoney}=5 or (#{param.currentMoney}=0 and #{param.maxMoney}=0) THEN (select max(project_current_donated) from project_info) " + 
+		"                 CASE WHEN #{param.currentMoney}=5 or (#{param.currentMoney}=0 and #{param.maxMoney}=0) THEN (select max(project_current_donated) from project_info) " + 
 		"                      ELSE #{param.maxMoney}" + 
 		"                 END " +
 "					  AND  project_current_percent BETWEEN #{param.minAchieveRate} and " + 
 	"                 	  case when #{param.achieveRate}=3 or (#{param.achieveRate}=0 and #{param.maxAchieveRate}=0) THEN (select max(project_current_percent) from project_info)" + 
 	"                     ELSE #{param.maxAchieveRate} " + 
 	"                 END"+
-					"AND (" + 
-	"                    project_title LIKE " + 
-	"                    CASE WHEN #{param.query}='none' THEN '%' " + 
-	"                    ELSE '%'||#{param.query} ||'%' " + 
-	"                    end " + 
-	"                    OR project_summary LIKE " + 
-	"                    CASE WHEN #{param.query}='none' THEN '%' " + 
-	"                    ELSE '%'||#{param.query}||'%' " + 
-	"                    end " + 
-	"                    OR project_summary LIKE " + 
-	"                    CASE WHEN #{param.query}='none' THEN '%' " + 
-	"                    ELSE '%'||#{param.query}||'%' " + 
-	"                    end " + 
-	"                )      " + 
+					
 	"             AND  " + 
 	"                (project_main_category LIKE " + 
 	"                    CASE WHEN #{param.category}='none' then '%' " + 
 	"                         ELSE #{param.category} " + 
-	"                         end " + 
+	"                         END " + 
 	"                 OR " + 
 	"                 project_sub_category LIKE " + 
 	"                    CASE WHEN #{param.category}='none' then '%' " + 
 	"                         ELSE #{param.category} " + 
-	"                         end " + 
+	"                         END " + 
 	"                )"+
+" 			AND ( " + 
+"                    project_title LIKE '%' || " + 
+"                    CASE WHEN #{param.query}='none' THEN '%' " + 
+"                    ELSE #{param.query} END ||'%' " + 
+"                    " + 
+"                    OR project_summary LIKE '%' || " + 
+"                    CASE WHEN #{param.query}='none' THEN '%' " + 
+"                    ELSE #{param.query} END ||'%' " + 
+"              " + 
+"                    OR project_tag LIKE '%' || " + 
+"                    CASE WHEN #{param.query}='none' THEN '%' " + 
+"                    ELSE #{param.query} END ||'%' " + 
+"                )"+
 		") complete ")
-	public int countProjects(@Param("param") ProjectParamDTO paramDto);		*/
+	public int countProjects(@Param("param") ProjectParamDTO paramDto);		
 
 	//7. 검색해서 게시글 뽑기
 /*

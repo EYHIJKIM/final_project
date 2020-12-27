@@ -112,10 +112,28 @@ body{
 		 
 		 </div>
 		 
+		 
+		 
+		 <div class="btn-group">
+		           
+          
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+           	 달성률
+          </button>
+          <ul id="achieveRate" class="dropdown-menu" role="menu">
+
+          </ul>
+		 
+		 </div>
+		 
+		 
 	</div>
 </div>
 
-      
+ 
+ 
+ 
+    
 <div class="container">
 	<div class="row">
         <div class="dropdown">
@@ -128,11 +146,94 @@ body{
         </div>
 	</div>
 </div>
-
-<button onclick="makePath()">눌러봐</button>
+<form id="rateForm" action="discover">
+	<input type="text" name="minAchieveRate" id="min" maxlength="4" oninput="numberMaxLength(this)"> - 
+	<input type="text" name="maxAchieveRate" id="max" maxlength="4" oninput="numberMaxLength(this)">
+	<span id="warn">s</span>
+	<input type="button" id="sub" value="적용"> 
+</form>
 
 
 <script type="text/javascript">
+
+function numberMaxLength(e){
+	e.value = e.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+	if(e.value.length > e.maxLength){
+		e.value = e.value.slice(0, e.maxLength);
+	}
+}
+
+$(document).ready(function(){
+
+	$("#sub").prop("disabled",true); //초기에는 disable
+	$("#sub").attr('style','opacity:0.5');
+	
+	$('input[type="text"]').on('keyup',function(){ //값 넣으면..?
+			
+			var min = Number($('#min').val());
+			var max = Number($("#max").val());
+			
+			
+			console.log("min:"+min);
+			console.log("max:"+max);
+
+			//경우의 수
+			//1.값이 둘다 없음 -> disable
+			//2.max에 값이 들어왔는데 min보다 작음 ->disable + text로 명시해줌 ->상위 조건문에 둘다 값이 있는데, 로 해야할듯
+			//3.둘 중 하나만 들어왔을 경우
+			
+			
+			
+			if((min=='' && max=='')){ //둘다 값 안들어옴.
+				console.log("둘다 값 ㄴㄴ")
+				$('#sub').prop("disabled",true);
+				$("#sub").attr('style','opacity:0.5');
+				
+			}else if((min!=''&& max=='') || (max !=''&& min=='' )){
+				console.log("둘중 하나만");
+				$('#sub').prop("disabled",false);
+				$('#sub').removeAttr('style');
+				$('#warn').text('');
+				
+			} else if(min!='' && max !=''){ //둘다 들어옴
+				
+				if(max<=min){ //max가 작음
+					console.log("둘다들어왔는데 맥스가 더 작아");
+					$('#sub').prop("disabled",true);
+					$("#sub").attr('style','opacity:0.5');
+					$('#warn').text("다시적어라");
+					
+					
+				} else{ //그것만 아니면 ㄱㅊ
+					console.log("둘다 들왔고 괜찮음");
+					$('#sub').prop("disabled",false);
+					$('#sub').removeAttr('style');
+					$('#warn').text('');
+				}
+				
+			}
+			
+			$("min").val(min);
+			$("max").val(max);
+		
+	});
+
+});
+	
+
+$("#sub").click(function(){
+	var path = makePath();
+	path = "?"+makePath;
+	$('#rateForm').attr('action','discover'+path);
+
+	$('#rateForm').submit();
+	
+});
+	
+
+
+
+
 
 function removeParam(name, _url){
     var reg = new RegExp("((&)*" + name + "=([^&]*))","g");
@@ -161,6 +262,7 @@ function build(){
 		
 	cateBuild();
 	stateBuild();
+	//achieveRate();
 		//var html ='<c:set var="path" value="'+path+'" />'
 		//$("#p").append(html);*/
 		
@@ -174,15 +276,44 @@ function build(){
 		*/
 		
 }
+
+/*
+function achieveRate(){
+	var path = makePath();
+	path = removeParam('achieveRate', path);
+	path = removeParam('minAchieveRate', path);
+	path = removeParam('maxAchieveRate', path);
+	
+	var rateLinks = [
+		{'75% 이하' : '?achieveRate=1'},
+		{'75% ~ 100%' : '?achieveRate=2'},
+		{'100% 이상' : '?achieveRate=3'},
+		{'직접 입력' : ''}
+		
+	];
+	
+	
+	$.each(rateLinks,function(list,map){
+		$.each(list,function(percent, value){
+			console.log(percent);
+			console.log(value);
+			var output ='';
+
+				output += '<li><a href="/fund/discover'+value+path'">'+percent+'</a></li>';
+
+			$("#achieveRate").append(output);
+			
+		});
+		
+		
+	});
+}
+*/
 	
 function stateBuild(){
 	var path = makePath();
 	path = removeParam('ongoing', path);
 
-	
-	
-	
-	console.log("path:"+path);
 	
 	
 	var stateLinks = [ 
@@ -197,7 +328,7 @@ function stateBuild(){
 			var output ='';
 			output += '<li><a href="/fund/discover'+param+path+'">'+title+'</a></li>';
 			$("#state").append(output);
-		})
+		});
 		
 	});
 	

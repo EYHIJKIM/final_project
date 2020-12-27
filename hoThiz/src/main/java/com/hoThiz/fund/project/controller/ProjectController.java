@@ -170,7 +170,12 @@ public class ProjectController {
 	}
 	
 
-
+	@GetMapping(value="header")
+	public ModelAndView header(ModelAndView mv) {
+		mv.setViewName("default/project/project_list_header");
+		
+		return mv;
+	}
 	
 	/*
 

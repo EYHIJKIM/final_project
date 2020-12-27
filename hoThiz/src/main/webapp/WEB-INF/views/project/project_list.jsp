@@ -21,13 +21,11 @@
 
 
 </style>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="/fund/resources/myjsFunction/projectFunction.js"></script>
+
 </head>
 <body>
 
-<%@ include file="../default/main_header.jsp" %>
-
+<%@ include file="../default/project/project_list_header.jsp" %>
 	
 
 
@@ -198,7 +196,11 @@ ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}<br>
 
 
 	<div id="scrollContent"></div>
-
+	
+	
+	
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="/fund/resources/myjsFunction/projectFunction.js"></script>
 <script>
 
 

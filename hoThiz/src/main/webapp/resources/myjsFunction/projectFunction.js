@@ -109,17 +109,6 @@ function MyAlarmProject(project_id) {
 		
 		
 		//파라미터 가져오는 함수
-function get_query(){
-	var url = document.location.href;
-	var qs = url.substring(url.indexOf('?') +1).split('&');
-	for(var i=0, result={}; i <qs.length; i++){
-		qs[i] = qs[i].split('=');
-		result[qs[i][0]] = decodeURIComponent(qs[i][1]);
-	}
-	
-	return result;
-	
-}
 
 function urlParam(name){
     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -131,15 +120,14 @@ function urlParam(name){
     }
 }
 
-//페이지 로직		
-		
-		//document의 height : 전체 스크롤 길이
-		//window의 height: 스크롤 바의 길이
-		//window의 scrollTop: 내려온 스크롤 길이(스크롤 바 기준으로 위쪽 공간)
-		
 
-		
-		
-		
-		
-		
+//특정 파라미터 제거
+
+
+
+
+
+
+
+
+

@@ -74,6 +74,13 @@ body{
 .show-on-hover:hover > ul.dropdown-menu {
     display: block;    
 }
+
+
+.conForm > input[type=text] {
+width: 30%; height: 5%;
+
+}
+
 </style>
 
 
@@ -121,7 +128,40 @@ body{
            	 달성률
           </button>
           <ul id="achieveRate" class="dropdown-menu" role="menu">
-
+          
+          <li>
+				<div class="conForm">
+					<input type="text" name="minAchieveRate" id="min" maxlength="4" oninput="numberMaxLength(this)"> - 
+					<input type="text" name="maxAchieveRate" id="max" maxlength="4" oninput="numberMaxLength(this)">
+					<span id="rateWarn"></span>
+					<input type="button" id="rateSub" value="적용"> 
+				</div>
+			</li>
+          </ul>
+		 
+		 </div>
+		 
+		 
+		 
+		 
+		 
+		  
+		 <div class="btn-group">
+		           
+          
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+           	 모인금액
+          </button>
+          <ul id="currentMoney" class="dropdown-menu" role="menu">
+          
+          <li>
+				<div class="conForm">
+					<input type="text" name="minMoney" id="minMoney" maxlength="10" oninput="numberMaxLength(this)"> - 
+					<input type="text" name="maxMoney" id="maxMoney" maxlength="10" oninput="numberMaxLength(this)">
+					<span id="moneyWarn"></span>
+					<input type="button" id="moneySub" value="적용"> 
+				</div>
+			</li>
           </ul>
 		 
 		 </div>
@@ -134,24 +174,6 @@ body{
  
  
     
-<div class="container">
-	<div class="row">
-        <div class="dropdown">
-            <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-primary" data-target="#" href="/page.html">
-                Dropdown <span class="caret"></span>
-            </a>
-    		<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-            
-            </ul>
-        </div>
-	</div>
-</div>
-<form id="rateForm" action="discover">
-	<input type="text" name="minAchieveRate" id="min" maxlength="4" oninput="numberMaxLength(this)"> - 
-	<input type="text" name="maxAchieveRate" id="max" maxlength="4" oninput="numberMaxLength(this)">
-	<span id="warn">s</span>
-	<input type="button" id="sub" value="적용"> 
-</form>
 
 
 <script type="text/javascript">
@@ -165,17 +187,21 @@ function numberMaxLength(e){
 
 $(document).ready(function(){
 
-	$("#sub").prop("disabled",true); //초기에는 disable
-	$("#sub").attr('style','opacity:0.5');
+	$("#rateSub").prop("disabled",true); //초기에는 disable
+	$("#rateSub").attr('style','opacity:0.5');
+	
+	$("#moneySub").prop("disabled",true); //초기에는 disable
+	$("#moneySub").attr('style','opacity:0.5');
+	
 	
 	$('input[type="text"]').on('keyup',function(){ //값 넣으면..?
 			
 			var min = Number($('#min').val());
 			var max = Number($("#max").val());
 			
-			
-			console.log("min:"+min);
-			console.log("max:"+max);
+			var minM = Number($('#minMoney').val());
+			var maxM = Number($("#maxMoney").val());
+
 
 			//경우의 수
 			//1.값이 둘다 없음 -> disable
@@ -186,51 +212,195 @@ $(document).ready(function(){
 			
 			if((min=='' && max=='')){ //둘다 값 안들어옴.
 				console.log("둘다 값 ㄴㄴ")
-				$('#sub').prop("disabled",true);
-				$("#sub").attr('style','opacity:0.5');
+				$('#rateSub').prop("disabled",true);
+				$("#rateSub").attr('style','opacity:0.5');
 				
 			}else if((min!=''&& max=='') || (max !=''&& min=='' )){
 				console.log("둘중 하나만");
-				$('#sub').prop("disabled",false);
-				$('#sub').removeAttr('style');
-				$('#warn').text('');
+				$('#rateSub').prop("disabled",true);
+				$("#rateSub").attr('style','opacity:0.5');
+				$('#rateWarn').text('');
 				
 			} else if(min!='' && max !=''){ //둘다 들어옴
 				
 				if(max<=min){ //max가 작음
 					console.log("둘다들어왔는데 맥스가 더 작아");
-					$('#sub').prop("disabled",true);
-					$("#sub").attr('style','opacity:0.5');
-					$('#warn').text("다시적어라");
+					$('#rateSub').prop("disabled",true);
+					$("#rateSub").attr('style','opacity:0.5');
+					$('#rateWarn').text(min+"보다 ");
 					
 					
 				} else{ //그것만 아니면 ㄱㅊ
 					console.log("둘다 들왔고 괜찮음");
-					$('#sub').prop("disabled",false);
-					$('#sub').removeAttr('style');
-					$('#warn').text('');
+					$('#rateSub').prop("disabled",false);
+					$('#rateSub').removeAttr('style');
+					$('#rateWarn').text('');
+				}
+				
+			}
+
+			//이건 currentMOney 폼 조건
+			
+			if((minM=='' && maM=='')){ //둘다 값 안들어옴.
+				console.log("둘다 값 ㄴㄴ")
+				$('#moneySub').prop("disabled",true);
+				$("#moneySub").attr('style','opacity:0.5');
+				
+			}else if((min!=''&& max=='') || (max !=''&& min=='' )){
+				console.log("둘중 하나만");
+				$('#moneySub').prop("disabled",true);
+				$('#moneySub').attr('style','opacity:0.5');
+				$('#moneySub').text('');
+				
+			} else if(min!='' && max !=''){ //둘다 들어옴
+				
+				if(max<=min){ //max가 작음
+					console.log("둘다들어왔는데 맥스가 더 작아");
+					$('#moneySub').prop("disabled",true);
+					$('#moneySub').attr('style','opacity:0.5');
+					$('#moneyWarn').text(minMoney+"원 보다 작게 적으세요");
+					
+					
+				} else{ //그것만 아니면 ㄱㅊ
+					console.log("둘다 들왔고 괜찮음");
+					$('#moneySub').prop("disabled",false);
+					$('#moneySub').removeAttr('style');
+					$('#moneyWarn').text('');
 				}
 				
 			}
 			
-			$("min").val(min);
-			$("max").val(max);
+			
+			
+			
+			
+			
 		
 	});
 
-});
 	
 
-$("#sub").click(function(){
+});
+
+//비율 버튼
+$("#rateSub").click(function(){
 	var path = makePath();
-	path = "?"+makePath;
-	$('#rateForm').attr('action','discover'+path);
-
-	$('#rateForm').submit();
+	path = removeParam('maxAchieveRate',path);
+	path = removeParam('minAchieveRate',path);
+	path = removeParam('achieveRate', path);
+	location.href="discover?minAchieveRate="+$("#min").val()+"&maxAchieveRate="+$("#max").val()+path;
 	
 });
-	
 
+
+//돈 버튼
+$("#MoneySub").click(function(){
+	var path = makePath();
+	path = removeParam('maxMoney',path);
+	path = removeParam('minMoney',path);
+	path = removeParam('currentMoney', path);
+	location.href="discover?minMoney="+$("#minMoney").val()+"&maxMoney="+$("#maxMoney").val()+path;
+	
+});
+
+
+
+
+function buttonSet(){
+	
+	
+	
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+function currentMoney(){
+	var path = makePath();
+	path = removeParam('currentMoney', path);
+	path = removeParam('minMoney', path);
+	path = removeParam('maxMoney', path);
+	
+	let moneyLinks = [
+		{'직접 입력' : ''},
+		{'1억원 이상' : '?currentMoney=5'},
+		{'75% ~ 100%' : '?currentMoney=4'},
+		{'75% 이하' : '?currentMoney=3'},
+		{'75% 이하' : '?currentMoney=2'},
+		{'75% 이하' : '?currentMoney=1'}
+		
+	];
+	
+	$.each(rateLinks,function(list,map){
+		$.each(map,function(percent, value){
+	
+			var output ='';
+			if(value!=''){
+				output += '<li><a href="/fund/discover'+value+path+'">'+percent+'</a></li>';
+				
+			} else{
+				output = '<li class="divider"></li><li>'+percent+'</li>';
+			}
+				
+	
+				$("#achieveRate").prepend(output);
+			
+		});
+		
+		
+	});
+	
+	
+}
+
+
+
+
+function achieveRate(){
+	var path = makePath();
+	path = removeParam('achieveRate', path);
+	path = removeParam('minAchieveRate', path);
+	path = removeParam('maxAchieveRate', path);
+	
+	let rateLinks = [
+		{'직접 입력' : ''},
+		{'100% 이상' : '?achieveRate=3'},
+		{'75% ~ 100%' : '?achieveRate=2'},
+		{'75% 이하' : '?achieveRate=1'}
+		
+	];
+	
+	$.each(rateLinks,function(list,map){
+		$.each(map,function(percent, value){
+	
+			var output ='';
+			if(value!=''){
+				output += '<li><a href="/fund/discover'+value+path+'">'+percent+'</a></li>';
+				
+			} else{
+				output = '<li class="divider"></li><li>'+percent+'</li>';
+			}
+				
+	
+				$("#achieveRate").prepend(output);
+			
+		});
+		
+		
+	});
+	
+	
+}
 
 
 
@@ -262,7 +432,7 @@ function build(){
 		
 	cateBuild();
 	stateBuild();
-	//achieveRate();
+	achieveRate();
 		//var html ='<c:set var="path" value="'+path+'" />'
 		//$("#p").append(html);*/
 		
@@ -277,38 +447,9 @@ function build(){
 		
 }
 
-/*
-function achieveRate(){
-	var path = makePath();
-	path = removeParam('achieveRate', path);
-	path = removeParam('minAchieveRate', path);
-	path = removeParam('maxAchieveRate', path);
-	
-	var rateLinks = [
-		{'75% 이하' : '?achieveRate=1'},
-		{'75% ~ 100%' : '?achieveRate=2'},
-		{'100% 이상' : '?achieveRate=3'},
-		{'직접 입력' : ''}
-		
-	];
-	
-	
-	$.each(rateLinks,function(list,map){
-		$.each(list,function(percent, value){
-			console.log(percent);
-			console.log(value);
-			var output ='';
 
-				output += '<li><a href="/fund/discover'+value+path'">'+percent+'</a></li>';
 
-			$("#achieveRate").append(output);
-			
-		});
-		
-		
-	});
-}
-*/
+
 	
 function stateBuild(){
 	var path = makePath();
@@ -343,12 +484,9 @@ function cateBuild(){
 	path = removeParam('category', path);
 
 
-	console.log("path:"+path);
-	
-
 
 	
-	var categoryLinks = [
+	let categoryLinks = [
 		 {  
 			 'game': { 
 				 	'title' : '게임',

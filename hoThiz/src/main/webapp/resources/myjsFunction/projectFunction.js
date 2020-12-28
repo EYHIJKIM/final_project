@@ -11,7 +11,6 @@ function MyFavoritProject(project_id) {
 				location.href = "/fund" //이거 합치면 로그인창으로 바꾸셈**//////////////////////
 			}
 
-			console.log('아이디:'+id);
 
 			//console.log($("#btn224").val());
 
@@ -20,8 +19,7 @@ function MyFavoritProject(project_id) {
 				member_email :userId
 			};
 
-			console.log(likeDto.project_id);
-			console.log(likeDto.member_email);
+
 
 			$.ajax({
 				type : 'POST',
@@ -56,11 +54,14 @@ function MyFavoritProject(project_id) {
 		}
 
 function MyAlarmProject(project_id) {
-		alert("알림신청 할거임")
-
+		alert("알림신청 할거임");
+		alert('${alarmMemberCnt}');
 			var sessionData = "userId";
 			var userId = sessionStorage.getItem(sessionData);
 			var id = project_id;
+			
+			var alarmCnt = '('+'${alarmMemberCnt}'+'명 신청중)';
+			console.log("알람:"+alarmCnt);
 			 
 			if ( userId == null) {
 				location.href = "/fund" //이거 로그인창으로 바꾸셈**//////////////////////
@@ -80,7 +81,7 @@ function MyAlarmProject(project_id) {
 				url : '/fund/discover/alarm',
 				data : alarmDto,
 				success : function(data) { //통신 성공시 호출됨,,msg를 담자.
-					//data = alarm // cancelAlarm
+					//data = alarm / cancelAlarm
 
 					console.log("성공요");
 
@@ -91,11 +92,11 @@ function MyAlarmProject(project_id) {
 
 					if (data == '"cancelAlarm"') { //좋아요 취소함
 						//like_img = "images/cancelLike.png"
-						$("#notiBtn" + id).html("알림신청하기")
+						$("#notiBtn" + id).html("알림신청"+'${alarmMemberCnt}');
 
 					} else { //좋아요 함
 						//like_img = "images/like.png"
-						$("#notiBtn" + id).html("알림신청완료")
+						$("#notiBtn" + id).html("알림신청완료"+alarmCnt);
 					}
 
 				},

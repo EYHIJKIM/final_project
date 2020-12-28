@@ -62,7 +62,7 @@ ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}<br>
 				
 				
 				${prj.project_id }는 진행중입니다. <br>
-				<h3>${prj.project_title }</h3>
+				<a href="/fund/discover/${prj.project_id}"><h3>${prj.project_title }</h3></a>
 				${prj.project_summary}<br>
 				d_day : ${dDayMap[prj.project_id].d_day}<br>
 				chk : ${dDayMap[prj.project_id].chk}<br>

@@ -51,8 +51,10 @@ public interface ProjectService {
 		public int getAlarmMemCount(int project_id);
 		
 		//프로젝트 기프트
-		public Map<Integer, Object> getAProjectGift(int project_id);
+		public Map<Integer, Map<String, String>> getAProjectGift(int project_id);
 		
+		//해당 프젝과 같은 카테고리의 게시글목록(푸터쪽에 필요함)
+		public Map<Integer, Map<String, String>> getMoreProject(int project_id,HttpSession session);
 		
 	//////////////////////////////좋아요 or 알림//////////////////////////////////
 	//좋아요했는지 안했는지를 체크함

@@ -78,16 +78,19 @@ public class ProjectServiceImpl implements ProjectService {
 	//프로젝트 얻어오기~
 	@Override
 	public ArrayList<ProjectInfoDTO> getParamProjectList(ProjectParamDTO paramDto) {
+		
 		ProjectPagingDTO pageDto = new ProjectPagingDTO(0);
 		int currentMoney = paramDto.getCurrentMoney();
 		int achieveRate = paramDto.getAchieveRate();
 		String sort = paramDto.getSort();
 		String onString = paramDto.getOngoing();
+		
+		
 		paramDto.setting();
 
 		
 		
-		
+		/*
 		System.out.println("파람 가지러왔다");
 		System.out.println("어치브비율값:"+paramDto.getAchieveRate());
 		System.out.println("최저퍼센트"+paramDto.getMinAchieveRate());
@@ -100,7 +103,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 		System.out.println(paramDto.getOngoing());
 		System.out.println(paramDto.getSort());
-		
+		*/
 		
 		
 		// 페이지 셋팅(db에 넘겨줄 start,end 값)
@@ -108,9 +111,23 @@ public class ProjectServiceImpl implements ProjectService {
 		// select값 넣는 list
 		ArrayList<ProjectInfoDTO> projectList = dao.getParamProjectList(paramDto, pageDto);
 		
-		for(ProjectInfoDTO dto :  projectList) {
-			System.out.println(dto.getProject_id());
-		}
+		//Map으로 포장해줄거임;
+		/*
+		  project id : { 
+		  				 project_
+		                 project_title :
+		  				 project_title :
+		  				 project_summary : 
+		  				 project_current_money :
+		  				 project_sub_tag :
+		   				 member_name : ______
+		                 member_profile : ____________
+		                 member_
+		  				} 
+		 
+		 */
+		
+
 		
 		//System.out.println(dao.countProjects(paramDto));
 		
@@ -351,7 +368,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 	
 	//프로젝트 기프트
-	public Map<Integer, Object> getAProjectGift(int project_id){
+	public Map<Integer, Map<String,String>> getAProjectGift(int project_id){
 		/*{
 		     #{기프트 번호1} : { gift : #{project_gift}, 
 		     					 price : #{기프트 가격}},
@@ -360,7 +377,7 @@ public class ProjectServiceImpl implements ProjectService {
 		 */
 		
 		ArrayList<ProjectGiftDTO> giftList = dao.getAProjectGift(project_id);
-		Map<Integer, Object> map = new HashMap<>();
+		Map<Integer, Map<String,String>> map = new HashMap<>();
 		Map<String, String> detail = null;
 			
 			
@@ -377,6 +394,59 @@ public class ProjectServiceImpl implements ProjectService {
 		
 		
 	}
+	
+	
+	public Map<Integer, Map<String, String>> getMoreProject(int project_id,HttpSession session){
+		ProjectInfoDTO dto = dao.getAProject(project_id);
+		String project_sub_category= dto.getProject_sub_category();
+
+		
+		ArrayList<ProjectInfoDTO> prjList = dao.getMoreProject(project_sub_category);
+		String userId = (String)session.getAttribute("userId");
+		
+		userId = "1"; ///////////나중에 지워라////////////////
+		
+		//이제 이 프로젝트의 멤버이름...만 가져오면 되는데...어케껴넣지
+		/*
+		 프젝 id, 프젝 메인 이미지, 프젝 요약, 프젝 서브카테고리, 프젝 퍼센트, 
+		 타이틀, 좋아요 여부..;;;??...<좟같네 ㅋㅋ싀발,,
+		
+		*/
+		Map<Integer, Map<String, String>> map = new HashMap<>(); //큰맵
+		Map<String, String> detail = null; //작은 맵
+		
+		
+		for(ProjectInfoDTO prj : prjList) {
+			detail = new HashMap<>();
+			MemberDTO memberDto = dao.getAMemberInfo(prj.getMember_email());
+			ArrayList<Integer> likeList = dao.getLikeProjectList(userId);
+			
+			detail.put("project_main_image", prj.getProject_main_image());
+			detail.put("project_title", prj.getProject_title());
+			detail.put("project_summary", prj.getProject_summary());
+			detail.put("project_sub_cateogry",prj.getProject_sub_category());
+			detail.put("project_current_percent",Integer.toString(prj.getProject_current_percent()));
+			detail.put("member_name",memberDto.getMember_name());
+			
+			for(Integer likeId : likeList) {
+				if(prj.getProject_id()==likeId) { //좋아하는 목록에 있으면
+					detail.put("project_like", "cancelLike");
+				} else {
+					detail.put("project_like", "like");
+				}
+			}
+			
+			map.put(prj.getProject_id(), detail);
+			
+		}
+		
+		
+		
+		return map;
+		
+		
+	}
+	
 
 	
 	/////1. 진행중인 펀딩

@@ -2,26 +2,19 @@ package com.hothiz.fund.project.controller;
 
 
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
+
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -30,12 +23,11 @@ import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
-import com.hothiz.fund.project.dto.ProjectDateDTO;
+
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
-import com.hothiz.fund.project.dto.ProjectPagingDTO;
-import com.hothiz.fund.project.dto.TestDTO;
+
 import com.hothiz.fund.project.service.ProjectService;
-import com.hothiz.fund.project.service.ProjectServiceImpl;
+
 
 @RestController
 @RequestMapping("/discover")
@@ -131,9 +123,9 @@ public class ProjectController {
 		mv.addObject("memberInfo", memberDto); //프젝 진행하는 멤버의 정보(프로필정보)
 		mv.addObject("projectInfo", prjDto); //프젝 상세정보
 		mv.addObject("projectGift", ps.getAProjectGift(project_id));//프젝 기프트 목록 가져오기
+		//이런 프로젝트 어떠세요. prj와 같은 태그의 4개 뽑기...
+		mv.addObject("morePrjList", ps.getMoreProject(project_id, session));
 		
-		
-	
 		
 		
 		mv.setViewName(path);

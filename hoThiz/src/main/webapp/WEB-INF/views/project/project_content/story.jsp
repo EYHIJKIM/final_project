@@ -87,7 +87,7 @@ display:flex;
 	<h1>이건 진행중인 프로젝트 상세보기 첫화면</h1>
 	<a href="/discover?category=${prj.project_main_category}">
 	
-	<!-- 이거 포문으로 -->
+	<%-- 이거 자바스크립트로 ㄱㄱ, 맵으로 리스트 만들어서 뽑으셈 --%>
 	<c:if test="${prj.project_main_category eq 'video'}">
 		비디오
 	</c:if>
@@ -125,7 +125,7 @@ display:flex;
 					<p id="likeBtn${prj.project_id}">${msg}</p>
 				</button>
 	
-
+<button class="kakao-link-btn" onclick="sendLink()">카톡 공유</button>
 
 	<div class="noticeBox">
 		<h3>펀딩 진행중</h3>
@@ -172,7 +172,21 @@ display:flex;
 
 <div class="giftForm">
 	선물 선택
-	<c:set var="gift" value="${projectGift}" />
+		<div class="aGift">
+			<h2>1,000원+</h2>
+			<p>선물을 선택하지 않고 밀어만 줍니다</p>
+		</div>
+	
+	
+	<c:forEach var="gift" items="${projectGift}">
+		<div class="aGift">
+			${gift.value.price}원 +
+			${gift.value.gift }
+		</div>
+	
+	
+	
+	</c:forEach>
 
 
 
@@ -185,19 +199,37 @@ display:flex;
 
 
 
-	
+<%--공개예정 --%>
 <c:if test="${day.chk<'0' and day.d_day>'0' and prj.project_prelaunching_check eq '1'}">
 	<h1>공개예정인 경우</h1>
-	${day.prelaunching_day}
+	
+	<%--이거 알람 나타나는거 자바 스크립트로 띄우셈...안그러면 잘 안됨.. --%>
 
+	<c:set var="msg" value="알림신청(${alarmMemberCnt}명 신청중)" />
+	
+	<img src="${path}/project/${prj.project_id}.jpg" width="500px" height="500px">
+	<a href="#멤버프로필로 고">
+	<img src="${path}/member/${mem.member_email}.jpg" width="50px" height="50px"></a> &nbsp;
+	${mem.member_name}<br>
+	
+	${prj.project_summary}
+	
+	
+	<p class="launchingDay">${day.prelaunching_day}</p>
+				<c:forEach var="alarmId" items="${likeOrAlarmList}">
+				 
+					<c:if test="${alarmId eq prj.project_id}">
+						<c:set var="msg" value="알림신청완료(${alarmMemberCnt}명 신청중)" />
+					</c:if>
+				</c:forEach>
 
+		
+				<button id="notificationBtn" onClick="MyAlarmProject('${prj.project_id}')">
+					<p id="notiBtn${prj.project_id}">${msg}</p>
+				</button>
+<button class="kakao-link-btn" onclick="sendLink()">카톡 공유</button>
 
-
-
-
-</c:if>
-
-
+</c:if><%--공개예정 뷰 --%>
 
 
 
@@ -225,10 +257,31 @@ display:flex;
 
 
 <!-- 공유 버튼은 둘다 있음~ -->
-<button class="kakao-link-btn" onclick="sendLink()">카톡 공유</button>
+
 
 
 <h2>이런 프로젝트 어떠세요?</h2>
+<c:forEach var="morePrj" items="${morePrjList}">
+	<img src="${path}/project/${morePrj.key}.jpg" width="100px" height="100px">
+	<br>
+	${morePrj.value.project_title }<br>
+	${morePrj.value.project_summary }<br>
+	${morePrj.value.member_name}
+<c:if test="${morePrj.value.project_like eq 'like' }">
+	<c:set var="msg" value="좋아요 누르기!" />
+</c:if>
+<c:if test="${morePrj.value.project_like eq 'cancelLike' }">
+	<c:set var="msg" value="좋아요 이미 누름!" />
+</c:if>
+	<button class="button small" id="likeBtn" onClick="MyFavoritProject('${morePrj.key}')">
+			<p id="likeBtn${morePrj.key}">${msg}</p>
+	</button>
+<hr>
+</c:forEach>
+
+
+
+
 <footer id="footer">
 				<div class="inner">
 					<div class="content">
@@ -245,6 +298,19 @@ display:flex;
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="/fund/resources/myjsFunction/projectFunction.js"></script>
 <script type="text/javascript">
+
+
+
+
+
+
+
+
+
+
+
+
+
 Kakao.init("4a910cfb1ef1434f4c361ae507d1375a");
 function sendLink(){
 	console.log("샌드링크 들어옴");

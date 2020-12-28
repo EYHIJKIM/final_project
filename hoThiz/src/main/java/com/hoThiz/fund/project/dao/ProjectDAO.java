@@ -34,6 +34,12 @@ public interface ProjectDAO {
 	@Select("SELECT * FROM project_gift_list WHERE project_id=#{project_id}")
 	public ArrayList<ProjectGiftDTO> getAProjectGift(int project_id);
 	
+	///////////////////이런 프젝 어떠세요??
+	@Select("SELECT B.* FROM(SELECT rownum rn, A.* FROM project_info A WHERE project_sub_category = #{project_sub_category} "
+			+ " AND (project_deadline > project_release_date) AND (project_release_date < sysdate ) )B"
+			+ " WHERE rn between 1 and 4 ")
+	public ArrayList<ProjectInfoDTO> getMoreProject(String project_sub_category);
+	
 	
 	///////////////////////////////게시글 목록 뽑아냄////////////////////////////////////////////////
 	

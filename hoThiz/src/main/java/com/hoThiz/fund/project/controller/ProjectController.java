@@ -112,36 +112,28 @@ public class ProjectController {
 	/////////게시글 상세보기////////////////////////
 	@GetMapping(value = "/{project_id}")
 	public ModelAndView getAProjectDetail(@PathVariable int project_id, 
-			ModelAndView mv, ProjectParamDTO paramDto) {
+			ModelAndView mv, ProjectParamDTO paramDto, HttpSession session) {
 		String path = "project/project_content/story";
+		
+		
 		//프로젝트 전체 값을 준다음에, 상세보기 페이지에서 받는다.
-		//근데 이거...프리런칭인지/아닌지 구분해줘야 됨
+		//근데 이거...프리런칭인지/아닌지 구분해줘야 됨 =>이거 뷰에서 해버려
+
+
+		ProjectInfoDTO prjDto=ps.getAProjectDetail(project_id); //프로젝트 상세정보
+		MemberDTO memberDto = ps.getAMemberDetail(prjDto.getMember_email()); //프로젝트 발행 멤버
+		
+
+		mv.addObject("likeOrAlarmList",ps.likeOrAlarmProjectList(session,paramDto));
+		mv.addObject("alarmMemberCnt", ps.getAlarmMemCount(project_id)); //알림 몇명 신청?
+		mv.addObject("dDayInfo", ps.getADDay(project_id) ); //며칠 남았는지 
+		mv.addObject("donatedMemberCnt", ps.getDonatedMemCount(project_id)); //후원자 몇명인지
+		mv.addObject("memberInfo", memberDto); //프젝 진행하는 멤버의 정보(프로필정보)
+		mv.addObject("projectInfo", prjDto); //프젝 상세정보
+		mv.addObject("projectGift", ps.getAProjectGift(project_id));//프젝 기프트 목록 가져오기
 		
 		
-		//프리런칭인 경우 alaram신청멤버 뽑아서 더해줌
-		if(paramDto.getOngoing().equals("prelaunching")) {
-			System.out.println("프리런칭임");
-			path = "project/project_content/story?ongoing=prelaunching";
-			int alarmMemberCnt = ps.getAlarmMemCount(project_id);
-			mv.addObject("alarmMemberCnt", alarmMemberCnt);
-			
-		}
-		
-		ProjectInfoDTO prjDto=ps.getAProjectDetail(project_id);
-		//해당 프로젝트의 이메일과 일치하는 유저정보를 가져온다.
-		MemberDTO memberDto = ps.getAMemberDetail(prjDto.getMember_email());
-		
-		//후원한 인원수
-		int donatedMemberCnt = ps.getDonatedMemCount(project_id);
-		ProjectDateDTO dateDto = ps.getADDay(project_id);
-		
-		
-		
-		mv.addObject("dDayInfo", dateDto );
-		mv.addObject("donatedMemberCnt", donatedMemberCnt);
-		mv.addObject("memberInfo", memberDto);
-		mv.addObject("projectInfo", prjDto);
-		//mv에 후원자 몇명인지, 프로필사진 꺼내오는 오브젝트도 set해줘야함..
+	
 		
 		
 		mv.setViewName(path);

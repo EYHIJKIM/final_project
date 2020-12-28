@@ -1,6 +1,7 @@
 package com.hothiz.fund.project.service;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import com.hothiz.fund.project.dao.ProjectDAO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
 import com.hothiz.fund.project.dto.ProjectStateDTO;
 import com.hothiz.fund.project.dto.ProjectDateDTO;
+import com.hothiz.fund.project.dto.ProjectGiftDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
 import com.hothiz.fund.project.dto.ProjectPagingDTO;
 import com.hothiz.fund.project.dto.TestDTO;
@@ -105,6 +107,11 @@ public class ProjectServiceImpl implements ProjectService {
 		
 		// select값 넣는 list
 		ArrayList<ProjectInfoDTO> projectList = dao.getParamProjectList(paramDto, pageDto);
+		
+		for(ProjectInfoDTO dto :  projectList) {
+			System.out.println(dto.getProject_id());
+		}
+		
 		//System.out.println(dao.countProjects(paramDto));
 		
 		//System.out.println(dao.countProjectList(paramDto));
@@ -326,12 +333,49 @@ public class ProjectServiceImpl implements ProjectService {
 	//게시글 상세정보
 	@Override
 	public ProjectInfoDTO getAProjectDetail(int project_id) {
-		return dao.getAProject(project_id);	
+		SimpleDateFormat credit = new SimpleDateFormat("yyyy년 MM월 dd일");
+		
+		
+		ProjectInfoDTO dto = dao.getAProject(project_id);
+		String date = credit.format(dto.getProject_deadline());
+		
+		dto.setProject_deadline_string(date);
+		System.out.println(date);
+
+		return dto;	
 	}
 	//한 멤버 디테일(프로필 정보)
 	@Override
 	public MemberDTO getAMemberDetail(String member_email) {
 		return dao.getAMemberInfo(member_email);
+	}
+	
+	//프로젝트 기프트
+	public Map<Integer, Object> getAProjectGift(int project_id){
+		/*{
+		     #{기프트 번호1} : { gift : #{project_gift}, 
+		     					 price : #{기프트 가격}},
+		     #{기프트 번호2} : {기프트2 설명, 기프트2 가격}...
+		  }
+		 */
+		
+		ArrayList<ProjectGiftDTO> giftList = dao.getAProjectGift(project_id);
+		Map<Integer, Object> map = new HashMap<>();
+		Map<String, String> detail = null;
+			
+			
+		for(ProjectGiftDTO dto : giftList) {
+			detail = new HashMap<>();
+			detail.put("gift", dto.getProject_gift());	
+			detail.put("price", Integer.toString(dto.getProject_gift_price()));	
+			
+			map.put(dto.getGift_id(), detail);	
+			
+		}
+		
+		return map;
+		
+		
 	}
 
 	

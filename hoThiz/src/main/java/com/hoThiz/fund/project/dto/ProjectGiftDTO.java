@@ -5,6 +5,8 @@ public class ProjectGiftDTO {
 	private int project_id;
 	private int project_gift_price;
 	private String project_gift;
+	private int gift_id;
+	
 
 	public int getProject_id() {
 		return project_id;
@@ -23,6 +25,12 @@ public class ProjectGiftDTO {
 	}
 	public void setProject_gift(String project_gift) {
 		this.project_gift = project_gift;
+	}
+	public int getGift_id() {
+		return gift_id;
+	}
+	public void setGift_id(int gift_id) {
+		this.gift_id = gift_id;
 	}
 
 	

@@ -32,10 +32,13 @@
     -webkit-border-radius: 0 6px 6px 6px;
     -moz-border-radius: 0 6px 6px;
     border-radius: 0 6px 6px 6px;
+    
+    position:absolute;
 }
 
 .dropdown-submenu:hover>.dropdown-menu {
     display: block;
+    position:absolute;
 }
 
 .dropdown-submenu>a:after {
@@ -50,6 +53,7 @@
     border-left-color: #ccc;
     margin-top: 5px;
     margin-right: -10px;
+
 }
 
 .dropdown-submenu:hover>a:after {
@@ -77,7 +81,7 @@ body{
 
 
 .conForm > input[type=text] {
-width: 30%; height: 5%;
+width: 30%; 
 
 }
 
@@ -99,7 +103,7 @@ width: 30%; height: 5%;
       
         <!-- Single button -->
         <div class="btn-group">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          <button id="cateBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
            	 카테고리
           </button>
           <ul id="category" class="dropdown-menu" role="menu">
@@ -111,8 +115,8 @@ width: 30%; height: 5%;
 		 <div class="btn-group">
 		           
           
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-           	 상태
+          <button id="stateBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+           	상태
           </button>
           <ul id="state" class="dropdown-menu" role="menu">
           </ul>
@@ -124,24 +128,27 @@ width: 30%; height: 5%;
 		 <div class="btn-group">
 		           
           
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          <button id="rateBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
            	 달성률
           </button>
           <ul id="achieveRate" class="dropdown-menu" role="menu">
-          
-          <li>
-				<div class="conForm">
-					<input type="text" name="minAchieveRate" id="min" maxlength="4" oninput="numberMaxLength(this)"> - 
-					<input type="text" name="maxAchieveRate" id="max" maxlength="4" oninput="numberMaxLength(this)">
-					<span id="rateWarn"></span>
-					<input type="button" id="rateSub" value="적용"> 
-				</div>
-			</li>
+	          
+	          <li>
+	         		 <div class="conForm">
+
+						<input type="text" name="minAchieveRate" id="min" maxlength="4" oninput="numberMaxLength(this)"> - 
+						<input type="text" name="maxAchieveRate" id="max" maxlength="4" oninput="numberMaxLength(this)">
+						<br><span id="rateWarn"></span>
+						<input type="button" id="rateSub" value="적용"> 
+
+					</div>
+				</li>
           </ul>
 		 
 		 </div>
 		 
 		 
+				
 		 
 		 
 		 
@@ -149,22 +156,33 @@ width: 30%; height: 5%;
 		 <div class="btn-group">
 		           
           
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          <button id="moneyBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
            	 모인금액
           </button>
           <ul id="currentMoney" class="dropdown-menu" role="menu">
           
-          <li>
-				<div class="conForm">
+        
+          </ul>
+		 
+		 </div>
+		 <div class="conForm">
 					<input type="text" name="minMoney" id="minMoney" maxlength="10" oninput="numberMaxLength(this)"> - 
 					<input type="text" name="maxMoney" id="maxMoney" maxlength="10" oninput="numberMaxLength(this)">
 					<span id="moneyWarn"></span>
 					<input type="button" id="moneySub" value="적용"> 
-				</div>
-			</li>
-          </ul>
+			</div>
+		 
+		 
+		 
+		 <div class="btn-group">
+		           
+          
+          <button id='init'>필터 초기화</button>
 		 
 		 </div>
+		 
+		 
+		 
 		 
 		 
 	</div>
@@ -178,8 +196,26 @@ width: 30%; height: 5%;
 
 <script type="text/javascript">
 
+
+function build(){
+	
+	
+	cateBuild();
+	stateBuild();
+	achieveRateBuild();
+	currentMoneyBuild();
+	buttonSet();
+		
+}
+
+
+$("#init").click(function(){location.href='discover'});
+
+
 function numberMaxLength(e){
 	e.value = e.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+
+	
 	if(e.value.length > e.maxLength){
 		e.value = e.value.slice(0, e.maxLength);
 	}
@@ -196,11 +232,11 @@ $(document).ready(function(){
 	
 	$('input[type="text"]').on('keyup',function(){ //값 넣으면..?
 			
-			var min = Number($('#min').val());
-			var max = Number($("#max").val());
+			var min = $('#min').val();
+			var max = $("#max").val();
 			
-			var minM = Number($('#minMoney').val());
-			var maxM = Number($("#maxMoney").val());
+			var minM = $('#minMoney').val();
+			var maxM = $("#maxMoney").val();
 
 
 			//경우의 수
@@ -210,24 +246,24 @@ $(document).ready(function(){
 			
 			
 			
-			if((min=='' && max=='')){ //둘다 값 안들어옴.
+			if(min==='' && max===''){ //둘다 값 안들어옴.
 				console.log("둘다 값 ㄴㄴ")
 				$('#rateSub').prop("disabled",true);
 				$("#rateSub").attr('style','opacity:0.5');
 				
-			}else if((min!=''&& max=='') || (max !=''&& min=='' )){
+			}else if( (min!==''&& max==='') || (max !==''&& min==='' ) ){
 				console.log("둘중 하나만");
 				$('#rateSub').prop("disabled",true);
 				$("#rateSub").attr('style','opacity:0.5');
 				$('#rateWarn').text('');
 				
-			} else if(min!='' && max !=''){ //둘다 들어옴
+			} else if(min!=='' && max !==''){ //둘다 들어옴
 				
-				if(max<=min){ //max가 작음
+				if( Number(max)<=Number(min) ){ //max가 작음
 					console.log("둘다들어왔는데 맥스가 더 작아");
 					$('#rateSub').prop("disabled",true);
 					$("#rateSub").attr('style','opacity:0.5');
-					$('#rateWarn').text(min+"보다 ");
+					$('#rateWarn').text(min+"보다 작은 수를 입력하세요 ");
 					
 					
 				} else{ //그것만 아니면 ㄱㅊ
@@ -239,26 +275,35 @@ $(document).ready(function(){
 				
 			}
 
+			
+			
+			
+			
+			
+			
+			
 			//이건 currentMOney 폼 조건
 			
-			if((minM=='' && maM=='')){ //둘다 값 안들어옴.
+			if( minM==='' && maxM==='' ){ //둘다 값 안들어옴.
 				console.log("둘다 값 ㄴㄴ")
 				$('#moneySub').prop("disabled",true);
 				$("#moneySub").attr('style','opacity:0.5');
 				
-			}else if((min!=''&& max=='') || (max !=''&& min=='' )){
+			}else if( (minM !==''&& maxM==='') || ( maxM !==''&& minM==='') ){ //하나만 들어옴
 				console.log("둘중 하나만");
 				$('#moneySub').prop("disabled",true);
 				$('#moneySub').attr('style','opacity:0.5');
 				$('#moneySub').text('');
 				
-			} else if(min!='' && max !=''){ //둘다 들어옴
 				
-				if(max<=min){ //max가 작음
+			} else if( (minM ===0 || minM !=='') && (maxM ===0 || maxM !=='') ){ //둘다들어옴
+						//minM이 숫자0 이거나 혹은 값이 있으면 true반환 
+				
+				if( Number(maxM)<=Number(minM) ){ //max가 작음
 					console.log("둘다들어왔는데 맥스가 더 작아");
 					$('#moneySub').prop("disabled",true);
 					$('#moneySub').attr('style','opacity:0.5');
-					$('#moneyWarn').text(minMoney+"원 보다 작게 적으세요");
+					$('#moneyWarn').text(minM+"보다 낮은 값을 입력해주세요");
 					
 					
 				} else{ //그것만 아니면 ㄱㅊ
@@ -294,7 +339,7 @@ $("#rateSub").click(function(){
 
 
 //돈 버튼
-$("#MoneySub").click(function(){
+$("#moneySub").click(function(){
 	var path = makePath();
 	path = removeParam('maxMoney',path);
 	path = removeParam('minMoney',path);
@@ -307,6 +352,245 @@ $("#MoneySub").click(function(){
 
 
 function buttonSet(){
+	console.log("버튼셋하자");
+	let category = [
+		 { 
+			 		'게임' : 'games',
+					'모바일 게임' : 'mobile-game', 
+					'비디오 게임':'video-game',
+					'보드 게임':'board-game'
+		 },
+		 
+		 {
+				 	'공연' : 'show',
+					'무용' : 'dance', 
+					'뮤지컬':'musical',
+					'공연':'theater'
+	 	 },
+	 	 
+	 	 {
+	 		 		 '디자인' : 'design',
+					 '건축, 공간' : 'architecture', 
+					 '그래픽 디자인':'graphic-design',
+					 '제품 디자인':'product-design'
+ 		 },
+ 		 
+ 		 {
+ 			        '만화' : 'comics',
+					'웹툰' : 'web-comics', 
+					'만화책':'comic-books'
+					
+         },
+ 		 {			
+ 			 	  '예술' : 'art',
+ 			 	  '전시' : 'exhibitions',
+				  '웹툰' : 'sculpture-and-action-figures', 
+				  '일러스트레이션':'illustration'
+				
+  		 },		
+         
+  		 	{			
+				 	  '공예' : 'crafts',
+				 	  '캔들&조향&비누' : 'candles-and-diffusers-and-soaps',
+				 	  '가죽&금속&목 공예' : 'leather-and-metal-and-woodworking',
+				 	  '도예' : 'pottery'
+					  
+					
+			 },
+			 
+			{			
+					 	  '사진' : 'photography',
+					 	  '인물' : 'people-photography',
+					 	  '배경' : 'space-and-urban-photography',
+					 	  '동물' : 'animals-photography'				
+			 
+		 },
+
+ 		{				
+					 	  '영상' : 'video',
+					 	  '영화' : 'film',
+					 	  '다큐멘터리' : 'documentary',
+					 	  '애니메이션' : 'animation',
+					 	  '뮤직비디오' : 'music-videos'
+						  
+			
+ 
+ 		},
+ 			{
+						
+					 	  '모든' : 'food',
+					 	  '에피타이저' : 'appetizer',
+					 	  '메인디쉬' : 'main-dish',
+					 	  '디저트' : 'dessert'
+						  
+				 
+			},
+			
+			{
+				 	  '음악' : 'music',
+				 	  '클래식' : 'classical-music',
+				 	  '대중음악' : 'popular-music',
+				 	  '인디음악' : 'independent-music'
+					  
+			},
+			
+			{
+						 '출판' : 'publication',
+						 '잡지' : 'zines',
+						 '문학&에세이' : 'literature-and-essay',
+						 '그림책' : 'picture-books'		  			 		
+		    },
+		    
+			{
+			
+					 	  '모든테크' : 'technology',
+					 	  '소프트웨어' : 'software',
+					 	  '하드웨어' : 'hardware',
+					 	  '앱' : 'apps',
+					 	  '웹' : 'web'
+						  
+			
+			},
+		
+			{
+					 	  '패션' : 'fashion',
+					 	  '의류' : 'apparels',
+					 	  '악세서리' : 'accessories',
+					 	  '뷰티' : 'beauty'
+			 		
+		   },
+	
+			{
+					 	  '저널' : 'journalism',
+					 	  '오디오 저널' : 'audio-journals',
+					 	  '비디오 저널' : 'video-journals',
+					 	  '웹 저널' : 'web-journals'
+	
+			}	
+	];
+	
+
+	let state = [
+		
+		{'진행중인 프로젝트':'ongoing'},
+		{'성사된 프로젝트':'confirm'},
+		{'공개예정 프로젝트':'prelaunching'}	
+	];
+	
+
+	let rate = [
+		{'100% 이상' : '3'},
+		{'75% ~ 100%' : '2'},
+		{'75% 이하' : '1'}	
+	];
+	
+
+	let money = [
+		{'1억원 이상' : '5'},
+		{'5천만원 ~ 1억원' : '4'},
+		{'1천만원 ~ 5천만원' : '3'},
+		{'1백만원 ~ 1천만원' : '2'},
+		{'1백만원 이하' : '1'}	
+	];
+	
+	var cateP = '${param.category}';
+	var stateP =  '${param.ongoing}';
+	var rateP =  '${param.achieveRate}';
+	var rateMin =  '${param.minAchieveRate}';
+	var rateMax =  '${param.maxAchieveRate}';
+
+	var moneyP =  '${param.currentMoney}';
+	var moneyMin =  '${param.minMoney}';
+	
+	var moneyMax =  '${param.maxMoney}';
+
+	console.log(moneyMin);
+	
+	
+	if(cateP!=''){//카테고리 눌렀다면
+		$.each(category,function(list,val){
+			$.each(val, function(title,value){
+				if(cateP==value){
+					$("#cateBtn").html(title);
+					return false;
+				}
+				
+			});	
+		});		
+	}//카테고리
+	
+	if(stateP!=''){//상태누름
+		$.each(state,function(list,val){
+			$.each(val, function(title,value){
+				if(stateP==value){
+					$("#stateBtn").html(title);
+					
+					return false;
+				}
+				
+			});	
+		});		
+	}//상태
+	
+	if(rateP!=''){//달성률 클릭시
+		$.each(rate,function(list,val){
+			$.each(val, function(title,value){
+				if(rateP==value){
+					$("#rateBtn").html(title);
+					return false;
+				}
+			});	
+		});		
+	}//달성률
+	
+	
+	if(rateMin!=0 || rateMax!=0){//달성률 직접입력시
+		if(rateMin=='' && rateMax!=''){ //최소달성률이 0이면
+			$("#rateBtn").html(rateMax+"% 이하");
+		} else if(rateMax=='' && rateMin!=''){
+			$("#rateBtn").html(rateMin+"% 이상");
+			
+		} else if(rateMax!='' && rateMin!=''){//둘다 존재
+			$("#rateBtn").html(rateMin+"% ~ "+rateMax+"%");
+		}
+		
+	}// 달성률 직접입력
+	
+	
+	if(moneyP!=''){//모인돈 클릭시
+		$.each(money,function(list,val){
+			$.each(val, function(title,value){
+				if(moneyP==value){
+					$("#moneyBtn").html(title);
+					return false;
+				}
+			});	
+		});		
+	}//모인돈
+	
+	
+	
+	if(moneyMin!=='' || moneyMax!==''){ //돈 직접입력
+		console.log(moneyMin);
+		console.log(moneyMax);
+		if(moneyMin==0 && moneyMax!==''){ //최소돈 0
+			$("#moneyBtn").html(moneyMax+"원 이하");
+		} else if(moneyMax==0 && moneyMin!=''){
+			$("#moneyBtn").html(moneyMin+"원 이상");
+			
+		} else if(moneyMax!=='' && moneyMin!==''){//둘다 존재
+			console.log("둘다 있으니까 적용하자");
+			$("#moneyBtn").html(moneyMin+"원 ~ "+moneyMax+"원");
+		}
+		
+	}//돈 직접입력
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -314,6 +598,7 @@ function buttonSet(){
 }
 
 
+ 
 
 
 
@@ -323,9 +608,8 @@ function buttonSet(){
 
 
 
-
-
-function currentMoney(){
+//모인금액
+function currentMoneyBuild(){
 	var path = makePath();
 	path = removeParam('currentMoney', path);
 	path = removeParam('minMoney', path);
@@ -334,14 +618,14 @@ function currentMoney(){
 	let moneyLinks = [
 		{'직접 입력' : ''},
 		{'1억원 이상' : '?currentMoney=5'},
-		{'75% ~ 100%' : '?currentMoney=4'},
-		{'75% 이하' : '?currentMoney=3'},
-		{'75% 이하' : '?currentMoney=2'},
-		{'75% 이하' : '?currentMoney=1'}
+		{'5천만원 ~ 1억원' : '?currentMoney=4'},
+		{'1천만원 ~ 5천만원' : '?currentMoney=3'},
+		{'1백만원 ~ 1천만원' : '?currentMoney=2'},
+		{'1백만원 이하' : '?currentMoney=1'}
 		
 	];
 	
-	$.each(rateLinks,function(list,map){
+	$.each(moneyLinks,function(list,map){
 		$.each(map,function(percent, value){
 	
 			var output ='';
@@ -349,11 +633,11 @@ function currentMoney(){
 				output += '<li><a href="/fund/discover'+value+path+'">'+percent+'</a></li>';
 				
 			} else{
-				output = '<li class="divider"></li><li>'+percent+'</li>';
+				output = '<li class="divider"></li><li><a>'+percent+'</a></li>';
 			}
 				
 	
-				$("#achieveRate").prepend(output);
+				$("#currentMoney").prepend(output);
 			
 		});
 		
@@ -366,7 +650,7 @@ function currentMoney(){
 
 
 
-function achieveRate(){
+function achieveRateBuild(){
 	var path = makePath();
 	path = removeParam('achieveRate', path);
 	path = removeParam('minAchieveRate', path);
@@ -388,7 +672,7 @@ function achieveRate(){
 				output += '<li><a href="/fund/discover'+value+path+'">'+percent+'</a></li>';
 				
 			} else{
-				output = '<li class="divider"></li><li>'+percent+'</li>';
+				output = '<li class="divider"></li><li><a>'+percent+'</a></li>';
 			}
 				
 	
@@ -427,25 +711,7 @@ function makePath(){
 }
 
 
-function build(){
-	
-		
-	cateBuild();
-	stateBuild();
-	achieveRate();
-		//var html ='<c:set var="path" value="'+path+'" />'
-		//$("#p").append(html);*/
-		
-		/*
-		var path = location.search
-		if(path==''){ path +='?category='+category;}
-		else{ path +='&category='+category;}
-	
-		console.log(path);
-		location.href= path;
-		*/
-		
-}
+
 
 
 
@@ -457,7 +723,7 @@ function stateBuild(){
 
 	
 	
-	var stateLinks = [ 
+	let stateLinks = [ 
 		{'진행중인 프로젝트':'?ongoing=ongoing'},
 		{'성사된 프로젝트':'?ongoing=confirm'},
 		{'공개예정 프로젝트':'?ongoing=prelaunching'}
@@ -500,7 +766,7 @@ function cateBuild(){
 			 'show': { 
 				 	
 				 	'title' : '공연',
-				 	'공연전체' : 'dance',
+				 	'공연전체' : 'show',
 					'무용' : 'dance', 
 					'뮤지컬':'musical',
 					'공연':'theater'},
@@ -612,7 +878,7 @@ function cateBuild(){
 					 	  '웹 저널' : 'web-journals',
 						  
 				 		}
-		},
+		}
 
 
  		

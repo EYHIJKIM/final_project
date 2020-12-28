@@ -35,8 +35,7 @@
 				
 				
 			});	
-			
-		
+
 			
 
 </script>
@@ -92,8 +91,7 @@
 		</ul>
 			
 			
-			<!-- 
-			
+		
 			
 			<li><a>공연</a>
 			<a href="/fund/discover?category=show">모든 공연</a>
@@ -204,8 +202,8 @@
 			
 		</ul>
 		
-		 -->
 		
+
 		
 		
 	</nav>

@@ -50,6 +50,8 @@ public interface ProjectService {
 		//(prelaunching게시글) 해당프젝 알림 인원
 		public int getAlarmMemCount(int project_id);
 		
+		//프로젝트 기프트
+		public Map<Integer, Object> getAProjectGift(int project_id);
 		
 		
 	//////////////////////////////좋아요 or 알림//////////////////////////////////

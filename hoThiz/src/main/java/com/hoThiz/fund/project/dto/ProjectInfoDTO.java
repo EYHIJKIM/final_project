@@ -3,7 +3,7 @@ package com.hothiz.fund.project.dto;
 import java.sql.Date;
 
 public class ProjectInfoDTO {
-	private int countProject;
+
 	private int project_id;
 	private String member_email;
 	private String project_title;
@@ -22,9 +22,16 @@ public class ProjectInfoDTO {
 	private String project_sub_category;
 	private int project_check;
 	private int project_prelaunching_check;//0이면 ㄴㄴ 1이면 프리런치
+	private String project_deadline_string;
 	
 	
 	
+	public String getProject_deadline_string() {
+		return project_deadline_string;
+	}
+	public void setProject_deadline_string(String project_deadline_string) {
+		this.project_deadline_string = project_deadline_string;
+	}
 	public int getProject_prelaunching_check() {
 		return project_prelaunching_check;
 	}

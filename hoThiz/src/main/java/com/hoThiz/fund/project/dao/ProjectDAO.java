@@ -16,6 +16,7 @@ import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
 import com.hothiz.fund.project.dto.ProjectStateDTO;
 import com.hothiz.fund.project.dto.ProjectDateDTO;
+import com.hothiz.fund.project.dto.ProjectGiftDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
 import com.hothiz.fund.project.dto.ProjectPagingDTO;
 import com.hothiz.fund.project.dto.TestDTO;
@@ -24,9 +25,14 @@ import com.hothiz.fund.project.dto.TestDTO;
 public interface ProjectDAO {
 	
 	
-	///////////////////////게시글 하나 뽑아냄
+	///////////////////////게시글 하나 뽑아냄/////////////////////////
 	@Select("SELECT * FROM project_info WHERE project_id = #{project_id}")
 	public ProjectInfoDTO getAProject(int project_id);
+	
+	
+	////////////////////게시글 gift_list 뽑아옴
+	@Select("SELECT * FROM project_gift_list WHERE project_id=#{project_id}")
+	public ArrayList<ProjectGiftDTO> getAProjectGift(int project_id);
 	
 	
 	///////////////////////////////게시글 목록 뽑아냄////////////////////////////////////////////////
@@ -116,6 +122,8 @@ public interface ProjectDAO {
 "                )"+
 		") complete " + 
 		"WHERE rn BETWEEN #{page.startRownum} AND #{page.endRownum}")
+
+
 public ArrayList<ProjectInfoDTO> getParamProjectList(@Param("param") ProjectParamDTO paramDto, @Param("page") ProjectPagingDTO pageDto);
 			
 
@@ -469,58 +477,7 @@ OR project_summary LIKE CONCAT('%',#{param.keyword},'%')) A
    
  */
 
-//검색, 카테고리, 소트 별로 정렬하는거..
-			
-			@Select(
-					
-					 "SELECT B.* FROM("+
-							 	" SELECT rownum rn, A.*"+
-							 	" FROM ("+
-							 		
-							 		" CASE WHEN #{param.sort} != 'none' THEN"+
-										" (SELECT sort.*"+ 
-												" FROM ("+
-												 	" CASE WHEN #{param.sort} = 'popular' THEN"+
-												 			" (select * from project_info WHERE project_like >= 50 ORDER BY project_id desc)"+
-												 		 " WHEN #{param.sort} = 'endedAt' THEN"+
-													 		" (select * from project_info"+
-													   		 " where (project_current_percent BETWEEN #{param.minAchieveRate} AND #{param.maxAchieveRate})"+ 
-													   		 " ORDER BY project_id desc)"+
-												 		 " WHEN #{param.sort} = 'publishedAt' THEN"+
-												 			" (select * from project_info ORDER BY project_id desc)"+
-												 		 " WHEN #{param.sort} = 'amount' THEN"+
-												 		 	" (select * from project_info ORDER BY project_current_donated desc)"+
-												 	" END"+
-												  ") sort"+
-									 	 " WHERE ("+
-											 	 " CASE WHEN #{param.category} != 'none' THEN"+
-											 	 	" (sort.project_title LIKE CONCAT('%'|| #{param.query},'%') OR sort.project_summary LIKE CONCAT('%'|| #{param.query},'%') )"+ 
-											 	 		" AND sort.category=#{param.category} "+			
-		
-											 	 " ELSE"+
-											 	  	"sort.project_title LIKE CONCAT('%'|| #{param.query},'%') OR sort.project_summary LIKE CONCAT('%'|| #{param.query},'%')"+
-											 	 " END )"+
-													  				
-										") END"+
-													  				
-									   ") A"+
-									 	 	
-							 ") B WHERE rn between #{page.startRownum} and #{page.endRownum}")
-			public ArrayList<ProjectInfoDTO> getConditionList(@Param("page") ProjectPagingDTO pageDto, @Param("param") ProjectParamDTO paramDto);
-			
-			
-			@Select(
-					
-					
-					"SELECT B.*" + 
-					" FROM (SELECT rownum rn, A.*" + 
-							" FROM (SELECT * from project_info WHERE (project_title LIKE CONCAT('%'|| #{param.query},'%')"
-							+ " OR project_summary LIKE CONCAT('%'|| #{param.query},'%')) )A" + 
-					") B" + 
-					" WHERE rn between #{page.startRownum} and #{page.endRownum}")
-			public ArrayList<ProjectInfoDTO> getQueryProjectList(@Param("page") ProjectPagingDTO pageDto, @Param("param") ProjectParamDTO paramDto);
-					
-	
+
 	/////////////////////////////////////////////////////////////////////////////
 			
 			

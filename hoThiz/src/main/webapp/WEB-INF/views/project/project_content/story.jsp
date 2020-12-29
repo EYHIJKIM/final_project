@@ -82,7 +82,8 @@ display:flex;
 
 <h2>${prj.project_id}번 게시물 일수: ${day.chk}</h2>
 
-<c:if test="${day.chk>='0' and day.d_day>'0'}">
+<c:if test="${day.chk>='0' and day.d_day>'0'}"><%--진행중인 경우 --%>
+
 <div class="banner">
 	<h1>이건 진행중인 프로젝트 상세보기 첫화면</h1>
 	<a href="/discover?category=${prj.project_main_category}">
@@ -173,41 +174,86 @@ display:flex;
 <div id="giftForm">
 	선물 선택
 		<div class="aGift">
-			<button class="basic">1,000원+</button>
+			<button class="">1,000원+</button>
 			<p>선물을 선택하지 않고 밀어만 줍니다</p>
 		</div>
 	
-	*더 후원해주시면 프로젝트 성사가 앞당겨집니다.
+		*더 후원해주시면 프로젝트 성사가 앞당겨집니다.
 	
-	<c:forEach var="gift" items="${projectGift}" varStatus="status">
+			<c:forEach var="gift" items="${projectGift}" varStatus="status">
+			
+				<div class="aGift">
+					<button class="hiddenBtn${gift.gift_id}" onClick="showOrView('${gift.gift_id}')">${gift.price}원+${gift.gift}
+					
+					추가 후원금(선택)
+					</button>
+					<div class="hiddenList" id="gift${gift.gift_id}" style="display:none;">
+					
+						<input type="text" id="input${gift.gift_id}" maxlength="16" oninput="numSet(this,'${gift.price}')">
 	
-		<div class="aGift">
-			<button class="${gift.key}">${gift.price}원+${gift.gift}
-			
-			추가 후원금(선택)</button>
-			
-			<input type="text" id="input${gift.gift_id}" maxlength="16" oninput="numSet(this,'${gift.price}')">
-			
-			
-			<button id="5000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 5천원</button>
-			<button id="10000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 1만원</button>
-			<button id="50000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 5만원</button>
-			<button id="100000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 10만원</button><br>
-			<button id="payMoney${gift.gift_id}">${gift.price}원 밀어주기</button>	
-		<hr>
-		</div>
-		
-		
-	</c:forEach>
+						<button id="5000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 5천원</button>
+						<button id="10000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 1만원</button>
+						<button id="50000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 5만원</button>
+						<button id="100000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 10만원</button><br>
+						<button id="payMoney${gift.gift_id}">${gift.price}원 밀어주기</button>
+					</div>	
+				<hr>
+				</div>
+				
+				
+			</c:forEach>
 	
+	</div>
+	
+</c:if><%--진행중인 경우 --%>
 
 
 
-</div>
-</c:if>
 <script type="text/javascript">
 
+function showOrView(id){
+	
+	var str = '${projectGift}';
+	var spList = str.split('{');
+	var cnt =1;
 
+	$.each(spList,function(idx,value){
+		if($("#gift"+id).is(":visible")){ //목록이 보이는 상황..그럼 굳이 누를건 없고..다른거 올려
+			if(cnt!==id){
+				$("#gift"+cnt).slideUp();
+			} 
+		} else{//목록이 안보이는 상황이면
+			if(cnt==id){
+				$("#gift"+cnt).slideDown(); //누르것만 내림
+			} else{
+				$("#gift"+cnt).slideUp()
+			}
+		}
+
+		cnt++;
+	});
+	
+
+
+	//만약 보이는 중에 클릭하면
+	if($("#gift"+id).is(":visible")){ //보이면
+		//다른거 다 올려야될듯..
+		
+		
+	}else{//만약 안보이면
+		
+		//선택한것만 내림
+		$("#gift"+id).slideDown();
+	}
+	
+}
+
+
+
+
+
+
+//가격 플러스 버튼클릭할시 실행
 function plusMoney(info,id,price){
 	var plus = Number(info.id);
 	var money = Number($("#input"+id).val());
@@ -252,9 +298,9 @@ function numSet(info,price){
 
 	$('#payMoney'+id).html(price);
 
-
-
 }	
+
+
 	
 	
 

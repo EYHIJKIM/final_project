@@ -31,7 +31,7 @@ public interface ProjectDAO {
 	
 	
 	////////////////////게시글 gift_list 뽑아옴
-	@Select("SELECT * FROM project_gift_list WHERE project_id=#{project_id}")
+	@Select("SELECT * FROM project_gift_list WHERE project_id=#{project_id} ORDER BY gift_id asc")
 	public ArrayList<ProjectGiftDTO> getAProjectGift(int project_id);
 	
 	///////////////////이런 프젝 어떠세요??

@@ -170,30 +170,101 @@ display:flex;
 
 </div>
 
-<div class="giftForm">
+<div id="giftForm">
 	선물 선택
 		<div class="aGift">
-			<h2>1,000원+</h2>
+			<button class="basic">1,000원+</button>
 			<p>선물을 선택하지 않고 밀어만 줍니다</p>
 		</div>
 	
+	*더 후원해주시면 프로젝트 성사가 앞당겨집니다.
 	
-	<c:forEach var="gift" items="${projectGift}">
+	<c:forEach var="gift" items="${projectGift}" varStatus="status">
+	
 		<div class="aGift">
-			${gift.value.price}원 +
-			${gift.value.gift }
+			<button class="${gift.key}">${gift.price}원+${gift.gift}
+			
+			추가 후원금(선택)</button>
+			
+			<input type="text" id="input${gift.gift_id}" maxlength="16" oninput="numSet(this,'${gift.price}')">
+			
+			
+			<button id="5000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 5천원</button>
+			<button id="10000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 1만원</button>
+			<button id="50000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 5만원</button>
+			<button id="100000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 10만원</button><br>
+			<button id="payMoney${gift.gift_id}">${gift.price}원 밀어주기</button>	
+		<hr>
 		</div>
-	
-	
-	
+		
+		
 	</c:forEach>
+	
 
 
 
 </div>
-
-
 </c:if>
+<script type="text/javascript">
+
+
+function plusMoney(info,id,price){
+	var plus = Number(info.id);
+	var money = Number($("#input"+id).val());
+	var price = Number(price)
+	var plusMoney = plus+money;
+	
+	console.log(price);
+	
+	price += plusMoney
+	price = price+'원 밀어주기';
+	
+	
+	$('#input'+id).val(plusMoney);
+	$('#payMoney'+id).html(price);
+
+}
+
+
+
+function numSet(info,price){
+	console.log("numSet들옴");	
+	var id = info.id;
+	
+	id = id.replace('input','');
+
+	var price = Number(price);
+	var inputDonate = Number(info.value);
+	
+	info.value = info.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');	
+	if(info.value.length > info.maxLength){
+		info.value = info.value.slice(0, info.maxLength);
+
+	}
+
+	console.log("id:"+id);
+	console.log("price:"+price);
+	console.log("input:"+inputDonate);
+	
+	
+	price +=inputDonate;
+	price = price+'원 밀어주기';
+
+	$('#payMoney'+id).html(price);
+
+
+
+}	
+	
+	
+
+
+
+
+
+
+</script>
+
 
 
 
@@ -295,14 +366,33 @@ display:flex;
 </footer>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="/fund/resources/myjsFunction/projectFunction.js"></script>
 <script type="text/javascript">
 
 
 
 
+/*
+jQuery(document).ready(function(){
+	
+	
+	$('#money'+).on('keyup',function(){
+		
+	});
+	
+	
+});
+*/
 
+
+
+
+$("#pushPrj").click(function(){
+	console.log("푸쉬");
+	var giftLocation = $("#giftForm").offset().top;
+
+	$("html,body").animate({scrollTop : giftLocation}, 500);
+});
 
 
 

@@ -212,14 +212,7 @@ function build(){
 $("#init").click(function(){location.href='discover'});
 
 
-function numberMaxLength(e){
-	e.value = e.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
 
-	
-	if(e.value.length > e.maxLength){
-		e.value = e.value.slice(0, e.maxLength);
-	}
-}
 
 $(document).ready(function(){
 

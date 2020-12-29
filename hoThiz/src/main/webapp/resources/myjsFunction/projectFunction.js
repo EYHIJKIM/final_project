@@ -122,10 +122,14 @@ function urlParam(name){
 }
 
 
-//특정 파라미터 제거
 
-
-
+//글자 제한 + 텍스트입력 막기
+function numberMaxLength(e){
+	e.value = e.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');	
+	if(e.value.length > e.maxLength){
+		e.value = e.value.slice(0, e.maxLength);
+	}
+}
 
 
 

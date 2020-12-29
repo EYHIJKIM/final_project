@@ -368,29 +368,30 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 	
 	//프로젝트 기프트
-	public Map<Integer, Map<String,String>> getAProjectGift(int project_id){
+	public ArrayList<Map<String,String>> getAProjectGift(int project_id){
 		/*{
-		     #{기프트 번호1} : { gift : #{project_gift}, 
+		      {gift_id : #{gift_id} 
+		     					gift : #{project_gift}, 
 		     					 price : #{기프트 가격}},
 		     #{기프트 번호2} : {기프트2 설명, 기프트2 가격}...
 		  }
 		 */
 		
+		ArrayList<Map<String,String>> list = new ArrayList<Map<String,String>>();
 		ArrayList<ProjectGiftDTO> giftList = dao.getAProjectGift(project_id);
-		Map<Integer, Map<String,String>> map = new HashMap<>();
 		Map<String, String> detail = null;
 			
 			
 		for(ProjectGiftDTO dto : giftList) {
 			detail = new HashMap<>();
+			detail.put("gift_id", Integer.toString(dto.getGift_id()));
 			detail.put("gift", dto.getProject_gift());	
 			detail.put("price", Integer.toString(dto.getProject_gift_price()));	
 			
-			map.put(dto.getGift_id(), detail);	
-			
+			list.add(detail);
 		}
 		
-		return map;
+		return list;
 		
 		
 	}

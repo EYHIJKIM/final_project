@@ -7,7 +7,7 @@
 -->
 <html>
 <head>
-<title>Industrious by TEMPLATED</title>
+<title>hoThiz :: 핫디즈</title>
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, user-scalable=no" />
@@ -19,42 +19,51 @@
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<style type="text/css">
+
+					
+ul.sub > li> a{
+	  			  list-style: none;
+		 		 
+				 	border: 0;
+		         
+		          color: inherit;
+		          display: block;
+		          text-decoration: none;
+			}       
+          	
+
+
+
+</style>
 </head>
 <body class="is-preload">
 <%String jspPath = "/fund/WebContent/WEB-INF/views/"; %>
-<script>
-			$(".more").click(function(){
-				if($(this).find(".sub").is(":visible")){
-					//$(".list").css("display","none");
-					$(this).find(".sub").slideUp();
-				} 
-				else{
-					//$(".list").css("display","block");	
-					$(this).find(".sub").slideDown();
-				}
-				
-				
-			});	
 
-			
-
-</script>
 	
 	<header id="header">
+		<nav>
+			<a href="#menu">프로젝트 둘러보기</a>
+		
+
+		
+		<a class="logo" href="/fund/">hoThiz</a>
 		
 		
-		<a class="logo" href="/fund/">Industrious</a>
-		<nav>
-			<a href="#search"><i class="fa fa-search"></i></a>	
-		</nav>
-		<nav>
-			<a href="#menu">Menu</a>
-		</nav>
+			<a class="search" href="#search"><i class="fa fa-search"></i></a>	
+		
 		
 		<!-- 
 			여기 로그인 버튼, 세션 처리 해야됨..(로그인한경우 버튼 달라지게)
 		
 		 -->
+		
+		 	<a href=#로그인페이지>로그인/회원가입</a>
+		 </nav>
+		 
+		 
+		 
 	</header>
 
 	<nav id="search">
@@ -64,8 +73,7 @@
 
 	<nav id="menu">
 		<ul class="links">
-			
-			<!-- 프로젝트마다 태그를 파라미터로 묻혀서 보내줌. -->
+
 			<li>
 			
 				<a href="/fund/discover">모든 프로젝트</a>
@@ -88,24 +96,65 @@
 				</ul>
 				
 			</li>
-		</ul>
 			
+			
+			
+			<li class="more">
+				<a href="#">공연</a>
+				<ul class="sub" style="display:none; text-decoration: none;">
+					<li><a href="/fund/discover?category=show">모든 공연</a></li>
+					<li><a href="/fund/discover?category=dance">무용</a></li>
+					<li><a href="/fund/discover?category=musical">뮤지컬</a></li>
+					<li><a href="/fund/discover?category=theater">연극</a></li>
+				</ul>
+				
+			</li>
+			
+			
+			<li class="more">
+				<a href="#">디자인</a>
+				<ul class="sub" style="display:none; text-decoration: none;">
+					<li><a href="/fund/discover?category=design">모든 디자인</a></li>
+					<li><a href="/fund/discover?category=architecture">건축</a></li>
+					<li><a href="/fund/discover?category=graphic-design">그래픽 디자인</a></li>
+					<li><a href="/fund/discover?category=product-design">제품 디자인</a></li>
+				</ul>
+				
+			</li>
 			
 		
+
+
+
 			
-			<li><a>공연</a>
-			<a href="/fund/discover?category=show">모든 공연</a>
-			<a href="/fund/discover?category=dance">무용</a>
-			<a href="/fund/discover?category=musical">뮤지컬</a>
-			<a href="/fund/discover?category=theater">연극</a>
-			</li>
 			
-			<li>디자인
-			<a href="/fund/discover?category=design">모든 디자인</a>
-			<a href="/fund/discover?category=architecture">건축</a>
-			<a href="/fund/discover?category=graphic-design">그래픽 디자인</a>
-			<a href="/fund/discover?category=product-design">제품 디자인</a>
-			</li>
+		</ul>
+		
+
+			
+<script type="text/javascript">
+				$(".more").click(function(){
+					if($(this).find(".sub").is(":visible")){
+						//$(".list").css("display","none");
+						$(this).find(".sub").slideUp();
+					} 
+					else{
+						//$(".list").css("display","block");	
+						$(this).find(".sub").slideDown();
+					}
+					
+					
+				});	
+
+			
+
+</script>
+			
+	
+		
+ 		
+			
+	
 			
 			<li>만화
 			<a href="/fund/discover?category=comics">모든 만화</a>
@@ -201,8 +250,7 @@
 			
 			
 		</ul>
-		
-		
+
 
 		
 		

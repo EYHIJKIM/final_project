@@ -52,30 +52,61 @@ public class ProjectServiceImpl implements ProjectService {
 		
 		//1.sort = popular
 		paramDto = new ProjectParamDTO();
+		paramDto.setting();
 		paramDto.setSort("popular");
-		//model.addAttribute("popularList",dao.getParamProjectList(paramDto, pageDto));
+		model.addAttribute("popularList",dao.getParamProjectList(paramDto, pageDto));
 		
 		
 		//2.sort = EndedAt
 		paramDto = new ProjectParamDTO();
+		paramDto.setting();
 		paramDto.setSort("endedAt");
-		//model.addAttribute("endedAtList",dao.getParamProjectList(paramDto, pageDto));
+		model.addAttribute("endedAtList",dao.getParamProjectList(paramDto, pageDto));
 		
 		
 		//3.sort = publishedAt
 		paramDto = new ProjectParamDTO();
+		paramDto.setting();
 		paramDto.setSort("publishedAt");
-		//model.addAttribute("publishedAtList",dao.getParamProjectList(paramDto, pageDto));
+		model.addAttribute("publishedAtList",dao.getParamProjectList(paramDto, pageDto));
 		
 		//4.ongoing=prelaunching
 		paramDto = new ProjectParamDTO();
+		paramDto.setting();
 		paramDto.setOngoing("prelaunching");
-		//model.addAttribute("publishedAtList",dao.getParamProjectList(paramDto, pageDto));
+		model.addAttribute("preLaunchingList",dao.getParamProjectList(paramDto, pageDto));
+		
+		
+		
+		/*
+			0 ,1 2 <-이거 키로
+			dto 넣기. 그럼 꺼내쓸 수 있음.
+		 */
+		ArrayList<ProjectInfoDTO> list = dao.getBannerProject();
+		Map<String, Map<String,String>> map = new HashMap<>();
+		Map<String,String> prj =null;
+
+		int idx = 0;
+		
+		for(ProjectInfoDTO dto : list) {
+			String key = "banner"+idx;
+			prj = new HashMap<String, String>();
+			prj.put("project_id", Integer.toString(dto.getProject_id()));
+			prj.put("project_main_image", dto.getProject_main_image());
+			prj.put("project_title",dto.getProject_title());
+			prj.put("project_summary",dto.getProject_summary());
+			map.put(key, prj);
+			idx++;
+		}
+		System.out.println(map);
+		model.addAttribute("bannerMap", map );
+		
+		
 		
 	}
 	
 	
-	//프로젝트 얻어오기~
+	//프로젝트 리스트 얻어오기~
 	@Override
 	public ArrayList<ProjectInfoDTO> getParamProjectList(ProjectParamDTO paramDto) {
 		

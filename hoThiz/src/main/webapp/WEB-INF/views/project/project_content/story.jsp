@@ -68,7 +68,7 @@ display:flex;
 </style>
 </head>
 
-<body>
+<body onload="setTag()">
 
 
 
@@ -86,16 +86,15 @@ display:flex;
 
 <div class="banner">
 	<h1>이건 진행중인 프로젝트 상세보기 첫화면</h1>
-	<a href="/discover?category=${prj.project_main_category}">
+	<a href="/discover?category=${prj.project_sub_category}">
 	
 	<%-- 이거 자바스크립트로 ㄱㄱ, 맵으로 리스트 만들어서 뽑으셈 --%>
-	<c:if test="${prj.project_main_category eq 'video'}">
-		비디오
-	</c:if>
+	<div id="subCategory">${prj.project_sub_category}</div>
 	</a>
+	
 	<h1>${prj.project_title}</h1>
 	<hr>
-
+s
 <img src="${path}/project/${prj.project_id}.jpg" width="500px" height="500px">
 
 이멜: ${mem.member_email }
@@ -106,8 +105,8 @@ display:flex;
 	
 	
 	모인금액 : ${prj.project_current_donated}원<br>
-	남은 시간 : ${prj.project_deadline}
-	
+	남은 시간 : ${day.chk} 일
+	후원자${donatedMemberCnt} 명<br>
 	<br>
 	
 	
@@ -120,7 +119,7 @@ display:flex;
 				</c:forEach>
 				
 	
-	후원자${donatedMemberCnt} 명<br>
+	
 	<button id="pushPrj">프로젝트 밀어주기</button><br><!-- 비동기로 내려가서 선물선택 보도록. -->
 	<button class="button small" id="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
 					<p id="likeBtn${prj.project_id}">${msg}</p>
@@ -174,8 +173,19 @@ display:flex;
 <div id="giftForm">
 	선물 선택
 		<div class="aGift">
-			<button class="">1,000원+</button>
-			<p>선물을 선택하지 않고 밀어만 줍니다</p>
+			<button class="hiddenBtn0" onclick="showOrView(0)">1,000원+ 선물을 선택하지 않고 밀어만 줍니다</button>
+					<div class="hiddenList" id="gift0" style="display:none;">
+					
+						<input type="text" id="input0" maxlength="16" oninput="numSet(this,0)">
+	
+						<button id="5000" onclick="plusMoney(this,0,1000)" >+ 5천원</button>
+						<button id="10000" onclick="plusMoney(this,0,1000)" >+ 1만원</button>
+						<button id="50000" onclick="plusMoney(this,0,1000)" >+ 5만원</button>
+						<button id="100000" onclick="plusMoney(this,0,1000)" >+ 10만원</button><br>
+						<button id="payMoney0" onclick="pay(0,1000)">1000원 밀어주기</button>
+					</div>
+
+
 		</div>
 	
 		*더 후원해주시면 프로젝트 성사가 앞당겨집니다.
@@ -195,7 +205,7 @@ display:flex;
 						<button id="10000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 1만원</button>
 						<button id="50000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 5만원</button>
 						<button id="100000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 10만원</button><br>
-						<button id="payMoney${gift.gift_id}">${gift.price}원 밀어주기</button>
+						<button id="payMoney${gift.gift_id}" onclick="pay('${gift.gift_id}','${gift.price}')">${gift.price}원 밀어주기</button>
 					</div>	
 				<hr>
 				</div>
@@ -211,11 +221,160 @@ display:flex;
 
 <script type="text/javascript">
 
+function pay(id, price){
+	let path = '';
+	let money = Number($("#input"+id).val());
+	money += Number(price);
+	let prjId = '${prj.project_id}';
+	let title = '${prj.project_title}';
+	
+	path += 'fund/paymethod?money='+money+'&project_id='+prjId+'&project_title='+title;
+	console.log(path);
+	//location.href=path;
+	
+}
+
+
+function setTag(){
+	
+	var  category = [
+		 { 
+		 		'게임' : 'games',
+				'모바일 게임' : 'mobile-game', 
+				'비디오 게임':'video-game',
+				'보드 게임':'board-game'
+	 },
+	 
+	 {
+			 	'공연' : 'show',
+				'무용' : 'dance', 
+				'뮤지컬':'musical',
+				'공연':'theater'
+	 },
+	 
+	 {
+		 		 '디자인' : 'design',
+				 '건축, 공간' : 'architecture', 
+				 '그래픽 디자인':'graphic-design',
+				 '제품 디자인':'product-design'
+	 },
+	 
+	 {
+		        '만화' : 'comics',
+				'웹툰' : 'web-comics', 
+				'만화책':'comic-books'
+				
+  },
+	 {			
+		 	  '예술' : 'art',
+		 	  '전시' : 'exhibitions',
+			  '웹툰' : 'sculpture-and-action-figures', 
+			  '일러스트레이션':'illustration'
+			
+	 },		
+  
+	 	{			
+			 	  '공예' : 'crafts',
+			 	  '캔들&조향&비누' : 'candles-and-diffusers-and-soaps',
+			 	  '가죽&금속&목 공예' : 'leather-and-metal-and-woodworking',
+			 	  '도예' : 'pottery'
+				  
+				
+		 },
+		 
+		{			
+				 	  '사진' : 'photography',
+				 	  '인물' : 'people-photography',
+				 	  '배경' : 'space-and-urban-photography',
+				 	  '동물' : 'animals-photography'				
+		 
+	 },
+
+	{				
+				 	  '영상' : 'video',
+				 	  '영화' : 'film',
+				 	  '다큐멘터리' : 'documentary',
+				 	  '애니메이션' : 'animation',
+				 	  '뮤직비디오' : 'music-videos'
+					  
+		
+
+	},
+		{
+					
+				 	  '모든' : 'food',
+				 	  '에피타이저' : 'appetizer',
+				 	  '메인디쉬' : 'main-dish',
+				 	  '디저트' : 'dessert'
+					  
+			 
+		},
+		
+		{
+			 	  '음악' : 'music',
+			 	  '클래식' : 'classical-music',
+			 	  '대중음악' : 'popular-music',
+			 	  '인디음악' : 'independent-music'
+				  
+		},
+		
+		{
+					 '출판' : 'publication',
+					 '잡지' : 'zines',
+					 '문학&에세이' : 'literature-and-essay',
+					 '그림책' : 'picture-books'		  			 		
+	    },
+	    
+		{
+		
+				 	  '모든테크' : 'technology',
+				 	  '소프트웨어' : 'software',
+				 	  '하드웨어' : 'hardware',
+				 	  '앱' : 'apps',
+				 	  '웹' : 'web'
+					  
+		
+		},
+	
+		{
+				 	  '패션' : 'fashion',
+				 	  '의류' : 'apparels',
+				 	  '악세서리' : 'accessories',
+				 	  '뷰티' : 'beauty'
+		 		
+	   },
+
+		{
+				 	  '저널' : 'journalism',
+				 	  '오디오 저널' : 'audio-journals',
+				 	  '비디오 저널' : 'video-journals',
+				 	  '웹 저널' : 'web-journals'
+
+		}	
+	];
+	
+	
+	$.each(category,function(idx,map){
+		$.each(map,function(key,value){
+			if(value=='${prj.project_sub_category}'){
+				$("#subCategory").html(key);
+			}
+			
+		})
+	})
+
+	
+	
+}
+
+
+
+
 function showOrView(id){
 	
 	var str = '${projectGift}';
 	var spList = str.split('{');
-	var cnt =1;
+	var cnt =0;
 
 	$.each(spList,function(idx,value){
 		if($("#gift"+id).is(":visible")){ //목록이 보이는 상황..그럼 굳이 누를건 없고..다른거 올려
@@ -393,7 +552,11 @@ function numSet(info,price){
 	<button class="button small" id="likeBtn" onClick="MyFavoritProject('${morePrj.key}')">
 			<p id="likeBtn${morePrj.key}">${msg}</p>
 	</button>
+		${morePrj.value.project_current_percent} %달성
 <hr>
+
+
+
 </c:forEach>
 
 

@@ -41,6 +41,12 @@ public interface ProjectDAO {
 	public ArrayList<ProjectInfoDTO> getMoreProject(String project_sub_category);
 	
 	
+	//메인에 랜덤 4개..
+	@Select("SELECT * FROM project_info where project_id in (10,20,30) order by project_id asc")
+	public ArrayList<ProjectInfoDTO> getBannerProject();
+	
+	
+	
 	///////////////////////////////게시글 목록 뽑아냄////////////////////////////////////////////////
 	
 	//1.페이징 프로젝트

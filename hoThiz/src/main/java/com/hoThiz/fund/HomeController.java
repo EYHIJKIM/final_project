@@ -31,10 +31,10 @@ public class HomeController {
 	public String home(Model model) {
 
 		ps.getMainProjectList(model);
-		System.out.println(model);
+		
 
 		
-		return "index";
+		return "innn";
 		
 	}
 

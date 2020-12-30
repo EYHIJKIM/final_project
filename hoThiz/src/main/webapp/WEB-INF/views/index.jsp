@@ -27,12 +27,9 @@
 
 		<!-- Banner : 추천 프로젝트 뜨는 곳-->
 			<section id="banner">
-				<div class="inner">
-					<h1>여기는 추천 프로젝트 뜰거임</h1>
-					<p>A responsive business oriented template with a video background<br />
-					designed by <a href="https://templated.co/">TEMPLATED</a> and released under the Creative Commons License.</p>
-				</div>
-				<video autoplay loop muted playsinline src="images/banner.mp4"></video>
+				<img src="/fund/resources/project/224.jpg">
+				
+				<%-- <video autoplay loop muted playsinline src="images/banner.mp4"></video>--%>
 			</section>
 			
 
@@ -85,7 +82,8 @@
 						<a href="/fund/discover?ongoing=popular">프로젝트 더보기</a>
 						
 						
-						<!--  
+						
+					
 						<section>
 							<div class="content">
 								<header>
@@ -131,7 +129,7 @@
 								<p>Nunc lacinia ante nunc ac lobortis ipsum. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus.</p>
 							</div>
 						</section>
-						-->
+				
 					</div>
 				</div>
 			</section>

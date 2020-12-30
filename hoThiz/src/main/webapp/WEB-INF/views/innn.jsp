@@ -16,14 +16,73 @@
   <link href="resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Custom styles for this template -->
-  <link href="css/heroic-features.css" rel="stylesheet">
+  <link href="resources/css/heroic-features.css" rel="stylesheet">
+   <link href="resources/css/shop-homepage.css" rel="stylesheet">
+   
 <style type="text/css">
-#banner{
-	display:flex;
 
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+  object-fit: fill;
+  margin:0 auto;
+}
+
+.bannerTitle{
+	height: 20%;
+	width:100%;
+	background-color: #17a2b8;
+	position: relative;
+	margin:0 auto;
+	
+}
+#banner{
+	width:100%;
+	/*flex-flow:column;*/
+	text-align: center;
 
 }
 
+
+
+.jumbotron {
+  width : 100%;
+  padding: 0 0 0 0;
+  background-color: white;
+  border-radius: 0.3rem;
+  margin:0 0 0 0;
+}
+
+
+
+@media (min-width: 576px) {
+
+	#banner{
+		display:flex;
+		
+	}
+	
+	.bannerTitle{
+	width:40%;
+	background-color: pink;
+	height:auto;
+	position: relative;
+	
+}
+.img-fluid {
+  max-width: 60%;
+  height: auto;
+  object-fit: fill;
+}
+	
+	
+
+
+/*
+
+#banner{
+	display:flex;
+}
 .bannerTitle{
 	height:auto;
 	width:40%;
@@ -31,23 +90,14 @@
 	position: relative;
 	
 }
-
-
 .img-fluid {
   max-width: 60%;
   height: auto;
   object-fit: fill;
 }
-.banContainer{
 
-  width: 100%;
 
-  margin-right: auto;
-  margin-left: auto;
-  text-align:center; margin:0 auto;
-	
-
-}
+*/
 
 
 
@@ -89,8 +139,10 @@
 
     <!-- Jumbotron Header -->
     <header class="jumbotron my-4">
+     
 
-             <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
+		
+        <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
           <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -111,8 +163,7 @@
 		        		
 	        			</div>
 			 		</div>
-						
-	            		            
+	            
 	            
 	            <div class="carousel-item">
 		           <div id="banner">
@@ -138,16 +189,24 @@
 		        		
 	        		</div>
 	            </div>
-	   
+
+          <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+        
+        
+</div>
+   
+   
+   
+   
     </header>
-
-
-
-
-
-
-
-
 
     <!-- Page Features -->
     <div class="row text-center">
@@ -221,8 +280,8 @@
   <!-- Bootstrap core JavaScript -->
   <script src="resources/vendor/jquery/jquery.min.js"></script>
   <script src="resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  
 
 </body>
 
 </html>
+

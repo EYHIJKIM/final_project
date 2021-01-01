@@ -22,7 +22,7 @@ public interface ProjectService {
 	/////////1. 게시글 리스트
 	
 	//메인 게시글 리스트
-	public void getMainProjectList(Model model);
+	public void getMainProjectList(Model model, HttpSession session);
 	
 	//게시글 리스트 뽑아오기(조건에 따라서)
 	public ArrayList<ProjectInfoDTO> getParamProjectList(ProjectParamDTO paramDto);

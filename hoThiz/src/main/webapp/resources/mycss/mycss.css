@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+
+
+.img-likeBtn{
+	 background: url( "resources/img/blankHeart.png" ) no-repeat;
+	 border: none;
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+        position : absolute;
+        
+ 
+}
+.img-cancelLikeBtn{
+	 background: url( "resources/img/fullHeart.png" ) no-repeat;
+	 border: none;
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+         position : absolute;
+  
+}

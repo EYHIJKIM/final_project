@@ -136,8 +136,25 @@ public class ProjectController {
 	}
 	
 	@GetMapping(value = "/{project_id}/community")
-	public ModelAndView getAProjectLive(@PathVariable int project_id, ModelAndView mv) {
+	public ModelAndView getAProjectLive(@PathVariable int project_id, ModelAndView mv, HttpSession session, ProjectParamDTO paramDto) {
 		
+
+		ProjectInfoDTO prjDto=ps.getAProjectDetail(project_id); //프로젝트 상세정보
+		MemberDTO memberDto = ps.getAMemberDetail(prjDto.getMember_email()); //프로젝트 발행 멤버
+		
+
+		mv.addObject("likeOrAlarmList",ps.likeOrAlarmProjectList(session, paramDto));
+		mv.addObject("alarmMemberCnt", ps.getAlarmMemCount(project_id)); //알림 몇명 신청?
+		mv.addObject("dDayInfo", ps.getADDay(project_id) ); //며칠 남았는지 
+		mv.addObject("donatedMemberCnt", ps.getDonatedMemCount(project_id)); //후원자 몇명인지
+		mv.addObject("memberInfo", memberDto); //프젝 진행하는 멤버의 정보(프로필정보)
+		mv.addObject("projectInfo", prjDto); //프젝 상세정보
+		mv.addObject("projectGift", ps.getAProjectGift(project_id));//프젝 기프트 목록 가져오기
+		//이런 프로젝트 어떠세요. prj와 같은 태그의 4개 뽑기...
+		mv.addObject("morePrjList", ps.getMoreProject(project_id, session));
+		
+		
+
 		//해당 프젝 라이브 꺼내와야함.
 		mv.setViewName("project/project_content/community");
 		return mv;
@@ -146,7 +163,21 @@ public class ProjectController {
 	
 	
 	@GetMapping(value = "/{project_id}/notice")
-	public ModelAndView getAProjectNotice(@PathVariable int project_id, ModelAndView mv) {
+	public ModelAndView getAProjectNotice(@PathVariable int project_id, HttpSession session, ModelAndView mv, ProjectParamDTO paramDto) {
+		ProjectInfoDTO prjDto=ps.getAProjectDetail(project_id); //프로젝트 상세정보
+		MemberDTO memberDto = ps.getAMemberDetail(prjDto.getMember_email()); //프로젝트 발행 멤버
+		
+
+		mv.addObject("likeOrAlarmList",ps.likeOrAlarmProjectList(session, paramDto));
+		mv.addObject("alarmMemberCnt", ps.getAlarmMemCount(project_id)); //알림 몇명 신청?
+		mv.addObject("dDayInfo", ps.getADDay(project_id) ); //며칠 남았는지 
+		mv.addObject("donatedMemberCnt", ps.getDonatedMemCount(project_id)); //후원자 몇명인지
+		mv.addObject("memberInfo", memberDto); //프젝 진행하는 멤버의 정보(프로필정보)
+		mv.addObject("projectInfo", prjDto); //프젝 상세정보
+		mv.addObject("projectGift", ps.getAProjectGift(project_id));//프젝 기프트 목록 가져오기
+		//이런 프로젝트 어떠세요. prj와 같은 태그의 4개 뽑기...
+		mv.addObject("morePrjList", ps.getMoreProject(project_id, session));
+		
 		
 		//그냥 펀딩 주의사항이요
 		mv.setViewName("project/project_content/notice");

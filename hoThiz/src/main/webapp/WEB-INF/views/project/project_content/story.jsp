@@ -6,6 +6,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
+ <link href="resources/mycss/mycss.css" rel="stylesheet">
 <style type="text/css">
 #wrap{
 display:flex;flex-flow: column;
@@ -64,6 +66,32 @@ display:flex;
 	text-indent: -9999px;
 }
 
+.img-likeBtn{
+	 background: url( "/fund/resources/img/blankHeart.png" ) no-repeat;
+	 border: none;
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+        position : absolute;
+        
+ 
+}
+.img-cancelLikeBtn{
+	 background: url( "/fund/resources/img/fullHeart.png" ) no-repeat;
+	 border: none;
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+         position : absolute;
+  
+}
+
+
+.likeBtn{
+    border: none;
+    outline:none;
+    background-color: white;
+}
 
 </style>
 </head>
@@ -86,7 +114,7 @@ display:flex;
 
 <div class="banner">
 	<h1>이건 진행중인 프로젝트 상세보기 첫화면</h1>
-	<a href="/discover?category=${prj.project_sub_category}">
+	<a href="/fund/discover?category=${prj.project_sub_category}">
 	
 	<%-- 이거 자바스크립트로 ㄱㄱ, 맵으로 리스트 만들어서 뽑으셈 --%>
 	<div id="subCategory">${prj.project_sub_category}</div>
@@ -95,7 +123,7 @@ display:flex;
 	<h1>${prj.project_title}</h1>
 	<hr>
 s
-<img src="${path}/project/${prj.project_id}.jpg" width="500px" height="500px">
+<img src="${path}/project/${prj.project_main_image}" width="500px" height="500px">
 
 이멜: ${mem.member_email }
 	
@@ -109,21 +137,37 @@ s
 	후원자${donatedMemberCnt} 명<br>
 	<br>
 	
-	
-	<c:set var="msg" value="좋아요 누르기!" />
+
 				
-				<c:forEach var="likeId" items="${likeOrAlarmList}">
-					<c:if test="${likeId eq prj.project_id}">
-						<c:set var="msg" value="좋아요 이미 누름!" />
-					</c:if>
-				</c:forEach>
+				
+				
+
 				
 	
 	
 	<button id="pushPrj">프로젝트 밀어주기</button><br><!-- 비동기로 내려가서 선물선택 보도록. -->
-	<button class="button small" id="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
-					<p id="likeBtn${prj.project_id}">${msg}</p>
-				</button>
+
+
+				
+			
+	<%--만약 이미 좋아하는 프로젝트면 flag는 true --%>		
+	<c:if test="${likeId eq prj.project_id}">
+		<c:set var="flag" value="true"></c:set>
+	</c:if>			
+	<c:if test="${flag}">
+		<button id="likeBtn${prj.project_id}" class="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
+			<img class="likeImg" src="${path}/img/fullHeart.png">
+		</button>
+				
+	</c:if>
+	<c:if test="${not flag}">
+		<button id="likeBtn${prj.project_id}" class="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
+			<img class="likeImg" src="${path}/img/blankHeart.png">
+		</button>
+				
+	</c:if>
+
+
 	
 <button class="kakao-link-btn" onclick="sendLink()">카톡 공유</button>
 
@@ -239,7 +283,7 @@ function setTag(){
 	
 	var  category = [
 		 { 
-		 		'게임' : 'games',
+		 		'게임' : 'game',
 				'모바일 게임' : 'mobile-game', 
 				'비디오 게임':'video-game',
 				'보드 게임':'board-game'

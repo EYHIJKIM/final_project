@@ -74,7 +74,8 @@ ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}<br>
 											</c:if>
 										</c:forEach>
 
-				<c:set var="msg" value="좋아요 누르기!" />
+	
+			  <c:set var="msg" value="좋아요 누르기!" />
 				
 				<c:forEach var="likeId" items="${likeOrAlarmList}">
 					<c:if test="${likeId eq prj.project_id}">
@@ -261,7 +262,7 @@ ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}<br>
 					//console.log(data["prj"]);
 					//console.log(data["day"]);
 					//console.log(data["member"]);
-					var state = '${state}' ;
+					var state = '${state}' ; //파라미터 상태
 					
 					$.each(data["prj"], function(index, proj) { //i배열이 들어온다.
 						
@@ -309,24 +310,6 @@ ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}<br>
 							
 						}
 
-						/*
-								+ "<br>";
-						html += "<b>메인카테고리: </b>"
-								+ item.project_main_category + "<br>";
-						html += "<b>서브카테고리: </b>"
-								+ item.project_sub_category + "<br>";
-						html += "<b>좋아요:</b>" + item.project_like + "<br>";
-						html += "<b>달성률:</b>"
-								+ item.project_current_percent + "<br>";
-								
-								
-								
-								"<c:forEach var='likeId' items='data[\"likeOrAlarm\"]'>"+
-									"<c:if test='${likeId eq prj.project_id}'>"+
-										"<c:set var='msg' value='좋아요 이미 누름!' />"+
-									"</c:if>"+
-								"</c:forEach>"+
-						*/
 								
 					});
 					$("#scrollContent").append(html);

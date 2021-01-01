@@ -15,6 +15,7 @@ import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
 import com.hothiz.fund.project.dto.ProjectStateDTO;
+import com.hothiz.fund.project.dto.ProjectAlarmCount;
 import com.hothiz.fund.project.dto.ProjectDateDTO;
 import com.hothiz.fund.project.dto.ProjectGiftDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
@@ -58,8 +59,8 @@ public interface ProjectDAO {
 	public ArrayList<ProjectInfoDTO> getProjectList(ProjectPagingDTO dto);
 
 	
-	//모든 프로젝트
-	@Select("SELECT * FROM project_info")
+	//모든 프로젝트 정보 비교
+	@Select("SELECT project_id, member_email FROM project_info")
 	public ArrayList<ProjectInfoDTO> getAllProjectList();
 	
 	
@@ -560,7 +561,10 @@ OR project_summary LIKE CONCAT('%',#{param.keyword},'%')) A
 	//알림신청 몇명?
 	@Select("SELECT COUNT(*) FROM member_alarm where project_id=#{project_id} ")
 	public int getAlarmMemCount(int project_id);
-
+	
+	//알림신청 몇명??리스트로->메인에서보여줘야됨.
+	@Select("SELECT project_id, count(*) AS \"count\" from member_alarm group by project_id ")
+	public ArrayList<ProjectAlarmCount> getAlarmCountList();
 	
 	
 //////////////////멤버정보 뽑아옴////////////////////////////////	

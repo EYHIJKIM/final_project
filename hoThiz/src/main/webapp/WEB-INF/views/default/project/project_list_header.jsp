@@ -182,11 +182,22 @@ width: 30%;
 		 </div>
 		 
 		 
-		 
-		 
+
+		           
+         
 		 
 	</div>
 </div>
+
+  <div class="btn-group">
+          <button id="sortBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+           	 정렬
+          </button>
+          <ul id="sort" class="dropdown-menu" role="menu">
+	        
+          </ul>
+		 </div>
+
 
  
  
@@ -199,7 +210,7 @@ width: 30%;
 
 function build(){
 	
-	
+	sortBuild();
 	cateBuild();
 	stateBuild();
 	achieveRateBuild();
@@ -348,7 +359,7 @@ function buttonSet(){
 	console.log("버튼셋하자");
 	let category = [
 		 { 
-			 		'게임' : 'games',
+			 		'게임' : 'game',
 					'모바일 게임' : 'mobile-game', 
 					'비디오 게임':'video-game',
 					'보드 게임':'board-game'
@@ -486,6 +497,16 @@ function buttonSet(){
 		{'1백만원 이하' : '1'}	
 	];
 	
+	
+	let sort = [
+		{'인기순' : 'popular'},
+		{'최신순' : 'publishedAt'},
+		{'최다 금액순' : 'amount'},
+		{'마감 임박순' : 'EndedAt'},
+
+	];
+	
+	
 	var cateP = '${param.category}';
 	var stateP =  '${param.ongoing}';
 	var rateP =  '${param.achieveRate}';
@@ -496,8 +517,23 @@ function buttonSet(){
 	var moneyMin =  '${param.minMoney}';
 	
 	var moneyMax =  '${param.maxMoney}';
+	
+	var sort = '${param.sort}';
 
-	console.log(moneyMin);
+	
+	if(sort !=''){//소트누룸
+		$.each(state,function(list,val){
+			$.each(val, function(title,value){
+				if(sort==value){
+					$("#sortBtn").html(title);
+					
+					return false;
+				}
+				
+			});	
+		});		
+	}//소트
+	
 	
 	
 	if(cateP!=''){//카테고리 눌렀다면
@@ -592,7 +628,36 @@ function buttonSet(){
 
 
  
+function sortBuild(){
+	var path = makePath();
+	path = removeParam('ongoing', path);
 
+	let sortList = [
+		{'인기순' : '?sort=popular'},
+		{'최신순' : '?sort=publishedAt'},
+		{'최다 금액순' : '?sort=amount'},
+		{'마감 임박순' : '?sort=EndedAt'},
+
+	];
+
+	
+	$.each(sortList,function(list,map){
+		$.each(map,function(title, value){
+	
+			var output ='';
+			output += '<li><a href="/fund/discover'+value+path+'">'+title+'</a></li>';
+
+			$("#sort").append(output);
+			
+		});
+		
+		
+	});
+	
+	
+	
+	
+}
 
 
 
@@ -743,13 +808,16 @@ function cateBuild(){
 	path = removeParam('category', path);
 
 
+	
+	
+	
 
 	
 	let categoryLinks = [
 		 {  
 			 'game': { 
 				 	'title' : '게임',
-			 		'게임전체' : 'games',
+			 		'모든 게임' : 'game',
 					'모바일 게임' : 'mobile-game', 
 					'비디오 게임':'video-game',
 					'보드 게임':'board-game'} ,
@@ -759,7 +827,7 @@ function cateBuild(){
 			 'show': { 
 				 	
 				 	'title' : '공연',
-				 	'공연전체' : 'show',
+				 	'모든 공연' : 'show',
 					'무용' : 'dance', 
 					'뮤지컬':'musical',
 					'공연':'theater'},
@@ -768,21 +836,22 @@ function cateBuild(){
 	 	 
 	 	 {'design': {
 	 				'title' : '디자인',
-	 		 		'디자인 전체' : 'design',
+	 		 		'모든 디자인' : 'design',
 					 '건축, 공간' : 'architecture', 
 					 '그래픽 디자인':'graphic-design',
 					 '제품 디자인':'product-design'}
  		 },
  		 
- 		 {'comics': {'title' : '만화', '모든만화' : 'comics',
+ 		 {'comics': {'title' : '만화', 
+ 			 '모든 만화' : 'comics',
 					'웹툰' : 'web-comics', 
 					'만화책':'comic-books',
 					}
          },
  		 {'art': {'title' : '예술',
- 			 	  '모든예술' : 'art',
+ 			 	  '모든 예술' : 'art',
  			 	  '전시' : 'exhibitions',
-				  '웹툰' : 'sculpture-and-action-figures', 
+				  '조소&피규어' : 'sculpture-and-action-figures', 
 				  '일러스트레이션':'illustration',
 				 }
   		 },		
@@ -881,10 +950,14 @@ function cateBuild(){
     ];
 	
 	
-	$.each(categoryLinks, function(index, list){		
+	
+	
+
+	
+	
+$.each(categoryLinks, function(index, list){		
 		
 		$.each(list,function(mainCate, subCateList){
-
 			$.each(subCateList, function(index,subCate){
 				if(index=='title'){
 					var mainCategory ='';
@@ -899,9 +972,7 @@ function cateBuild(){
 					$('#'+mainCate).append(output);
 				}
 			});
-
 		});
-
 	});
 	
 

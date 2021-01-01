@@ -6,7 +6,7 @@ public class ProjectPagingDTO {
 	
 
 	
-	private int PER_PAGE_PROJECT = 20;//뽑아낼 글 수
+	private int PER_PAGE_PROJECT;//뽑아낼 글 수
 	private int totalPrjAmount; //전체 글의 갯수
 	private int locatedPage; //현재 위치하고있는 페이지(1페이지,,2페이지,,)
 	private int startRownum; //시작 rownum
@@ -16,6 +16,7 @@ public class ProjectPagingDTO {
 	public ProjectPagingDTO() {}
 	public ProjectPagingDTO(int page) {
 		this.locatedPage = page;
+		this.PER_PAGE_PROJECT=20;
 		setStartRownum();setEndRownum();
 	}
 

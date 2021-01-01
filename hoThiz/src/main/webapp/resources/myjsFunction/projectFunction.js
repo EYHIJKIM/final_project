@@ -1,9 +1,15 @@
 
 
+
+
+
+
+//좋아요 프로젝트
 function MyFavoritProject(project_id) {
-			console.log("좋아요 자바스크립트 실행")
+
 			var sessionData = "userId";
 			sessionStorage.setItem("userId","1");//이거 합치면 지워라잉/////////////////
+			
 			var userId = sessionStorage.getItem(sessionData);
 			var id = project_id;
 			 
@@ -27,22 +33,30 @@ function MyFavoritProject(project_id) {
 				data : likeDto,
 				success : function(data) { //통신 성공시 호출됨,,msg를 담자.
 					//data.msg = like 혹은 cancelLike 들음.
-
-					console.log("성공요");
-
+					
 					var like_img = '';
 
-					alert(data);
-					console.log(data);
 
 					if (data == '"cancelLike"') { //좋아요 취소함
-						//like_img = "images/cancelLike.png"
-						$("#likeBtn" + id).html("좋아요 누르기!")
+						$("#likeBtn" + id).children(".likeImg").attr('src','/fund/resources/img/blankHeart.png');
+						$("#likeBtn" + id).css('background-color','white');
+						$("#likeBtn" + id).css('outline','none');
+						$("#likeBtn" + id).css('border','none');
+					
+						
+
+						alert("좋아요 취소 성공");
+						
 
 					} else { //좋아요 함
-						//like_img = "images/like.png"
-						$("#likeBtn" + id).html("좋아요 이미 누름")
+						
+					$("#likeBtn" + id).children(".likeImg").attr('src','/fund/resources/img/fullHeart.png');
+						$("#likeBtn" + id).css('background-color','white');
+						$("#likeBtn" + id).css('outline','none');
+						$("#likeBtn" + id).css('border','none');
 					}
+					
+					$("#likeBtn" + id).attr('class',like_img);
 
 				},
 				error : function() {
@@ -54,14 +68,13 @@ function MyFavoritProject(project_id) {
 		}
 
 function MyAlarmProject(project_id) {
-		alert("알림신청 할거임");
-		alert('${alarmMemberCnt}');
+		
 			var sessionData = "userId";
 			var userId = sessionStorage.getItem(sessionData);
 			var id = project_id;
 			
 			var alarmCnt = '('+'${alarmMemberCnt}'+'명 신청중)';
-			console.log("알람:"+alarmCnt);
+	
 			 
 			if ( userId == null) {
 				location.href = "/fund" //이거 로그인창으로 바꾸셈**//////////////////////
@@ -83,20 +96,14 @@ function MyAlarmProject(project_id) {
 				success : function(data) { //통신 성공시 호출됨,,msg를 담자.
 					//data = alarm / cancelAlarm
 
-					console.log("성공요");
-
-					//var like_img = '';
-
-					alert(data);
-					console.log(data);
-
+	
 					if (data == '"cancelAlarm"') { //좋아요 취소함
-						//like_img = "images/cancelLike.png"
-						$("#notiBtn" + id).html("알림신청"+'${alarmMemberCnt}');
+					
+						$("#notiBtn" + id).html("알림신청");
 
 					} else { //좋아요 함
-						//like_img = "images/like.png"
-						$("#notiBtn" + id).html("알림신청완료"+alarmCnt);
+			
+						$("#notiBtn" + id).html("알림신청완료");
 					}
 
 				},
@@ -132,6 +139,11 @@ function numberMaxLength(e){
 }
 
 
+
+
+  
+  
+  
 
 
 

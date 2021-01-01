@@ -15,6 +15,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.client.support.HttpAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -26,6 +27,7 @@ import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
 import com.hothiz.fund.project.dto.ProjectStateDTO;
+import com.hothiz.fund.project.dto.ProjectAlarmCount;
 import com.hothiz.fund.project.dto.ProjectDateDTO;
 import com.hothiz.fund.project.dto.ProjectGiftDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
@@ -41,11 +43,13 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	//메인에 뿌려줄 프로젝트 목록
 	@Override
-	public void getMainProjectList(Model model) {
+	public void getMainProjectList(Model model, HttpSession session) {
 		
 		//페이지 셋팅
 		ProjectPagingDTO pageDto = new ProjectPagingDTO();
-		pageDto.setPER_PAGE_PROJECT(10); //게시글 당 10개씩만
+		pageDto.setPER_PAGE_PROJECT(8);pageDto.setStartRownum();pageDto.setEndRownum(); //게시글 당 8개씩만
+		String userId = (String)session.getAttribute("userId");
+		userId = "1";
 		
 		ProjectParamDTO paramDto = null;
 
@@ -55,12 +59,14 @@ public class ProjectServiceImpl implements ProjectService {
 		paramDto.setting();
 		paramDto.setSort("popular");
 		model.addAttribute("popularList",dao.getParamProjectList(paramDto, pageDto));
+
 		
 		
 		//2.sort = EndedAt
 		paramDto = new ProjectParamDTO();
 		paramDto.setting();
 		paramDto.setSort("endedAt");
+		paramDto.setMinAchieveRate(80);paramDto.setMaxAchieveRate(99);
 		model.addAttribute("endedAtList",dao.getParamProjectList(paramDto, pageDto));
 		
 		
@@ -74,8 +80,8 @@ public class ProjectServiceImpl implements ProjectService {
 		paramDto = new ProjectParamDTO();
 		paramDto.setting();
 		paramDto.setOngoing("prelaunching");
-		model.addAttribute("preLaunchingList",dao.getParamProjectList(paramDto, pageDto));
-		
+		model.addAttribute("prelaunchingList",dao.getParamProjectList(paramDto, pageDto));
+		model.addAttribute("alarmList",likeOrAlarmProjectList(session, paramDto) );
 		
 		
 		/*
@@ -98,8 +104,46 @@ public class ProjectServiceImpl implements ProjectService {
 			map.put(key, prj);
 			idx++;
 		}
-		System.out.println(map);
+
+		//배너에 들어갈 프로젝트
 		model.addAttribute("bannerMap", map );
+		
+		paramDto = new ProjectParamDTO();
+		paramDto.setting();
+		//좋아요 상태
+		model.addAttribute("likeList",likeOrAlarmProjectList(session, paramDto) );
+		
+	
+	
+		
+		//프로젝트 id와 묶자,,
+		//유저 네임
+		ArrayList<MemberDTO> memberList = dao.getMemberInfoList();
+		ArrayList<ProjectInfoDTO> prjList = dao.getAllProjectList();
+		Map<Integer, Map<String,String>> memberMap = new HashMap<>();
+		Map<String, String> detailMap = null;
+		
+		for(ProjectInfoDTO pro : prjList) {
+			for(MemberDTO mem : memberList) {
+			
+				if(pro.getMember_email().equals(mem.getMember_email())) { 
+					detailMap = new HashMap<String, String>();
+					//해당 프로젝트의 멤버를 찾았으면 이메일,닉네임, url 보내줌
+					detailMap.put("member_email", mem.getMember_email());
+					detailMap.put("member_name",mem.getMember_name());
+					detailMap.put("member_url", mem.getMember_URL());
+				}
+				
+				memberMap.put(pro.getProject_id(), detailMap);
+				
+			}
+			
+			
+		}
+		
+		model.addAttribute("memberMap",memberMap);
+		
+		model.addAttribute("alarmCntMap", getAlarmCountList());
 		
 		
 		
@@ -172,7 +216,6 @@ public class ProjectServiceImpl implements ProjectService {
 	//비동기로 가져오기
 	@Override
 	public String syncGetData(ProjectParamDTO paramDto, HttpSession session) {
-		
 
 		System.out.println("비동기로 가지러옴");
 		System.out.println("페이지:"+paramDto.getPage());
@@ -180,17 +223,7 @@ public class ProjectServiceImpl implements ProjectService {
 		ProjectPagingDTO pageDto = new ProjectPagingDTO(paramDto.getPage());
 		
 		paramDto.setting();
-
-		System.out.println(paramDto.getAchieveRate());
-		System.out.println("최저퍼센트"+paramDto.getMinAchieveRate());
-		System.out.println("최대퍼센트"+paramDto.getMaxAchieveRate());
-		System.out.println(paramDto.getCategory());
-		System.out.println(paramDto.getCurrentMoney());
-		System.out.println("최대머니:"+paramDto.getMaxMoney());
-		System.out.println("최저머니:"+paramDto.getMaxMoney());
-
-		System.out.println(paramDto.getOngoing());
-		System.out.println(paramDto.getSort());
+		
 		//day에 대한 정보 가져오는 맵
 		Map<Integer, ProjectDateDTO> dDayMap = getDDayMap();
 		
@@ -212,8 +245,7 @@ public class ProjectServiceImpl implements ProjectService {
 		map.put("likeOrAlarm", likeOrAlarmList);
 		
 		System.out.println(map.get("day"));
-		
-		
+
 		return jsonMapper(map);
 	}
 	
@@ -225,6 +257,7 @@ public class ProjectServiceImpl implements ProjectService {
 			System.out.println("좋아요 or 찜한 목록 가지러 옴");
 			paramDto.setting();
 			String state = paramDto.getOngoing();
+			System.out.println(state);
 			String userId = "1";
 					//(String)session.getAttribute("userId"); //세션 확인. 이거 1대신 넣어주기
 			
@@ -497,10 +530,33 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 	
 	
+	
 	//알람신청한 인원
 	public int getAlarmMemCount(int project_id) {
 		return dao.getAlarmMemCount(project_id);
 	}
+	
+	
+	//프로젝트 별 알람 인원
+	public Map<Integer, Integer> getAlarmCountList(){
+		
+		ArrayList<ProjectAlarmCount> prjList = dao.getAlarmCountList();
+		
+		Map<Integer, Integer> alarmCntMap = new HashMap<>();
+
+		
+		for(ProjectAlarmCount pro : prjList) {
+			alarmCntMap.put(pro.getProject_id(), pro.getCount());
+			
+		}
+		
+		System.out.println(alarmCntMap);
+		
+		return alarmCntMap;
+		
+	}
+	
+	
 	
 	
 	//////////////////////////////////////////////////////

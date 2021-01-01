@@ -53,7 +53,7 @@ public class ProjectController {
 		mv.addObject("likeOrAlarmList",ps.likeOrAlarmProjectList(session,paramDto));//좋아하는 게시글/ 혹은 알람신청한 게시글
 		mv.addObject("firstList", ps.getParamProjectList(paramDto)); //게시글 목록
 		
-		mv.setViewName("project/project_list");
+		mv.setViewName("project/project_list_real");
 
 		
 		return mv;

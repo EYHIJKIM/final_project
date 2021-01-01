@@ -1,213 +1,3 @@
-<!DOCTYPE HTML>
-<%@ page contentType = "text/html;charset=utf-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<html>
-<head>
-  <title>Navbar</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  //<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-  //<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  //<link rel="stylesheet" href="assets/css/myCss.css">
-  //<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-
-<script src="/fund/resources/myjsFunction/projectFunction.js"></script>
-
-
-
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-
-<style type="text/css">
-
-
-.dropdown-submenu {
-    position: relative;
-}
-
-.dropdown-submenu>.dropdown-menu {
-    top: 0;
-    left: 100%;
-    margin-top: -6px;
-    margin-left: -1px;
-    -webkit-border-radius: 0 6px 6px 6px;
-    -moz-border-radius: 0 6px 6px;
-    border-radius: 0 6px 6px 6px;
-    
-    position:absolute;
-}
-
-.dropdown-submenu:hover>.dropdown-menu {
-    display: block;
-    position:absolute;
-}
-
-.dropdown-submenu>a:after {
-    display: block;
-    content: " ";
-    float: right;
-    width: 0;
-    height: 0;
-    border-color: transparent;
-    border-style: solid;
-    border-width: 5px 0 5px 5px;
-    border-left-color: #ccc;
-    margin-top: 5px;
-    margin-right: -10px;
-
-}
-
-.dropdown-submenu:hover>a:after {
-    border-left-color: #fff;
-}
-
-.dropdown-submenu.pull-left {
-    float: none;
-}
-
-.dropdown-submenu.pull-left>.dropdown-menu {
-    left: -100%;
-    margin-left: 10px;
-    -webkit-border-radius: 6px 0 6px 6px;
-    -moz-border-radius: 6px 0 6px 6px;
-    border-radius: 6px 0 6px 6px;
-}
-body{
-    padding:10px;
-}
-
-.show-on-hover:hover > ul.dropdown-menu {
-    display: block;    
-}
-
-
-.conForm > input[type=text] {
-width: 30%; 
-
-}
-
-</style>
-
-
-</head>
-  <body onload='build()'>
-
-  
-<!------ Include the above in your HEAD tag ---------->
-
-
-
-<div class="container">
-	<div class="row">
-
-
-      
-        <!-- Single button -->
-        <div class="btn-group">
-          <button id="cateBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-           	 카테고리
-          </button>
-          <ul id="category" class="dropdown-menu" role="menu">
-       
-          </ul>
-		 </div>
-		 
-		 
-		 <div class="btn-group">
-		           
-          
-          <button id="stateBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-           	상태
-          </button>
-          <ul id="state" class="dropdown-menu" role="menu">
-          </ul>
-		 
-		 </div>
-		 
-		 
-		 
-		 <div class="btn-group">
-		           
-          
-          <button id="rateBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-           	 달성률
-          </button>
-          <ul id="achieveRate" class="dropdown-menu" role="menu">
-	          
-	          <li>
-	         		 <div class="conForm">
-
-						<input type="text" name="minAchieveRate" id="min" maxlength="4" oninput="numberMaxLength(this)"> - 
-						<input type="text" name="maxAchieveRate" id="max" maxlength="4" oninput="numberMaxLength(this)">
-						<br><span id="rateWarn"></span>
-						<input type="button" id="rateSub" value="적용"> 
-
-					</div>
-				</li>
-          </ul>
-		 
-		 </div>
-		 
-		 
-				
-		 
-		 
-		 
-		  
-		 <div class="btn-group">
-		           
-          
-          <button id="moneyBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-           	 모인금액
-          </button>
-          <ul id="currentMoney" class="dropdown-menu" role="menu">
-          
-        
-          </ul>
-		 
-		 </div>
-		 <div class="conForm">
-					<input type="text" name="minMoney" id="minMoney" maxlength="10" oninput="numberMaxLength(this)"> - 
-					<input type="text" name="maxMoney" id="maxMoney" maxlength="10" oninput="numberMaxLength(this)">
-					<span id="moneyWarn"></span>
-					<input type="button" id="moneySub" value="적용"> 
-			</div>
-		 
-		 
-		 
-		 <div class="btn-group">
-		           
-          
-          <button id='init'>필터 초기화</button>
-		 
-		 </div>
-		 
-		 
-
-		           
-         
-		 
-	</div>
-</div>
-
-  <div class="btn-group">
-          <button id="sortBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-           	 정렬
-          </button>
-          <ul id="sort" class="dropdown-menu" role="menu">
-	        
-          </ul>
-		 </div>
-
-
- 
- 
- 
-    
-
-
-<script type="text/javascript">
 
 
 function build(){
@@ -504,29 +294,31 @@ function buttonSet(){
 		{'인기순' : 'popular'},
 		{'최신순' : 'publishedAt'},
 		{'최다 금액순' : 'amount'},
-		{'마감 임박순' : 'EndedAt'},
+		{'마감 임박순' : 'EndedAt'}
 
 	];
 	
 	
 	var cateP = '${param.category}';
 	var stateP =  '${param.ongoing}';
-	var rateP =  '${param.achieveRate}';
-	var rateMin =  '${param.minAchieveRate}';
-	var rateMax =  '${param.maxAchieveRate}';
+	var rateP =  urlParam('achieveRate');
+	var rateMinP =  urlParam('minAchieveRate');
+	var rateMaxP =  urlParam('maxAchieveRate');
 
 	var moneyP =  '${param.currentMoney}';
-	var moneyMin =  '${param.minMoney}';
+	var moneyMinP =  '${param.minMoney}';
 	
-	var moneyMax =  '${param.maxMoney}';
+	var moneyMaxP =  '${param.maxMoney}';
 	
-	var sort = '${param.sort}';
+	var sortP = '${param.sort}';
+	
+	console.log("rateP:"+rateP);
 
 	
-	if(sort !=''){//소트누룸
+	if(sortP !=''){//소트누룸
 		$.each(state,function(list,val){
 			$.each(val, function(title,value){
-				if(sort==value){
+				if(sortP==value){
 					$("#sortBtn").html(title);
 					
 					return false;
@@ -563,10 +355,13 @@ function buttonSet(){
 		});		
 	}//상태
 	
-	if(rateP!=''){//달성률 클릭시
+	if(rateP!==null){//달성률 클릭시
+		console.log("달성률 클ㄹ릭!");
 		$.each(rate,function(list,val){
+			console.log(val);
 			$.each(val, function(title,value){
 				if(rateP==value){
+					console.log(rateP);
 					$("#rateBtn").html(title);
 					return false;
 				}
@@ -575,15 +370,16 @@ function buttonSet(){
 	}//달성률
 	
 	
-	if(rateMin!=0 || rateMax!=0){//달성률 직접입력시
-		if(rateMin=='' && rateMax!=''){ //최소달성률이 0이면
-			$("#rateBtn").html(rateMax+"% 이하");
-		} else if(rateMax=='' && rateMin!=''){
-			$("#rateBtn").html(rateMin+"% 이상");
+	if(rateMinP!==null || rateMaxP!==null){//둘다 값이 존재함.
+		if(rateMinP==0 && rateMaxP!==null){ //최소달성률이 0이면
+			$("#rateBtn").html(rateMaxP+"% 이하");
+		} else if(rateMaxP==0 && rateMinP!==null){
+			$("#rateBtn").html(rateMinP+"% 이상");
 			
-		} else if(rateMax!='' && rateMin!=''){//둘다 존재
-			$("#rateBtn").html(rateMin+"% ~ "+rateMax+"%");
+		} else if(rateMaxP!==null && rateMinP!==null){//둘다 존재
+			$("#rateBtn").html(rateMinP+"% ~ "+rateMaxP+"%");
 		}
+		
 		
 	}// 달성률 직접입력
 	
@@ -601,17 +397,17 @@ function buttonSet(){
 	
 	
 	
-	if(moneyMin!=='' || moneyMax!==''){ //돈 직접입력
-		console.log(moneyMin);
-		console.log(moneyMax);
-		if(moneyMin==0 && moneyMax!==''){ //최소돈 0
-			$("#moneyBtn").html(moneyMax+"원 이하");
-		} else if(moneyMax==0 && moneyMin!=''){
-			$("#moneyBtn").html(moneyMin+"원 이상");
+	if(moneyMinP!=='' || moneyMaxP!==''){ //돈 직접입력
+		console.log(moneyMinP);
+		console.log(moneyMaxP);
+		if(moneyMinP==0 && moneyMaxP!==''){ //최소돈 0
+			$("#moneyBtn").html(moneyMaxP+"원 이하");
+		} else if(moneyMaxP==0 && moneyMinP!=''){
+			$("#moneyBtn").html(moneyMinP+"원 이상");
 			
-		} else if(moneyMax!=='' && moneyMin!==''){//둘다 존재
+		} else if(moneyMaxP!=='' && moneyMinP!==''){//둘다 존재
 			console.log("둘다 있으니까 적용하자");
-			$("#moneyBtn").html(moneyMin+"원 ~ "+moneyMax+"원");
+			$("#moneyBtn").html(moneyMinP+"원 ~ "+moneyMaxP+"원");
 		}
 		
 	}//돈 직접입력
@@ -957,32 +753,47 @@ function cateBuild(){
 
 	
 	
-$.each(categoryLinks, function(index, list){		
-		
-		$.each(list,function(mainCate, subCateList){
-			$.each(subCateList, function(index,subCate){
-				if(index=='title'){
-					var mainCategory ='';
-					mainCategory = '<li class="dropdown-submenu"><a href="#">'+subCate+'</a><ul id="'+mainCate+'" class="dropdown-menu"></ul>';
-					
-					$('#category').append(mainCategory);
-				} else{
-					var output='';
-					output += '<li><a href="/fund/discover?category='+subCate+path+'">'+index+'</a></li>';
-					
-					
-					$('#'+mainCate).append(output);
-				}
+	$.each(categoryLinks, function(index, list){		
+			
+			$.each(list,function(mainCate, subCateList){
+				$.each(subCateList, function(index,subCate){
+					if(index=='title'){
+						var mainCategory ='';
+						mainCategory = '<li class="dropdown-submenu"><a href="#">'+subCate+'</a><ul id="'+mainCate+'" class="dropdown-menu"></ul>';
+						
+						$('#category').append(mainCategory);
+					} else{
+						var output='';
+						output += '<li><a href="/fund/discover?category='+subCate+path+'">'+index+'</a></li>';
+						
+						
+						$('#'+mainCate).append(output);
+					}
+				});
 			});
 		});
-	});
 	
 
 }
-	
 
 
-</script>
-      
-</body>
-</html>
+function urlParam(name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null){
+       return null;
+    }
+    else{
+       return 0;
+    }
+}
+
+
+
+//글자 제한 + 텍스트입력 막기
+function numberMaxLength(e){
+	e.value = e.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');	
+	if(e.value.length > e.maxLength){
+		e.value = e.value.slice(0, e.maxLength);
+	}
+}
+

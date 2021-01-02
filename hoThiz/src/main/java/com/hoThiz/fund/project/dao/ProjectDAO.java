@@ -15,12 +15,12 @@ import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
 import com.hothiz.fund.project.dto.ProjectStateDTO;
-import com.hothiz.fund.project.dto.ProjectAlarmCount;
+import com.hothiz.fund.project.dto.ProjectAlarmCountDTO;
 import com.hothiz.fund.project.dto.ProjectDateDTO;
 import com.hothiz.fund.project.dto.ProjectGiftDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
 import com.hothiz.fund.project.dto.ProjectPagingDTO;
-import com.hothiz.fund.project.dto.TestDTO;
+
 
 @Repository
 public interface ProjectDAO {
@@ -29,6 +29,10 @@ public interface ProjectDAO {
 	///////////////////////게시글 하나 뽑아냄/////////////////////////
 	@Select("SELECT * FROM project_info WHERE project_id = #{project_id}")
 	public ProjectInfoDTO getAProject(int project_id);
+	
+	///모든 게시글을 셀 것/////////////
+	@Select("SELECT count(*) from project_info")
+	public int getAllProjectCnt();
 	
 	
 	////////////////////게시글 gift_list 뽑아옴
@@ -66,6 +70,7 @@ public interface ProjectDAO {
 	
 
 //////////////////////////////////////**파라미터 조건으로 게시글 목록 뽑아내기//////////////////////////////////	
+
 @Select("SELECT complete.* " + 
 		"FROM (" + 
 		"    SELECT rownum rn, condition.* " + 
@@ -98,8 +103,15 @@ public interface ProjectDAO {
 		"              CASE WHEN #{param.ongoing} = 'prelaunching' then project_deadline " + 
 		"                   WHEN #{param.ongoing} = 'ongoing' THEN project_deadline " + 
 		"                   WHEN #{param.ongoing} = 'confirm' THEN sysdate " + 
-		"              END " + 
-		"           ) AND " + 
+		"              END "+
+					 "AND"
+					  +" CASE WHEN #{param.ongoing}='confirm' THEN project_current_donated "
+					  +" ELSE 2 "
+					  +" END >"
+					  +" CASE WHEN #{param.ongoing}='confirm' THEN project_target_price"
+					  +" ELSE 1 "
+					  + " END" + 			
+					  " ) AND " + 
 		"                 project_current_donated BETWEEN #{param.minMoney} and  " + 
 		"                 CASE WHEN #{param.currentMoney}=5 or (#{param.currentMoney}=0 and #{param.maxMoney}=0) THEN (select max(project_current_donated) from project_info) " + 
 		"                      ELSE #{param.maxMoney}" + 
@@ -133,10 +145,8 @@ public interface ProjectDAO {
 "                    CASE WHEN #{param.query}='none' THEN '%' " + 
 "                    ELSE #{param.query} END ||'%' " + 
 "                )"+
-		") complete " + 
+		") complete "+
 		"WHERE rn BETWEEN #{page.startRownum} AND #{page.endRownum}")
-
-
 public ArrayList<ProjectInfoDTO> getParamProjectList(@Param("param") ProjectParamDTO paramDto, @Param("page") ProjectPagingDTO pageDto);
 			
 
@@ -172,8 +182,15 @@ public ArrayList<ProjectInfoDTO> getParamProjectList(@Param("param") ProjectPara
 		"              CASE WHEN #{param.ongoing} = 'prelaunching' then project_deadline " + 
 		"                   WHEN #{param.ongoing} = 'ongoing' THEN project_deadline " + 
 		"                   WHEN #{param.ongoing} = 'confirm' THEN sysdate " + 
-		"              END " + 
-		"           ) AND " + 
+		"              END "+
+					 "AND"
+					  +" CASE WHEN #{param.ongoing}='confirm' THEN project_current_donated "
+					  +" ELSE 2 "
+					  +" END >"
+					  +" CASE WHEN #{param.ongoing}='confirm' THEN project_target_price"
+					  +" ELSE 1 "
+					  + " END" + 			
+					  " ) AND " + 
 		"                 project_current_donated BETWEEN #{param.minMoney} and  " + 
 		"                 CASE WHEN #{param.currentMoney}=5 or (#{param.currentMoney}=0 and #{param.maxMoney}=0) THEN (select max(project_current_donated) from project_info) " + 
 		"                      ELSE #{param.maxMoney}" + 
@@ -208,7 +225,10 @@ public ArrayList<ProjectInfoDTO> getParamProjectList(@Param("param") ProjectPara
 "                    ELSE #{param.query} END ||'%' " + 
 "                )"+
 		") complete ")
-	public int countProjects(@Param("param") ProjectParamDTO paramDto);		
+public int getProjectsCnt(@Param("param") ProjectParamDTO paramDto);		
+
+@Select("SELECT count(*) from project_info where project_prelaunching_check=1 and sysdate < project_release_date")
+public int getPreProjectsCnt();
 
 	//7. 검색해서 게시글 뽑기
 /*
@@ -564,7 +584,7 @@ OR project_summary LIKE CONCAT('%',#{param.keyword},'%')) A
 	
 	//알림신청 몇명??리스트로->메인에서보여줘야됨.
 	@Select("SELECT project_id, count(*) AS \"count\" from member_alarm group by project_id ")
-	public ArrayList<ProjectAlarmCount> getAlarmCountList();
+	public ArrayList<ProjectAlarmCountDTO> getAlarmCountList();
 	
 	
 //////////////////멤버정보 뽑아옴////////////////////////////////	
@@ -576,6 +596,12 @@ public MemberDTO getAMemberInfo(String member_email);
 	
 @Select("SELECT COUNT(*) FROM member_donated_project WHERE project_id = #{project_id}")
 public int getDonatedMemberCnt(int project_id);
+
+//confirm인 경우에 줄거임.
+@Select("select project_id, count(*) AS \"count\" from member_donated_project group by project_id")
+public ArrayList<ProjectAlarmCountDTO> getDonatedCntList();
+
+
 	
 ///////////////////날짜차이 뽑아주기//////////////////////////////
 @Select("select project_id, to_number(to_date(project_deadline,'yyyy-MM-DD')-to_date(sysdate,'yyyy-MM-DD')) AS \"d_day\" "
@@ -602,16 +628,16 @@ public ProjectDateDTO getADDay(int project_id);
 	         + " values(#{member_email},#{member_pwd},#{member_name},0,#{member_phnum},#{member_addr},#{member_URL},0,0)")
 	public void insertMember(MemberDTO dto);
 	
-@Update("update project_info set project_current_donated = 0 where project_id=#{project_id}")
-public void updateProject1(int project_id);
+@Update("update project_info set project_main_image = #{img} where project_id=#{project_id}")
+public void updateProject1(@Param("project_id") int project_id, @Param("img") String img);
 
 	
-@Update("update project_info set project_current_donated = 1000 where project_id=#{project_id}")
+@Update("update project_info set project_deadline = to_date('2021-01-12','YY-MM-DD') where project_id=#{project_id}")
 public void updateProject2(int project_id);
 
 	
 
-@Update("update project_info set project_current_donated = 100000000 where project_id=#{project_id}")
+@Update("update project_info set project_release_date = to_date('2021-01-11','YY-MM-DD') where project_id=#{project_id}")
 public void updateProject3(int project_id);
 
 

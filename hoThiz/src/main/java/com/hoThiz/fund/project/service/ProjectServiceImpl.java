@@ -27,12 +27,13 @@ import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
 import com.hothiz.fund.project.dto.ProjectStateDTO;
-import com.hothiz.fund.project.dto.ProjectAlarmCount;
+
+import com.hothiz.fund.project.dto.ProjectAlarmCountDTO;
 import com.hothiz.fund.project.dto.ProjectDateDTO;
 import com.hothiz.fund.project.dto.ProjectGiftDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
 import com.hothiz.fund.project.dto.ProjectPagingDTO;
-import com.hothiz.fund.project.dto.TestDTO;
+
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -149,6 +150,29 @@ public class ProjectServiceImpl implements ProjectService {
 		
 	}
 	
+	//전체글 갯수..(첫 리스트 화면)
+	
+	@Override
+	public int getAllProjectsCnt() {
+		return dao.getAllProjectCnt();
+	}
+	
+	//프로젝트 갯수
+	@Override
+	public int getProjectsCnt(ProjectParamDTO paramDto) {
+		
+		int cnt=0;
+		
+		if(paramDto.getOngoing().equals("prelaunching")) {
+			cnt = dao.getPreProjectsCnt();
+		} else {
+			cnt = dao.getProjectsCnt(paramDto);
+		}
+		
+
+		
+		return cnt;
+	}
 	
 	//프로젝트 리스트 얻어오기~
 	@Override
@@ -211,6 +235,24 @@ public class ProjectServiceImpl implements ProjectService {
 		
 		return projectList;
 	}
+	
+	public Map<Integer,Integer> getDonatedCntMap() {
+		/*
+		  프젝 id : 후원자 수,
+		 */
+		//어차피 변수명 똑같애서 dto돌려씀..
+		ArrayList<ProjectAlarmCountDTO> cntList = dao.getDonatedCntList();
+		Map<Integer, Integer> donatedCntMap = new HashMap<Integer, Integer>();
+		
+		for(ProjectAlarmCountDTO dto : cntList ) {
+			donatedCntMap.put(dto.getProject_id(), dto.getCount());
+		}
+		
+		
+		return donatedCntMap;
+	}
+	
+	
 
 
 	//비동기로 가져오기
@@ -243,6 +285,7 @@ public class ProjectServiceImpl implements ProjectService {
 		map.put("member", memberList);
 		map.put("prj", prjList);
 		map.put("likeOrAlarm", likeOrAlarmList);
+		
 		
 		System.out.println(map.get("day"));
 
@@ -309,6 +352,7 @@ public class ProjectServiceImpl implements ProjectService {
 				Map<Integer, ProjectDateDTO> map = new HashMap<>();
 				ArrayList<ProjectDateDTO> list = dao.getDDayList();
 				
+			//키는 id..
 				for(ProjectDateDTO dto : list) {
 					map.put(dto.getProject_id(), dto);
 				}
@@ -365,8 +409,34 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 	
 	@Override
-	public ArrayList<MemberDTO> getMemberInfoList() {
-		return dao.getMemberInfoList();
+	public Map<Integer, Map<String,String>> getMemberInfoList() {
+		
+		
+		ArrayList<MemberDTO> memberList = dao.getMemberInfoList();
+		ArrayList<ProjectInfoDTO> prjList = dao.getAllProjectList();
+		Map<Integer, Map<String,String>> memberMap = new HashMap<>();
+		Map<String, String> detailMap = null;
+		
+		for(ProjectInfoDTO pro : prjList) {
+			for(MemberDTO mem : memberList) {
+			
+				if(pro.getMember_email().equals(mem.getMember_email())) { 
+					detailMap = new HashMap<String, String>();
+					//해당 프로젝트의 멤버를 찾았으면 이메일,닉네임, url 보내줌
+					detailMap.put("member_email", mem.getMember_email());
+					detailMap.put("member_name",mem.getMember_name());
+					detailMap.put("member_url", mem.getMember_URL());
+				}
+				
+				memberMap.put(pro.getProject_id(), detailMap);
+				
+			}
+			
+			
+		}
+		
+		
+		return memberMap;
 	}
 
 
@@ -540,14 +610,13 @@ public class ProjectServiceImpl implements ProjectService {
 	//프로젝트 별 알람 인원
 	public Map<Integer, Integer> getAlarmCountList(){
 		
-		ArrayList<ProjectAlarmCount> prjList = dao.getAlarmCountList();
+		ArrayList<ProjectAlarmCountDTO> prjList = dao.getAlarmCountList();
 		
 		Map<Integer, Integer> alarmCntMap = new HashMap<>();
 
 		
-		for(ProjectAlarmCount pro : prjList) {
+		for(ProjectAlarmCountDTO pro : prjList) {
 			alarmCntMap.put(pro.getProject_id(), pro.getCount());
-			
 		}
 		
 		System.out.println(alarmCntMap);

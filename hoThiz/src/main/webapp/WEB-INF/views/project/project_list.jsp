@@ -189,7 +189,7 @@ ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}<br>
 											</c:if>
 										</c:forEach>
 
-		</c:when>
+	</c:when>
 </c:choose>
 
 </c:forEach>

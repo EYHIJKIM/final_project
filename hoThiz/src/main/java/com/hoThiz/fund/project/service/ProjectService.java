@@ -5,12 +5,14 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.ui.Model;
 
 import com.hothiz.fund.member.dto.MemberDTO;
 import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
+import com.hothiz.fund.project.dto.ProjectAlarmCountDTO;
 import com.hothiz.fund.project.dto.ProjectDateDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
 
@@ -28,10 +30,22 @@ public interface ProjectService {
 	public ArrayList<ProjectInfoDTO> getParamProjectList(ProjectParamDTO paramDto);
 	
 		//멤버정보 리스트 => 목록에서 닉네임 뽑을때 필요
-		public ArrayList<MemberDTO> getMemberInfoList();
+		public Map<Integer, Map<String, String>> getMemberInfoList();
 		
 		//<게시글 번호, 게시글날짜DTO> ==> 목록 뽑아올 때 ongoing/prelaunching/confirm 조건거는데 필요
 		public Map<Integer, ProjectDateDTO> getDDayMap();
+		
+		//알람신청 몇명했는지 가져옴
+		public Map<Integer, Integer> getAlarmCountList();
+		
+		//진행중 프로젝트 총 갯수
+		public int getProjectsCnt(ProjectParamDTO paramDto);
+		
+		//모든 프로젝트
+		public int getAllProjectsCnt();
+		
+		//총 후원자 수
+		public Map<Integer, Integer> getDonatedCntMap();
 	
 	//게시글 리스트 비동기로 뽑아오기
 	public String syncGetData(ProjectParamDTO paramDto, HttpSession session);

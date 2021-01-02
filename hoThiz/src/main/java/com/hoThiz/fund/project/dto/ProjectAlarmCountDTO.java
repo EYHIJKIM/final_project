@@ -1,6 +1,6 @@
 package com.hothiz.fund.project.dto;
 
-public class ProjectAlarmCount {
+public class ProjectAlarmCountDTO {
 	
 	private int project_id;
 	private int count;

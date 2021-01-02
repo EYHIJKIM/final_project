@@ -28,7 +28,7 @@
 		
 </head>
 <body onload='build()'>
-<jsp:include page="../default/main_header.jsp"></jsp:include>
+<%@include file="../default/main_header.jsp" %>
 
 <div class="container">
       
@@ -128,7 +128,7 @@
 
 </div>
 
-</div>
+
 
 
 <hr><%--------------------리스트----------------------------- --%>
@@ -137,10 +137,13 @@
 
 
 
+<c:if test="${param.ongoing eq null}">
+<h3>총 게시글 :${countAllProject}개</h3>
+</c:if>
 
-
-
-	총 게시글 :...
+<c:if test="${param.ongoing ne null}">
+	<h3>총 게시글 :${countProject} 개</h3>
+</c:if>
 
 <c:if test="${param.ongoing eq null}">
 	<c:set var="state" value="ongoing"/>
@@ -151,21 +154,23 @@
 
 
 
-<c:forEach var="prj" items="${firstList}" varStatus="var">
+<c:set var="path" value="resources/project" />
+
+
+
+<div class="row text-center">
+<c:forEach var="prj"  items="${firstList}" varStatus="var">
 <%-- ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}<br>--%>
-	<c:choose>
-		<c:when test="${state eq 'ongoing'}"><%--진행중인 프로젝트 --%>
-			<c:if test="${dDayMap[prj.project_id].d_day >='0' and dDayMap[prj.project_id].chk >='0'}">
-				
-				
-				
-		<div class="row text-center">
-
-
- <c:set var="loop" value="false"/>
-
-
-	<c:if test="${not loop}">
+<c:choose>
+	<c:when test="${state eq 'ongoing'}"><%--진행중인 프로젝트 --%>
+	
+	
+	
+	
+	<c:if test="${dDayMap[prj.project_id].d_day >='0' and dDayMap[prj.project_id].chk >='0'}">
+			
+		
+		
 	    <div class="col-md-3">
 	        <div class="card">
 	            <div class="card-img">
@@ -175,7 +180,7 @@
 	            
 	            <%--좋아요  --%>
 	           	 <c:set var="flag" value="false" />
-	                <c:forEach var="likeId" items="${likeList}">
+	                <c:forEach var="likeId" items="${likeOrAlarmList}">
 						<c:if test="${likeId eq prj.project_id}">
 							<c:set var="flag" value="true" />
 						</c:if>		
@@ -204,114 +209,133 @@
 	                    ${prj.project_current_percent}% 달성</p>
 	                </div>
 				
-				
+		
 				</div>
 				
+			
 				
 			</div>
+			
 		</div>
-	</c:if>
-	
-			<c:if test="${var.index eq 3 }">
-		  	  <c:set var="loop" value="true"/>
-		   </c:if>
-
-
-
-
-
-
-
-
-</div>   
-
-<div style="width:100%;margin:1em;"></div>
-
-			
-				
-</c:if>
-	
-</c:when>
-
-
-
-
-
-<%-- ///////////////////////////////////공개예정인 경우. 알림신청으로 나타나야함///////////////////////// --%>
-
-	<c:when test="${state eq 'prelaunching' and prj.project_prelaunching_check eq '1'}">
 		
-			<h2>공개예정인 경우</h2>
-				
-				${prj.project_id }는 공개예정입니다. <br>
-				d_day : ${dDayMap[prj.project_id].d_day}<br>
-				chk : ${dDayMap[prj.project_id].chk}<br>
-				${prj.project_sub_category } | 
-										<c:forEach var="mem" items="${memberList}">
-											<c:if test="${prj.member_email eq mem.member_email}">
-												${mem.member_name}
-											</c:if>
-										</c:forEach>
+	</c:if>
+
+		</c:when>
+
+	<c:when test="${state eq 'prelaunching'}">
+	
+	<c:if test="${prj.project_prelaunching_check eq '1'}" >
+		
 			
-			<%-- 
-			<div class="col-md-2 column productbox" style="position:relative;">
-						<a href="/discover/${prj.project_id}?ongoing=prelaunching">	
-							<img src="/fund/resources/project/${prj.project_id}.jpg" class="img-responsive"></a>
-							<div class="producttitle">
-							<a href="/discover/${prj.project_id}?ongoing=prelaunching"><h3>${prj.project_title}</h3></a></div>
-							<div class="productprice">
-								${prj.project_sub_category } | 
-								<c:forEach var="mem" items="${memberList}">
-									<c:if test="${prj.member_email eq mem.member_email}">
-										${mem.member_name}
-									</c:if>
-								</c:forEach>
-								<div class="pull-right">
-									<a href="#" class="btn btn-danger btn-sm" role="button">BUY</a>
-								</div>
-								<div class="pricetext">${prj.project_summary }</div>
-							</div>
-			</div>--%>
-	
-	
-				<c:set var="msg" value="알림신청" />
+	    <div class="col-md-3">
+	        <div class="card">
+	            <div class="card-img">
+	                <img class="img-responsive" src="${path}/${prj.project_main_image}" onclick="goProject('${prj.project_id}')">
+	            </div>
+	            
+	            
+	            <%--좋아요  --%>
+
+	            <div class="card-block">
+	               <div class="card-title">
+	                    <small><a href="/fund/discover?category=${prj.project_sub_category}">${prj.project_sub_category}</a> | <a href="fund/u?member_url=${memberMap[prj.project_id].member_URL}">${memberMap[prj.project_id].member_name}</a></small>
+	                    <h4><a href="/fund/discover/${prj.project_id}">${prj.project_title}</a></h4>
+	                    <p>${prj.project_summary}</p>
+	                </div>
+	                
+	                
+	                
+	                
+	                	<c:set var="msg" value="알림신청" />
 				<c:forEach var="alarmId" items="${likeOrAlarmList}">
 				 
 					<c:if test="${alarmId eq prj.project_id}">
-						<c:set var="msg" value="알림신청했음" />
+						<c:set var="msg" value="알림신청완료" />
 					</c:if>
 				</c:forEach>
-	
-	
-				<button id="notificationBtn" onClick="MyAlarmProject('${prj.project_id}')">
-					<p id="notiBtn${prj.project_id}">${msg}</p>
-				</button>
+	             <button class="btn btn-secondary my-2 my-sm-0" id="notificationBtn" onClick="MyAlarmProject('${prj.project_id}')">
+								<p id="notiBtn${prj.project_id}">${msg}</p>
+						</button>
 				
+			
+						
+				</div>
+			</div>
+		</div>
+
+			</c:if>
+		</c:when>
+		<c:when test="${state eq 'confirm'}">
+
+		
+				<div class="col-md-3">
+	        <div class="card">
+	            <div class="card-img">
+	                <img class="img-responsive" src="${path}/${prj.project_main_image}" onclick="goProject('${prj.project_id}')">
+	            </div>
+	            
+	            
+	            <%--좋아요  --%>
+	           	 <c:set var="flag" value="false" />
+	                <c:forEach var="likeId" items="${likeOrAlarmList}">
+						<c:if test="${likeId eq prj.project_id}">
+							<c:set var="flag" value="true" />
+						</c:if>		
+					</c:forEach>
+					
+					
+		<c:if test="${flag}">
+			<button id="likeBtn${prj.project_id}" class="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
+				<img class="likeImg" src="resources/img/fullHeart.png">
+			</button>
+				
+		</c:if>
+		<c:if test="${not flag}">
+			<button id="likeBtn${prj.project_id}" class="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
+				<img class="likeImg" src="resources/img/blankHeart.png">
+			</button>		
+		</c:if>
+		
+		
+		
+	            <div class="card-block">
+	               <div class="card-title">
+	                    <small><a href="/fund/discover?category=${prj.project_sub_category}">${prj.project_sub_category}</a> | <a href="fund/u?member_url=${memberMap[prj.project_id].member_URL}">${memberMap[prj.project_id].member_name}</a></small>
+	                    <h4><a href="/fund/discover/${prj.project_id}">${prj.project_title}</a></h4>
+	                    <p>${prj.project_summary}</p>
+	                    <hr>
+	                   ${countDonated[prj.project_id]} 명의 후원으로 펀딩 성공
+	                </div>
+				
+		
+				</div>
+				
+			
+				
+			</div>
+			
+		</div>
 
 		</c:when>
 
-		
-	
-	<c:when test="${state eq 'confirm'}">
-			<h2>끝난 프로젝트 입니다</h2>
-		
-				d_day : ${dDayMap[prj.project_id].d_day}<br>
-				chk : ${dDayMap[prj.project_id].chk}<br>
-				${prj.project_sub_category } | 
-										<c:forEach var="mem" items="${memberList}">
-											<c:if test="${prj.member_email eq mem.member_email}">
-												${mem.member_name}
-											</c:if>
-										</c:forEach>
-
-		</c:when>
 </c:choose>
 
 </c:forEach>
+	</div><%--row div임 --%>
+</div><%--container div임 --%>
+
+<div class="container">
+
+	<div class="row text-center">
+
+		<div id="scrollContent"></div>
 
 
+	</div>
 
-	<div id="scrollContent"></div>
+</div>	
+
+
 
 
 
@@ -337,12 +361,193 @@
 
 --%>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="/fund/resources/myjsFunction/projectListViewFunction.js"></script>
+
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-
+<script src="/fund/resources/myjsFunction/projectFunction.js"></script>
   <script src="resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
+
+
+let page = 0;
+
+function infiniteScroll() {
+		console.log("인피니트 진입")
+
+		//만약 전체 스크롤-10보다 내려온 스크롤이 크면(밑바닥에 거의 닿으면)
+		if ($(document).height() - 30 <= $(window).height()
+				+ $(window).scrollTop()) {
+			page += 1;
+			//list객체에서 page값을 1 올려준다. 
+
+			let params = "?page=" + page;
+			//param += ${param.cat1egory} ->이렇게 하면 안돼ㅜ
+
+			//파라미터값이 존재할때만 params에 붇혀줌(ajax로 url에 묻혀줄 변수임)
+
+			if ('${param.category}' != '') {
+				params += "&category="+'${param.category}';
+			}
+			if ('${param.ongoing}' != '') {
+				params += "&ongoing="+'${param.ongoing}';
+			}
+			if ('${param.sort}' != '') {
+				params += "&sort="+'${param.sort}';
+			}if ('${param.maxAchieveRate}' !='') {
+				params += "&maxAchieveRate="+'${param.maxAchieveRate}';
+			} if ('${param.minAchieveRate}' != '') {
+				params += "&minAchieveRate="+'${param.minAchieveRate}';
+			}if ('${param.query}' != '') {
+				params += "&query="+'${param.query}';
+			
+			}if ('${param.currentMoney}' != '') {
+				params += "&currentMoney="+'${param.currentMoney}';
+			}
+			if ('${param.achieveRate}'!='') {
+				params += "&achieveRate="+'${param.achieveRate}';
+			}
+			
+			
+			
+			console.log("붙여줄 파람값:"+params);
+			
+
+			//비동기 실행
+			//여기서 보내줘야할것...은...필요한거 똑같이 보내줘야됨. if문도 걸어줘야 됨.(prelaunchig or not?)
+			$.ajax({
+				type : 'GET',
+				url : '/fund/discover/getData' + params,
+				contentType : "application/json; charset=utf-8",
+				success : function(data) {
+		
+					let html = ""
+					
+					//console.log(data["likeOrAlarm"]);
+					//console.log(data["prj"]);
+					//console.log(data["day"]);
+			
+					//console.log(data["member"]);
+					var state = '${param.ongoing}' ; //파라미터 상태
+					console.log(state);
+					if(state==''){
+						state = 'ongoing';
+					}
+					
+					console.log("status:"+state);
+					
+					$.each(data["prj"], function(index, proj) { //i배열이 들어온다.
+						console.log("프젝 꺼내자");
+						 //진행중인거
+							let likeHtml='';
+							let memUrl='';
+							let memName='';
+							let chk=0;
+							let d_day = 0;
+						
+							//남으
+							$.each(data['day'],function(index,dto){//project id가 들어있는 리스트
+								if(dto.project_id==proj.project_id){
+									chk = dto.chk;
+									d_day = dto.d_day;
+									return false;
+								} 
+							});
+							
+							//멤버 
+							$.each(data["member"],function(index, mem){
+								if(mem.member_email == proj.member_email){
+									memName = mem.member_name;
+									memUrl= mem.member_URL
+									return false;
+								}
+							});
+							
+							
+							if(state == 'ongoing'){
+								console.log("ongoing으로 비동기 html넣어주기");
+								
+								if(d_day>=0 && chk >=0){
+									html += '<div class="col-md-3"><div class="card"><div class="card-img">';
+									html += '<img class="img-responsive" src="resources/project/'+proj.project_main_image+'" onclick="goProject('+proj.project_id+')"></div>';
+									//좋아요
+									$.each(data['likeOrAlarm'],function(index,like){//project id가 들어있는 리스트
+										if(like==proj.project_id){
+											likeAlarmHtml ='<button id="likeBtn'+proj.project_id+'" class="likeBtn" onClick="MyFavoritProject('+proj.project_id+')"><img class="likeImg" src="resources/img/fullHeart.png"></button>';
+											return false;
+										} else{
+											likeAlarmHtml ='<button id="likeBtn'+proj.project_id+'" class="likeBtn" onClick="MyFavoritProject('+proj.project_id+')"><img class="likeImg" src="resources/img/blankHeart.png"></button>';
+										}
+									});
+			
+									html +=likeHtml;
+		
+									html+= '<div class="card-block"><div class="card-title">';
+									html+= '<small><a href="/fund/discover?category='+proj.project_sub_category+'">'+proj.project_sub_category+'</a> | <a href="fund/u?member_url='+memUrl+'">'+memName+'</a></small>';
+									html+=  '<h4><a href="/fund/discover/'+proj.project_id+'">'+proj.project_title+'</a></h4>';
+									html+=  '<p>'+proj.project_summary+'<br>'+proj.project_current_percent+'% 달성</p></div></div> </div></div>';
+									
+									
+								}
+							
+						} if(state=='prelaunching'){
+							console.log("prelaunching으로 비동기 html넣어주기");
+
+							
+							if(proj.project_prelaunching_check==1){
+								html += '<div class="col-md-3"><div class="card"><div class="card-img">';
+								html += '<img class="img-responsive" src="resources/project/'+proj.project_main_image+'" onclick="goProject('+proj.project_id+')"></div>';
+								
+								
+								//좋아요
+								$.each(data['likeOrAlarm'],function(index,like){//project id가 들어있는 리스트
+									if(like==proj.project_id){
+										likeAlarmHtml = '알림신청완료';
+										return false;
+									} else{
+										likeAlarmHtml ='알림신청';
+									}
+								});
+		
+								
+	
+								html+= '<div class="card-block"><div class="card-title">';
+								html+= '<small><a href="/fund/discover?category='+proj.project_sub_category+'">'+proj.project_sub_category+'</a> | <a href="fund/u?member_url='+memUrl+'">'+memName+'</a></small>'
+								html+=  '<h4><a href="/fund/discover/'+proj.project_id+'">'+proj.project_title+'</a></h4>';
+								html+=  '<p>'+proj.project_summary+'<br></p></div></div></div></div>';
+								
+								html +=  '<button class="btn btn-secondary my-2 my-sm-0" id="notificationBtn" onClick="MyAlarmProject(' +proj.project_id+ ')"><p id="notiBtn'+proj.project_id+'">'+likeAlarmHtml+'</p></button></div></div></div>'
+								
+							}	
+							
+						 }else if(state=='confirm'){
+							 console.log("컨펌됐음");
+							
+						}
+
+								
+					});
+					
+					
+					$("#scrollContent").append(html);
+
+				}//success func 
+				,
+				error : function() {
+					alert("문제발생");
+				}
+
+			});//ajax 실행
+
+		}
+	}//infiniteScroll함수
+
+
+		$(document).ready(function() {
+			$(window).scroll(infiniteScroll)
+		});
+
+
+
 
 function build(){
 	

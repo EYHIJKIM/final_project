@@ -111,8 +111,8 @@
 
 
 <c:set var="path" value="resources/project" />
-
-
+	`
+v6
 
 
 <h3><a href="/fund/discover?sort=popular">인기 프로젝트</a></h3>
@@ -276,19 +276,19 @@
 	                    <p>${pre.project_summary}</p>
 	                    <p class="percent" >${pre.project_current_percent}% 달성</p>
 	                </div>
-				</div>
-			</div>
-			
-					<div class="card-footer">   
+	                
+	                <div class="card-footer">   
 			
 	                   <c:set var="msg" value="알림신청" />
 	                   <ul class="list-inline">
-	                   <li>${alarmCntMap[pre.project_id]} 명 알람 신청중</li>
-			</ul>
+	                   		<li class="margin-t-10">${alarmCntMap[pre.project_id]} 명 알람 신청중</li>
+						</ul>
 				
-	    </div>
-			
-			
+	    			</div>
+	                
+	                
+				</div>
+			</div>
 		</div>
 	</c:if>
 	
@@ -326,23 +326,23 @@
 	                    <p>${pre.project_summary}<br>
 	                    ${pre.project_current_percent}% 달성</p>
 	                </div>
-				</div>
-		<div class="card-footer">   
-
-	                   <c:set var="msg" value="알림신청" />
-	                   
-				<c:forEach var="alarmId" items="${alarmList}"> 
-					<c:if test="${alarmId eq pre.project_id}">
-						<c:set var="msg" value="알림신청완료" />
-					</c:if>
-				</c:forEach>
-	
-				<button class="btn btn-secondary my-2 my-sm-0" id="notificationBtn" onClick="MyAlarmProject('${pre.project_id}')">
-					<p id="notiBtn${pre.project_id}">${msg}</p>
-				</button>
+	                
+	                
+	 
+	                <div class="card-footer">   
 			
+	                   <c:set var="msg" value="알림신청" />
+	                   <ul class="list-inline">
+	                   		<li class="margin-t-10">${alarmCntMap[pre.project_id]} 명 알람 신청중</li>
+						</ul>
 				
-	    </div>
+	    			</div>
+	                
+	              
+				</div>
+				
+				
+		
 	               
 	           
 	            
@@ -661,12 +661,14 @@
 	    </div>
 	    --%>
 	   
-	    
+<div style="width:100%;margin:3em;"></div>
+<div style="width:100%;margin:3em;"></div>
+<div style="width:100%;margin:3em;"></div>	    
 	    
 </div>	    
 	    
 	    
-</div>
+
   
   
   

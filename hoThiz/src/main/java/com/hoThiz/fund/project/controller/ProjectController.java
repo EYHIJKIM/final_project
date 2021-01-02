@@ -47,11 +47,15 @@ public class ProjectController {
 	public ModelAndView projectList(ModelAndView mv,
 			ProjectParamDTO paramDto, HttpSession session) {
 		
-		
+		mv.addObject("alarmCntMap", ps.getAlarmCountList());
 		mv.addObject("dDayMap",ps.getDDayMap()); 			//프젝id__dto(프젝id,d_day,prelaunching_day)
 		mv.addObject("memberMap",ps.getMemberInfoList());  //멤버 정보들(닉네임 빼낼라고)
 		mv.addObject("likeOrAlarmList",ps.likeOrAlarmProjectList(session,paramDto));//좋아하는 게시글/ 혹은 알람신청한 게시글
 		mv.addObject("firstList", ps.getParamProjectList(paramDto)); //게시글 목록
+		mv.addObject("countProject",ps.getProjectsCnt(paramDto));
+		mv.addObject("countAllProject", ps.getAllProjectsCnt());
+		mv.addObject("countDonated",ps.getDonatedCntMap());
+		
 		
 		mv.setViewName("project/project_list_real");
 
@@ -217,8 +221,13 @@ public class ProjectController {
 	//날짜 넣장
 	@RequestMapping("/update")
 	public void update() {
-		for(int i=1;i<80;i++) {
-			dao.updateProject1(i);
+		String img=null;
+		
+		for(int i=80;i<210;i++) {
+			img = Integer.toString(i)+".jpg";
+			
+			
+			dao.updateProject1(i,img);
 		}
 	}
 	
@@ -231,7 +240,7 @@ public class ProjectController {
 	
 	@RequestMapping("/update3")
 	public void update3() {
-		for(int i=160;i<225;i++) {
+		for(int i=103;i<160;i++) {
 			dao.updateProject3(i);
 		}
 	}

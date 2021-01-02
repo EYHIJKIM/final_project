@@ -16,7 +16,7 @@ public class ProjectPagingDTO {
 	public ProjectPagingDTO() {}
 	public ProjectPagingDTO(int page) {
 		this.locatedPage = page;
-		this.PER_PAGE_PROJECT=15;
+		this.PER_PAGE_PROJECT=20;
 		setStartRownum();setEndRownum();
 	}
 

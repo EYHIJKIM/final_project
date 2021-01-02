@@ -72,7 +72,7 @@ function MyAlarmProject(project_id) {
 			var sessionData = "userId";
 			var userId = sessionStorage.getItem(sessionData);
 			var id = project_id;
-			
+			sessionStorage.setItem("userId","1");//이거 합치면 지워라잉/////////////////
 			var alarmCnt = '('+'${alarmMemberCnt}'+'명 신청중)';
 	
 			 

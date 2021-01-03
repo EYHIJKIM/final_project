@@ -278,6 +278,7 @@ public class ProjectServiceImpl implements ProjectService {
 		//게시글 목록..
 		ArrayList<ProjectInfoDTO> prjList = dao.getParamProjectList(paramDto, pageDto);
 		//map..뽑아낼수있게 키값을 넣어줄거임..
+
 		
 		Map<String, Object> map = new HashMap<>();
 		
@@ -285,7 +286,7 @@ public class ProjectServiceImpl implements ProjectService {
 		map.put("member", memberList);
 		map.put("prj", prjList);
 		map.put("likeOrAlarm", likeOrAlarmList);
-		
+		map.put("donCnt", getDonatedCntMap());
 		
 		System.out.println(map.get("day"));
 

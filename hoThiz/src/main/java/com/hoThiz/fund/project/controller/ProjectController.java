@@ -109,7 +109,7 @@ public class ProjectController {
 	@GetMapping(value = "/{project_id}")
 	public ModelAndView getAProjectDetail(@PathVariable int project_id, 
 			ModelAndView mv, ProjectParamDTO paramDto, HttpSession session) {
-		String path = "project/project_content/story";
+		String path = "project/project_content/story_real";
 		
 		
 		//프로젝트 전체 값을 준다음에, 상세보기 페이지에서 받는다.

@@ -16,12 +16,12 @@
   	 
 	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 	  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-	  <link rel="stylesheet" href="resources/mycss/mycss.css">
+	  <link rel="stylesheet" href="/fund/resources/mycss/mycss.css">
 
   <title>핫디즈 :: hoThiz</title>
 
   
-  <link href="resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/fund/resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
   <style type="text/css">
 

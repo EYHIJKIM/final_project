@@ -43,9 +43,7 @@ function MyFavoritProject(project_id) {
 						$("#likeBtn" + id).css('outline','none');
 						$("#likeBtn" + id).css('border','none');
 					
-						
 
-						alert("좋아요 취소 성공");
 						
 
 					} else { //좋아요 함
@@ -67,13 +65,17 @@ function MyFavoritProject(project_id) {
 
 		}
 
-function MyAlarmProject(project_id) {
+function MyAlarmProject(project_id,alarmMemberCnt) {
 		
 			var sessionData = "userId";
 			var userId = sessionStorage.getItem(sessionData);
 			var id = project_id;
 			sessionStorage.setItem("userId","1");//이거 합치면 지워라잉/////////////////
-			var alarmCnt = '('+'${alarmMemberCnt}'+'명 신청중)';
+			var cnt = alarmMemberCnt;
+			var msg='';
+
+
+			console.log(cnt);
 	
 			 
 			if ( userId == null) {
@@ -98,11 +100,10 @@ function MyAlarmProject(project_id) {
 
 	
 					if (data == '"cancelAlarm"') { //좋아요 취소함
-					
-						$("#notiBtn" + id).html("알림신청");
+
+						$("#notiBtn" + id).html('알림신청');
 
 					} else { //좋아요 함
-			
 						$("#notiBtn" + id).html("알림신청완료");
 					}
 

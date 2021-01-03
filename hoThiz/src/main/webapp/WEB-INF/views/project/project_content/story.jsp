@@ -5,17 +5,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>hoThiz :: 핫디즈</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	  <link rel="stylesheet" href="resources/mycss/mycss.css">
 
- <link href="resources/mycss/mycss.css" rel="stylesheet">
 <style type="text/css">
-#wrap{
-display:flex;flex-flow: column;
-align-content: center;
-}
-.prjBanner{
-display:flex;
-}
 
 
 
@@ -66,25 +62,7 @@ display:flex;
 	text-indent: -9999px;
 }
 
-.img-likeBtn{
-	 background: url( "/fund/resources/img/blankHeart.png" ) no-repeat;
-	 border: none;
-        width: 35px;
-        height: 35px;
-        cursor: pointer;
-        position : absolute;
-        
- 
-}
-.img-cancelLikeBtn{
-	 background: url( "/fund/resources/img/fullHeart.png" ) no-repeat;
-	 border: none;
-        width: 35px;
-        height: 35px;
-        cursor: pointer;
-         position : absolute;
-  
-}
+
 
 
 .likeBtn{
@@ -98,7 +76,7 @@ display:flex;
 
 <body onload="setTag()">
 
-
+<%@include file="../../default/main_header.jsp" %>
 
 
 
@@ -122,7 +100,7 @@ display:flex;
 	
 	<h1>${prj.project_title}</h1>
 	<hr>
-s
+
 <img src="${path}/project/${prj.project_main_image}" width="500px" height="500px">
 
 이멜: ${mem.member_email }
@@ -164,7 +142,6 @@ s
 		<button id="likeBtn${prj.project_id}" class="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
 			<img class="likeImg" src="${path}/img/blankHeart.png">
 		</button>
-				
 	</c:if>
 
 
@@ -619,7 +596,11 @@ function numSet(info,price){
 </footer>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
-<script src="/fund/resources/myjsFunction/projectFunction.js"></script>
+
+
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
 
 

@@ -21,6 +21,10 @@
 		
 		}
 		
+		
+		.col-md-3{
+			margin-bottom: 2em;
+		}
 		</style>
 	
 		
@@ -135,15 +139,18 @@
 
 
 
+<c:choose>
 
-
-<c:if test="${param.ongoing eq null}">
+<c:when test="${param.category eq null and param.ongoing eq null and param.achieveRate eq null and param.currentMoney eq null and param.currentMoney eq null and param.minAchieveRate eq null and param.maxAchieveRate eq null and param.maxMoney eq null and param.minMoney eq null}">
 <h3>총 게시글 :${countAllProject}개</h3>
-</c:if>
+</c:when>
 
-<c:if test="${param.ongoing ne null}">
+<c:otherwise>
 	<h3>총 게시글 :${countProject} 개</h3>
-</c:if>
+</c:otherwise>
+
+
+</c:choose>
 
 <c:if test="${param.ongoing eq null}">
 	<c:set var="state" value="ongoing"/>
@@ -241,19 +248,19 @@
 	                    <small><a href="/fund/discover?category=${prj.project_sub_category}">${prj.project_sub_category}</a> | <a href="fund/u?member_url=${memberMap[prj.project_id].member_URL}">${memberMap[prj.project_id].member_name}</a></small>
 	                    <h4><a href="/fund/discover/${prj.project_id}">${prj.project_title}</a></h4>
 	                    <p>${prj.project_summary}</p>
-	                </div>
+	               </div>
 	                
 	                
 	                
 	                
-	                	<c:set var="msg" value="알림신청" />
-				<c:forEach var="alarmId" items="${likeOrAlarmList}">
+	                <c:set var="msg" value="알림신청" />
+					<c:forEach var="alarmId" items="${likeOrAlarmList}">
 				 
-					<c:if test="${alarmId eq prj.project_id}">
-						<c:set var="msg" value="알림신청완료" />
-					</c:if>
-				</c:forEach>
-	             <button class="btn btn-secondary my-2 my-sm-0" id="notificationBtn" onClick="MyAlarmProject('${prj.project_id}')">
+						<c:if test="${alarmId eq prj.project_id}">
+							<c:set var="msg" value="알림신청완료" />
+						</c:if>
+					</c:forEach>
+	             		<button class="btn btn-secondary my-2 my-sm-0" id="notificationBtn" onClick="MyAlarmProject('${prj.project_id}')">
 								<p id="notiBtn${prj.project_id}">${msg}</p>
 						</button>
 				
@@ -368,7 +375,10 @@
   <script src="resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
 
-
+function goProject(id){
+	  location.href='/fund/discover/'+id;
+	   
+}
 let page = 0;
 
 function infiniteScroll() {
@@ -443,6 +453,7 @@ function infiniteScroll() {
 							let memName='';
 							let chk=0;
 							let d_day = 0;
+							let done='';
 						
 							//남으
 							$.each(data['day'],function(index,dto){//project id가 들어있는 리스트
@@ -458,6 +469,14 @@ function infiniteScroll() {
 								if(mem.member_email == proj.member_email){
 									memName = mem.member_name;
 									memUrl= mem.member_URL
+									return false;
+								}
+							});
+							
+							
+							$.each(data["donCnt"],function(index, don){
+								if(don.key==proj.project_id){
+									done = don.value;
 									return false;
 								}
 							});
@@ -513,15 +532,32 @@ function infiniteScroll() {
 								html+= '<div class="card-block"><div class="card-title">';
 								html+= '<small><a href="/fund/discover?category='+proj.project_sub_category+'">'+proj.project_sub_category+'</a> | <a href="fund/u?member_url='+memUrl+'">'+memName+'</a></small>'
 								html+=  '<h4><a href="/fund/discover/'+proj.project_id+'">'+proj.project_title+'</a></h4>';
-								html+=  '<p>'+proj.project_summary+'<br></p></div></div></div></div>';
+								html+=  '<p>'+proj.project_summary+'<br></p></div>';
 								
 								html +=  '<button class="btn btn-secondary my-2 my-sm-0" id="notificationBtn" onClick="MyAlarmProject(' +proj.project_id+ ')"><p id="notiBtn'+proj.project_id+'">'+likeAlarmHtml+'</p></button></div></div></div>'
 								
 							}	
 							
-						 }else if(state=='confirm'){
-							 console.log("컨펌됐음");
-							
+						 }if(state=='confirm'){
+							 console.log("후원:"+done);
+							 html += '<div class="col-md-3"><div class="card"><div class="card-img">';
+								html += '<img class="img-responsive" src="resources/project/'+proj.project_main_image+'" onclick="goProject('+proj.project_id+')"></div>';
+								//좋아요
+								$.each(data['likeOrAlarm'],function(index,like){//project id가 들어있는 리스트
+									if(like==proj.project_id){
+										likeAlarmHtml ='<button id="likeBtn'+proj.project_id+'" class="likeBtn" onClick="MyFavoritProject('+proj.project_id+')"><img class="likeImg" src="resources/img/fullHeart.png"></button>';
+										return false;
+									} else{
+										likeAlarmHtml ='<button id="likeBtn'+proj.project_id+'" class="likeBtn" onClick="MyFavoritProject('+proj.project_id+')"><img class="likeImg" src="resources/img/blankHeart.png"></button>';
+									}
+								});
+		
+								html +=likeHtml;
+	
+								html+= '<div class="card-block"><div class="card-title">';
+								html+= '<small><a href="/fund/discover?category='+proj.project_sub_category+'">'+proj.project_sub_category+'</a> | <a href="fund/u?member_url='+memUrl+'">'+memName+'</a></small>';
+								html+=  '<h4><a href="/fund/discover/'+proj.project_id+'">'+proj.project_title+'</a></h4>';
+								html+=  '<p>'+proj.project_summary+'</p><hr>'+done.proj_project_id+'명의 후원으로 펀딩성공</p></div></div> </div></div>';
 						}
 
 								
@@ -977,7 +1013,7 @@ function buttonSet(){
  
 function sortBuild(){
 	var path = makePath();
-	path = removeParam('ongoing', path);
+	path = removeParam('sort', path);
 
 	let sortList = [
 		{'인기순' : '?sort=popular'},

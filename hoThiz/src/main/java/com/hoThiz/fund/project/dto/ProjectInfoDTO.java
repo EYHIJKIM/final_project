@@ -23,10 +23,16 @@ public class ProjectInfoDTO {
 	private int project_check;//펀딩에 성공?실패?
 	private int project_prelaunching_check;//0이면 ㄴㄴ 1이면 프리런치
 	private String project_story;
-	
+	private String project_video;
 	private String project_date_string; //펀딩 끝나는 날짜(게시글상세보기), 혹은 펀딩 release 날짜(스케줄러)
 
 	
+	public String getProject_video() {
+		return project_video;
+	}
+	public void setProject_video(String project_video) {
+		this.project_video = project_video;
+	}
 	public String getProject_date_string() {
 		return project_date_string;
 	}

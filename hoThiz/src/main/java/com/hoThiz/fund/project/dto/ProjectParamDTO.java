@@ -24,7 +24,7 @@ public class ProjectParamDTO {
 	
 	public void setting() {
 		if(sort==null || sort.equals("")) {this.sort="popular";}
-		if(ongoing==null || ongoing.equals("")) {this.ongoing="none";}
+		if(ongoing==null || ongoing.equals("")) {this.ongoing="ongoing";}
 		if(category==null || category.equals("")) {this.category="none";}
 		if(query==null || query.equals("")) {this.query="none";}
 		

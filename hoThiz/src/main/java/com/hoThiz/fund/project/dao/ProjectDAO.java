@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.hothiz.fund.member.dto.MemberDTO;
 import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
+import com.hothiz.fund.member.dto.Member_messageDTO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
 import com.hothiz.fund.project.dto.ProjectStateDTO;
 import com.hothiz.fund.project.dto.ProjectAlarmCountDTO;
@@ -25,6 +26,16 @@ import com.hothiz.fund.project.dto.ProjectPagingDTO;
 @Repository
 public interface ProjectDAO {
 	
+	//////////////////////스케줄러 실행//////////////////////
+	@Select("select member_email from member_alarm where project_id = #{project_id}")
+	public ArrayList<String> getMemberListBeAlarmed(int project_id);
+	
+	@Insert("INSERT INTO message value(member_email,message_type,message_content,message_send_member,message_receive_member,message_date)"
+			+ "values(#{member_email},#{message_type}),#{message_content},#{message_send_member},#{message_receive_member},sysdate")
+	public void sendAlarmToMember(Member_messageDTO msgDto);
+	
+	
+	//////////////////////////////////////////////
 	
 	///////////////////////게시글 하나 뽑아냄/////////////////////////
 	@Select("SELECT * FROM project_info WHERE project_id = #{project_id}")
@@ -230,7 +241,7 @@ public ArrayList<ProjectInfoDTO> getParamProjectList(@Param("param") ProjectPara
 "                    OR project_tag LIKE '%' || " + 
 "                    CASE WHEN #{param.query}='none' THEN '%' " + 
 "                    ELSE #{param.query} END ||'%' " + 
-"                )"+
+"                ) AND project_check=2"+
 		") complete ")
 public int getProjectsCnt(@Param("param") ProjectParamDTO paramDto);		
 

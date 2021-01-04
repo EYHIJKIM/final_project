@@ -154,10 +154,11 @@
 
 </c:choose>
 
-<c:if test="${param.ongoing eq null}">
-	<c:set var="state" value="all"/>
+
+<c:if test="${empty param.ongoing}">
+	<c:set var="state" value="none"/>
 </c:if>
-<c:if test="${param.ongoing ne null}">
+<c:if test="${not empty param.ongoing }">
 	<c:set var="state" value="${param.ongoing}"></c:set>
 </c:if>
 
@@ -166,12 +167,11 @@
 <c:set var="path" value="resources/project" />
 
 
-
 <div class="row text-center">
-<c:forEach var="prj"  items="${firstList}" varStatus="var">
-<%-- ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}<br>--%>
+<c:forEach var="prj"  items="${firstList}">
+
 <c:choose>
-	<c:when test="${state eq 'all'}"><%--첫화면, 모조리 보여줌 --%>
+	<c:when test="${state eq 'none'}"><%--첫화면, 모조리 보여줌 --%>
 
 		<c:if test="${dDayMap[prj.project_id].d_day >='0' and dDayMap[prj.project_id].chk >='0'}">
 			
@@ -327,25 +327,15 @@
 	
 	</c:when>
 
+</c:choose>
 
 
 
 
+<%-- ${prj.project_id} 번 프리런치 상태: ${prj.project_prelaunching_check}<br>--%>
+<c:choose>
 
-
-
-
-
-
-
-
-
-
-
-	<c:when test="${state eq 'ongoing'}"><%--진행중인 프로젝트 --%>
-	
-	
-	
+<c:when test="${state eq 'ongoing'}"><%--진행중인 프로젝트 --%>
 	
 	<c:if test="${dDayMap[prj.project_id].d_day >='0' and dDayMap[prj.project_id].chk >='0'}">
 			
@@ -357,10 +347,9 @@
 	                <img class="img-responsive" src="${path}/${prj.project_main_image}" onclick="goProject('${prj.project_id}')">
 	            </div>
 	            
-	            
-	            <%--좋아요  --%>
+	                   <%--좋아요  --%>
 	           	 <c:set var="flag" value="false" />
-	                <c:forEach var="likeId" items="${likeOrAlarmList}">
+	                <c:forEach var="likeId" items="${likeList}">
 						<c:if test="${likeId eq prj.project_id}">
 							<c:set var="flag" value="true" />
 						</c:if>		
@@ -383,10 +372,12 @@
 		
 	            <div class="card-block">
 	               <div class="card-title">
-	                    <small><a href="/fund/discover?category=${prj.project_sub_category}">${prj.project_sub_category}</a> | <a href="fund/u?member_url=${memberMap[prj.project_id].member_URL}">${memberMap[prj.project_id].member_name}</a></small>
+	                    <small><a href="/fund/discover?category=${prj.project_sub_category}">
+	                    	<span class="subCategory">${prj.project_sub_category}</span></a>
+	                    	| <a href="fund/u?member_url=${memberMap[prj.project_id].member_URL}">${memberMap[prj.project_id].member_name}</a></small>
 	                    <h4><a href="/fund/discover/${prj.project_id}">${prj.project_title}</a></h4>
 	                    <p>${prj.project_summary}<br>
-	                    ${prj.project_current_donated} | <font style="color:red;">${prj.project_current_percent}%</font></p>
+	                    ${prj.project_current_donated}원 | <font style="color:red;">${prj.project_current_percent}%</font></p>
 	                </div>
 				
 		
@@ -414,25 +405,25 @@
 	            </div>
 	            
 	            
-	            <%--좋아요  --%>
+	            
 
 	            <div class="card-block">
 	               <div class="card-title">
-	                    <small><a href="/fund/discover?category=${prj.project_sub_category}">${prj.project_sub_category}</a> | <a href="fund/u?member_url=${memberMap[prj.project_id].member_URL}">${memberMap[prj.project_id].member_name}</a></small>
+	                    <small><a href="/fund/discover?category=${prj.project_sub_category}"><span class="subCategory">${prj.project_sub_category}</span></a> | <a href="fund/u?member_url=${memberMap[prj.project_id].member_URL}">${memberMap[prj.project_id].member_name}</a></small>
 	                    <h4><a href="/fund/discover/${prj.project_id}">${prj.project_title}</a></h4>
 	                    <p>${prj.project_summary}</p>
 	               </div>
 	                
 	                
-	                
+	                <%--알림신청  --%>
 	                
 	                <c:set var="msg" value="알림신청" />
-					<c:forEach var="alarmId" items="${likeOrAlarmList}">
-				 
+					<c:forEach var="alarmId" items="${alarmList}">
 						<c:if test="${alarmId eq prj.project_id}">
 							<c:set var="msg" value="알림신청완료" />
 						</c:if>
 					</c:forEach>
+					
 	             		<button class="btn btn-secondary my-2 my-sm-0" id="notificationBtn" onClick="MyAlarmProject('${prj.project_id}')">
 								<p id="notiBtn${prj.project_id}">${msg}</p>
 						</button>
@@ -457,7 +448,7 @@
 	            
 	            <%--좋아요  --%>
 	           	 <c:set var="flag" value="false" />
-	                <c:forEach var="likeId" items="${likeOrAlarmList}">
+	                <c:forEach var="likeId" items="${likeList}">
 						<c:if test="${likeId eq prj.project_id}">
 							<c:set var="flag" value="true" />
 						</c:if>		
@@ -480,7 +471,7 @@
 		
 	            <div class="card-block">
 	               <div class="card-title">
-	                    <small><a href="/fund/discover?category=${prj.project_sub_category}">${prj.project_sub_category}</a> | <a href="fund/u?member_url=${memberMap[prj.project_id].member_URL}">${memberMap[prj.project_id].member_name}</a></small>
+	                    <small><a href="/fund/discover?category=${prj.project_sub_category}"><span class="subCategory">${prj.project_sub_category}</span></a> | <a href="fund/u?member_url=${memberMap[prj.project_id].member_URL}">${memberMap[prj.project_id].member_name}</a></small>
 	                    <h4><a href="/fund/discover/${prj.project_id}">${prj.project_title}</a></h4>
 	                    <p>${prj.project_summary}</p>
 	                    <hr>
@@ -556,8 +547,144 @@ function build(){
 	achieveRateBuild();
 	currentMoneyBuild();
 	buttonSet();
+	setTag();
 		
 }
+
+
+
+function setTag(){
+	
+	var  category = [
+		 { 
+		 		'게임' : 'game',
+				'모바일 게임' : 'mobile-game', 
+				'비디오 게임':'video-game',
+				'보드 게임':'board-game'
+	 },
+	 
+	 {
+			 	'공연' : 'show',
+				'무용' : 'dance', 
+				'뮤지컬':'musical',
+				'공연':'theater'
+	 },
+	 
+	 {
+		 		 '디자인' : 'design',
+				 '건축, 공간' : 'architecture', 
+				 '그래픽 디자인':'graphic-design',
+				 '제품 디자인':'product-design'
+	 },
+	 
+	 {
+		        '만화' : 'comics',
+				'웹툰' : 'web-comics', 
+				'만화책':'comic-books'
+				
+  },
+	 {			
+		 	  '예술' : 'art',
+		 	  '전시' : 'exhibitions',
+			  '웹툰' : 'sculpture-and-action-figures', 
+			  '일러스트레이션':'illustration'
+			
+	 },		
+  
+	 	{			
+			 	  '공예' : 'crafts',
+			 	  '캔들&조향&비누' : 'candles-and-diffusers-and-soaps',
+			 	  '가죽&금속&목 공예' : 'leather-and-metal-and-woodworking',
+			 	  '도예' : 'pottery'
+				  
+				
+		 },
+		 
+		{			
+				 	  '사진' : 'photography',
+				 	  '인물' : 'people-photography',
+				 	  '배경' : 'space-and-urban-photography',
+				 	  '동물' : 'animals-photography'				
+		 
+	 },
+
+	{				
+				 	  '영상' : 'video',
+				 	  '영화' : 'film',
+				 	  '다큐멘터리' : 'documentary',
+				 	  '애니메이션' : 'animation',
+				 	  '뮤직비디오' : 'music-videos'
+					  
+		
+
+	},
+		{
+					
+				 	  '모든' : 'food',
+				 	  '에피타이저' : 'appetizer',
+				 	  '메인디쉬' : 'main-dish',
+				 	  '디저트' : 'dessert'
+					  
+			 
+		},
+		
+		{
+			 	  '음악' : 'music',
+			 	  '클래식' : 'classical-music',
+			 	  '대중음악' : 'popular-music',
+			 	  '인디음악' : 'independent-music'
+				  
+		},
+		
+		{
+					 '출판' : 'publication',
+					 '잡지' : 'zines',
+					 '문학&에세이' : 'literature-and-essay',
+					 '그림책' : 'picture-books'		  			 		
+	    },
+	    
+		{
+		
+				 	  '모든테크' : 'technology',
+				 	  '소프트웨어' : 'software',
+				 	  '하드웨어' : 'hardware',
+				 	  '앱' : 'apps',
+				 	  '웹' : 'web'
+					  
+		
+		},
+	
+		{
+				 	  '패션' : 'fashion',
+				 	  '의류' : 'apparels',
+				 	  '악세서리' : 'accessories',
+				 	  '뷰티' : 'beauty'
+		 		
+	   },
+
+		{
+				 	  '저널' : 'journalism',
+				 	  '오디오 저널' : 'audio-journals',
+				 	  '비디오 저널' : 'video-journals',
+				 	  '웹 저널' : 'web-journals'
+
+		}	
+	];
+	
+	
+	$.each(category,function(idx,map){
+		$.each(map,function(key,value){
+			if(value==$(".subCategory").text()){
+				$(".subCategory").text(key);
+			}
+			
+		})
+	})
+
+	
+	
+}
+
 
 function goProject(id){
 	  location.href='/fund/discover/'+id;
@@ -611,7 +738,8 @@ function infiniteScroll() {
 		
 					let html = ""
 					
-					//console.log(data["likeOrAlarm"]);
+					//console.log(data["likeList"]);
+					//console.log(date['alarmList'])
 					//console.log(data["prj"]);
 					//console.log(data["day"]);
 			
@@ -619,7 +747,7 @@ function infiniteScroll() {
 					var state = '${param.ongoing}' ; //파라미터 상태
 					console.log("state"+state);
 					if(state==''){
-						state = 'none';
+						state = 'ongoing';
 					}
 				
 					console.log("status:"+state);
@@ -668,7 +796,7 @@ function infiniteScroll() {
 									html += '<div class="col-md-3"><div class="card"><div class="card-img">';
 									html += '<img class="img-responsive" src="resources/project/'+proj.project_main_image+'" onclick="goProject('+proj.project_id+')"></div>';
 									//좋아요
-									$.each(data['likeOrAlarm'],function(index,like){//project id가 들어있는 리스트
+									$.each(data['likeList'],function(index,like){//project id가 들어있는 리스트
 										if(like==proj.project_id){
 											likeAlarmHtml ='<button id="likeBtn'+proj.project_id+'" class="likeBtn" onClick="MyFavoritProject('+proj.project_id+')"><img class="likeImg" src="resources/img/fullHeart.png"></button>';
 											return false;
@@ -696,7 +824,7 @@ function infiniteScroll() {
 								
 								
 								//좋아요
-								$.each(data['likeOrAlarm'],function(index,like){//project id가 들어있는 리스트
+								$.each(data['alarmList'],function(index,like){//project id가 들어있는 리스트
 									if(like==proj.project_id){
 										likeAlarmHtml = '알림신청완료';
 										return false;
@@ -722,7 +850,7 @@ function infiniteScroll() {
 							 html += '<div class="col-md-3"><div class="card"><div class="card-img">';
 								html += '<img class="img-responsive" src="resources/project/'+proj.project_main_image+'" onclick="goProject('+proj.project_id+')"></div>';
 								//좋아요
-								$.each(data['likeOrAlarm'],function(index,like){//project id가 들어있는 리스트
+								$.each(data['likeList'],function(index,like){//project id가 들어있는 리스트
 									if(like==proj.project_id){
 										likeAlarmHtml ='<button id="likeBtn'+proj.project_id+'" class="likeBtn" onClick="MyFavoritProject('+proj.project_id+')"><img class="likeImg" src="resources/img/fullHeart.png"></button>';
 										return false;

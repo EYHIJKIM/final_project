@@ -258,7 +258,7 @@ width: 30%;
 
   <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="/fund">hoThiz</a>
+  <a class="navbar-brand" href="/fund/">hoThiz</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -267,6 +267,12 @@ width: 30%;
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
         <a class="nav-link" href="#">로그인
+          <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      
+       <li class="nav-item">
+        <a class="nav-link" href="agreements">프로젝트 올리기
           <span class="sr-only">(current)</span>
         </a>
       </li>
@@ -491,6 +497,11 @@ width: 30%;
 
 	       </ul>   
 		  </li>
+		  
+		  
+		 
+		  
+		  
 		</ul>
 		
 		

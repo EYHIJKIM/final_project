@@ -8,20 +8,22 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import com.hothiz.fund.member.dto.MemberDTO;
+import com.hothiz.fund.member.dto.Member_messageDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
 
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
+import com.hothiz.fund.project.dto.ProjectParamDTO;
 
-
+@Component
 public class ProjectSchedulerService {
 
 	@Autowired
 	ProjectDAO dao;
 
-	
-	
 	
 	//세션으로 user가 어떤 프로젝트 알림신청 했는지 확인
 	//프로젝트 id를 뽑아와서-> 해당 프로젝트의 release_date를 sysdate와 비교.
@@ -46,14 +48,13 @@ public class ProjectSchedulerService {
 	 
 	 */
 	
-	@Scheduled(cron="*/2 * * * * *")
-	public void updateAlarmMessage() throws ParseException {
-		System.out.println("실행되는중!");
-		System.out.println(dao);
+	@Scheduled(cron="0 0 0/1 * * *")
+	public void updateAlarmMessage() throws ParseException { //알림 메시지 보내기.
+	
+		//공개예정 프로젝트들
 		ArrayList<ProjectInfoDTO> prjList = dao.getPreProjectList(); 
-		
-		
-		System.out.println(prjList);
+		Member_messageDTO msgDto = null;
+
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmm");
 		Date time = new Date();
 		
@@ -63,10 +64,36 @@ public class ProjectSchedulerService {
 		
 		//dtd랑 sysdate를 비교할거임
 			for(ProjectInfoDTO dto : prjList) {
-				System.out.println(dto.getProject_date_string());	
 				relDate = format.parse(dto.getProject_date_string());
-				if(time.getTime()<=relDate.getTime()) { //릴리즈날짜랑 같거나, 작으면-->시간 된거임.
-					System.out.println("알림 메시지를 db에 넣자");
+				
+				
+				msgDto = new Member_messageDTO(); //
+				
+				msgDto.setMessage_send_member("admin");
+				msgDto.setMessage_type("알림");
+				
+				String project_title = dto.getProject_title();
+				int project_id = dto.getProject_id();
+				String message_content = "알림신청하신 '"+project_title+"'의 펀딩이 시작되었습니다!"
+						+"<br><a href=\"/fund/discover/"+project_id+"\">바로가기</a>";
+				msgDto.setMessage_content(message_content);
+				
+				
+				  { //릴리즈날짜랑 같거나, 작으면-->시간 된거임.
+						
+					
+					//해당 프로젝트의 id를 가져와서, 이걸 알림한 유저들을 뽑아오는 dao 실행.
+					ArrayList<String> memList = dao.getMemberListBeAlarmed(dto.getProject_id());
+					
+					for(String email:memList) {
+						msgDto.setMessage_receive_member(email);
+						msgDto.setMember_email(email);
+						dao.sendAlarmToMember(msgDto);
+						
+					}
+					
+					
+					
 				}		
 				
 			}
@@ -74,8 +101,29 @@ public class ProjectSchedulerService {
 		} 
 			
 		
+		/*
+	@Scheduled(cron="0 0 0/1 * * *")
+	public void updateProjectStatus(){
 		
-	
+		ProjectParamDTO paramDto = new ProjectParamDTO();
+		paramDto.setOngoing("ongoing");
+		
+		//진행중인 프로젝트의 상황을 체크해서 넣을거임.
+		//즉 파라미터는 온고윙정도???
+		
+		ArrayList<ProjectInfoDTO> prjList = dao.getParamProjectList(paramDto, pageDto)
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmm");
+		Date time = new Date();
+		String sysdate =  format.format(time);
+		Date deadLine = null;
+		
+		for(ProjectInfoDTO dto : prjList) {
+			deadLine = format.parse(dto.getProject_date_string());
+		}
+		
+		
+		
+	}*/
 	
 	
 	

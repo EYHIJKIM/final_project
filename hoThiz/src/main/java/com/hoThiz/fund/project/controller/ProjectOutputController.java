@@ -31,7 +31,7 @@ import com.hothiz.fund.project.service.ProjectService;
 
 @RestController
 @RequestMapping("/discover")
-public class ProjectController {
+public class ProjectOutputController {
 	
 	@Autowired
 	ProjectService ps;
@@ -47,7 +47,9 @@ public class ProjectController {
 		mv.addObject("alarmCntMap", ps.getAlarmCountList());
 		mv.addObject("dDayMap",ps.getDDayMap()); 			//프젝id__dto(프젝id,d_day,prelaunching_day)
 		mv.addObject("memberMap",ps.getMemberInfoList());  //멤버 정보들(닉네임 빼낼라고)
-		mv.addObject("likeOrAlarmList",ps.likeOrAlarmProjectList(session,paramDto));//좋아하는 게시글/ 혹은 알람신청한 게시글
+
+		mv.addObject("likeList",ps.likeProjectList(session,paramDto));
+		mv.addObject("alarmList",ps.alarmProjectList(session,paramDto));//좋아하는 게시글/ 혹은 알람신청한 게시글
 		mv.addObject("firstList", ps.getParamProjectList(paramDto)); //게시글 목록
 		mv.addObject("countProject",ps.getProjectsCnt(paramDto));
 		mv.addObject("countAllProject", ps.getAllProjectsCnt());
@@ -116,7 +118,8 @@ public class ProjectController {
 		MemberDTO memberDto = ps.getAMemberDetail(prjDto.getMember_email()); //프로젝트 발행 멤버
 		
 
-		mv.addObject("likeOrAlarmList",ps.likeOrAlarmProjectList(session,paramDto));
+		mv.addObject("likeList",ps.likeProjectList(session,paramDto));
+		mv.addObject("alarmList",ps.alarmProjectList(session,paramDto));
 		mv.addObject("alarmMemberCnt", ps.getAlarmMemCount(project_id)); //알림 몇명 신청?
 		mv.addObject("dDayInfo", ps.getADDay(project_id) ); //며칠 남았는지 
 		mv.addObject("donatedMemberCnt", ps.getDonatedMemCount(project_id)); //후원자 몇명인지
@@ -143,7 +146,9 @@ public class ProjectController {
 		MemberDTO memberDto = ps.getAMemberDetail(prjDto.getMember_email()); //프로젝트 발행 멤버
 		
 
-		mv.addObject("likeOrAlarmList",ps.likeOrAlarmProjectList(session, paramDto));
+
+		mv.addObject("likeList",ps.likeProjectList(session,paramDto));
+		mv.addObject("alarmList",ps.alarmProjectList(session,paramDto));
 		mv.addObject("alarmMemberCnt", ps.getAlarmMemCount(project_id)); //알림 몇명 신청?
 		mv.addObject("dDayInfo", ps.getADDay(project_id) ); //며칠 남았는지 
 		mv.addObject("donatedMemberCnt", ps.getDonatedMemCount(project_id)); //후원자 몇명인지
@@ -168,7 +173,9 @@ public class ProjectController {
 		MemberDTO memberDto = ps.getAMemberDetail(prjDto.getMember_email()); //프로젝트 발행 멤버
 		
 
-		mv.addObject("likeOrAlarmList",ps.likeOrAlarmProjectList(session, paramDto));
+
+		mv.addObject("likeList",ps.likeProjectList(session,paramDto));
+		mv.addObject("alarmList",ps.alarmProjectList(session,paramDto));
 		mv.addObject("alarmMemberCnt", ps.getAlarmMemCount(project_id)); //알림 몇명 신청?
 		mv.addObject("dDayInfo", ps.getADDay(project_id) ); //며칠 남았는지 
 		mv.addObject("donatedMemberCnt", ps.getDonatedMemCount(project_id)); //후원자 몇명인지

@@ -79,10 +79,8 @@ public interface ProjectService {
 	/////////////////////////////
 
 	//알림, or 좋아요 신청한 프로젝트 리스트
-	public ArrayList<Integer> likeOrAlarmProjectList(HttpSession session, ProjectParamDTO paramDto);
-
-	
-	
+	public ArrayList<Integer> alarmProjectList(HttpSession session, ProjectParamDTO paramDto);
+	public ArrayList<Integer> likeProjectList(HttpSession session, ProjectParamDTO paramDto);
 
 
 	

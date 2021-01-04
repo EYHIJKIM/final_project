@@ -6,12 +6,14 @@
 
 //좋아요 프로젝트
 function MyFavoritProject(project_id) {
-
+			
+			console.log(project_id);
 			var sessionData = "userId";
 			sessionStorage.setItem("userId","1");//이거 합치면 지워라잉/////////////////
 			
 			var userId = sessionStorage.getItem(sessionData);
 			var id = project_id;
+			 console.log(id);
 			 
 			if ( userId == null) {
 				location.href = "/fund" //이거 합치면 로그인창으로 바꾸셈**//////////////////////
@@ -21,7 +23,7 @@ function MyFavoritProject(project_id) {
 			//console.log($("#btn224").val());
 
 			var likeDto = {
-				project_id : project_id,
+				project_id : id,
 				member_email :userId
 			};
 
@@ -65,7 +67,7 @@ function MyFavoritProject(project_id) {
 
 		}
 
-function MyAlarmProject(project_id,alarmMemberCnt) {
+function MyAlarmProject(project_id) {
 		
 			var sessionData = "userId";
 			var userId = sessionStorage.getItem(sessionData);
@@ -84,13 +86,12 @@ function MyAlarmProject(project_id,alarmMemberCnt) {
 
 	
 			var alarmDto = {
-				project_id : project_id,
+				project_id : id,
 				member_email : userId
 		     };
 
-			console.log(alarmDto.project_id);
-			console.log(alarmDto.member_email);
-
+			console.log(alarmDto.id);
+	
 			$.ajax({
 				type : 'POST',
 				url : '/fund/discover/alarm',

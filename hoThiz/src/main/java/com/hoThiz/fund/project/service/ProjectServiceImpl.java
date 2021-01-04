@@ -59,6 +59,7 @@ public class ProjectServiceImpl implements ProjectService {
 		paramDto = new ProjectParamDTO();
 		paramDto.setting();
 		paramDto.setSort("popular");
+		paramDto.setOngoing("ongoing");
 		model.addAttribute("popularList",dao.getParamProjectList(paramDto, pageDto));
 
 		
@@ -82,7 +83,7 @@ public class ProjectServiceImpl implements ProjectService {
 		paramDto.setting();
 		paramDto.setOngoing("prelaunching");
 		model.addAttribute("prelaunchingList",dao.getParamProjectList(paramDto, pageDto));
-		model.addAttribute("alarmList",likeOrAlarmProjectList(session, paramDto) );
+		model.addAttribute("alarmList",alarmProjectList(session, paramDto) );
 		
 		
 		/*
@@ -112,7 +113,7 @@ public class ProjectServiceImpl implements ProjectService {
 		paramDto = new ProjectParamDTO();
 		paramDto.setting();
 		//좋아요 상태
-		model.addAttribute("likeList",likeOrAlarmProjectList(session, paramDto) );
+		model.addAttribute("likeList",likeProjectList(session, paramDto) );
 		
 	
 	
@@ -127,7 +128,7 @@ public class ProjectServiceImpl implements ProjectService {
 		for(ProjectInfoDTO pro : prjList) {
 			for(MemberDTO mem : memberList) {
 			
-				if(pro.getMember_email().equals(mem.getMember_email())) { 
+				if(mem.getMember_email() !=null && pro.getMember_email() !=null&& pro.getMember_email().equals(mem.getMember_email())) { 
 					detailMap = new HashMap<String, String>();
 					//해당 프로젝트의 멤버를 찾았으면 이메일,닉네임, url 보내줌
 					detailMap.put("member_email", mem.getMember_email());
@@ -278,7 +279,8 @@ public class ProjectServiceImpl implements ProjectService {
 		ArrayList<MemberDTO> memberList = dao.getMemberInfoList();
 		
 		//좋아하는 게시글, 알람신청하는 게시글.
-		ArrayList<Integer> likeOrAlarmList = likeOrAlarmProjectList(session, paramDto);
+		ArrayList<Integer> likeList = likeProjectList(session, paramDto);
+		ArrayList<Integer> alarmList = alarmProjectList(session, paramDto);
 		
 		//게시글 목록..
 		ArrayList<ProjectInfoDTO> prjList = dao.getParamProjectList(paramDto, pageDto);
@@ -290,7 +292,8 @@ public class ProjectServiceImpl implements ProjectService {
 		map.put("day", dDayMap);
 		map.put("member", memberList);
 		map.put("prj", prjList);
-		map.put("likeOrAlarm", likeOrAlarmList);
+		map.put("likeList", likeList);
+		map.put("alarmList", alarmList);
 		map.put("donCnt", getDonatedCntMap());
 		
 		System.out.println(map.get("day"));
@@ -298,30 +301,42 @@ public class ProjectServiceImpl implements ProjectService {
 		return jsonMapper(map);
 	}
 	
+	//알람 리스트
+	public ArrayList<Integer> alarmProjectList(HttpSession session, ProjectParamDTO paramDto){
+		paramDto.setting();
+		String state = paramDto.getOngoing();
+		System.out.println(state);
+		ArrayList<Integer> list = null;
+		String userId = "1";
+		//String userId = (String)session.getAttribute("userId"); //세션 확인. 이거 1대신 넣어주기
+		
+		
+		list = dao.getAlarmProjectList(userId);
+		
+		return list;
+		
+	}
+	
+	
 	
 	//해당 게시글의 좋아요 유무 확인을 위한 리스트
 		@Override
-		public ArrayList<Integer> likeOrAlarmProjectList(HttpSession session, ProjectParamDTO paramDto) {
+		public ArrayList<Integer> likeProjectList(HttpSession session, ProjectParamDTO paramDto) {
 			//이거 맵에 해도 될거같긴 한데,,,
-			System.out.println("좋아요 or 찜한 목록 가지러 옴");
+			System.out.println("좋아요 목록 가지러 옴");
 			paramDto.setting();
 			String state = paramDto.getOngoing();
 			System.out.println(state);
 			String userId = "1";
-					//(String)session.getAttribute("userId"); //세션 확인. 이거 1대신 넣어주기
+			//String userId = (String)session.getAttribute("userId"); //세션 확인. 이거 1대신 넣어주기
 			
 			ArrayList<Integer> list = null;
 
 			
-			if(state.equals("prelaunching")) { //공개예정이므로 알림목록을 가져온다
-
-				System.out.println("공개예정 찜목록");
-				list = dao.getAlarmProjectList(userId);
-				
-			} else { //진행중인 펀딩이므로 좋아요 목록을 가져온다.
+				//진행중인 펀딩이므로 좋아요 목록을 가져온다.
 				System.out.println("좋아요 목록");
 				list = dao.getLikeProjectList(userId);
-			}
+		
 
 			
 			return list;
@@ -426,7 +441,7 @@ public class ProjectServiceImpl implements ProjectService {
 		for(ProjectInfoDTO pro : prjList) {
 			for(MemberDTO mem : memberList) {
 			
-				if(pro.getMember_email().equals(mem.getMember_email())) { 
+				if(mem.getMember_email() !=null && pro.getMember_email() !=null&& pro.getMember_email().equals(mem.getMember_email())) { 
 					detailMap = new HashMap<String, String>();
 					//해당 프로젝트의 멤버를 찾았으면 이메일,닉네임, url 보내줌
 					detailMap.put("member_email", mem.getMember_email());
@@ -561,7 +576,7 @@ public class ProjectServiceImpl implements ProjectService {
 			detail = new HashMap<>();
 			MemberDTO memberDto = dao.getAMemberInfo(prj.getMember_email());
 			ArrayList<Integer> likeList = dao.getLikeProjectList(userId);
-			
+			detail.put("project_id", Integer.toString(prj.getProject_id()));
 			detail.put("project_main_image", prj.getProject_main_image());
 			detail.put("project_title", prj.getProject_title());
 			detail.put("project_summary", prj.getProject_summary());

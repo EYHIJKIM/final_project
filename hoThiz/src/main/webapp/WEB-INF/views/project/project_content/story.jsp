@@ -43,7 +43,7 @@ float:left;
 </style>
 </head>
 
-<body>
+<body onload="setTag()">
 
   <!-- Navigation -->
 <%@include file="../../default/main_header.jsp" %>
@@ -114,7 +114,7 @@ float:left;
 			
 			<%--좋아요 버튼 --%>
 			<c:set var="flag" value="false" />
-	                <c:forEach var="likeId" items="${likeOrAlarmList}">
+	                <c:forEach var="likeId" items="${likeList}">
 						<c:if test="${likeId eq prj.project_id}">
 							<c:set var="flag" value="true" />
 						</c:if>		
@@ -331,13 +331,18 @@ float:left;
 	
 	<%--이거 알람 나타나는거 자바 스크립트로 띄우셈...안그러면 잘 안됨.. --%>
 
-	<c:set var="msg" value="알림신청" />
+			 
 	
-	
-				<c:forEach var="alarmId" items="${likeOrAlarmList}">
-					<c:if test="${alarmId eq prj.project_id}">
-						<c:set var="msg" value="알림신청완료" />
-					</c:if>
+		
+				<c:forEach var="alarmId" items="${alarmList}">
+					<c:choose>
+						<c:when test="${alarmId eq prj.project_id}">
+							<c:set var="msg" value="알림신청완료" />
+						</c:when>
+						<c:otherwise>
+							<c:set var="msg" value="알림신청" />
+						</c:otherwise>
+					</c:choose>
 				</c:forEach>
 
 		
@@ -356,6 +361,8 @@ float:left;
 
 
 
+디데이:${day.d_day}
+${day.chk}
 
 
 
@@ -365,9 +372,7 @@ float:left;
 
 
 
-
-
-<c:if test="${day.d_day<'0'}">
+<c:if test="${day.d_day<='0'}">
 	
 	  <!-- Post Content Column -->
       <div class="col-lg-8">
@@ -420,7 +425,7 @@ float:left;
 			
 			<%--좋아요 버튼 --%>
 			<c:set var="flag" value="false" />
-	                <c:forEach var="likeId" items="${likeOrAlarmList}">
+	                <c:forEach var="likeId" items="${likeList}">
 						<c:if test="${likeId eq prj.project_id}">
 							<c:set var="flag" value="true" />
 						</c:if>		
@@ -630,29 +635,40 @@ float:left;
 <h2>이런 프로젝트 어떠세요?</h2><br>
 <div class="row text-center">
 <c:forEach var="morePrj" items="${morePrjList}">
-	
+${memberMap[morePrj.value.project_id].member_URL}
+	${morePrj.value.project_id}
 	    <div class="col-md-3">
 	        <div class="card">
 	            <div class="card-img">
-	                <img class="img-responsive" src="${path}/${moreprj.value.project_main_image}" onclick="goProject('${prj.project_id}')">
+	                <img class="img-responsive" src="${path}/${morePrj.value.project_main_image}" onclick="goProject('${morePrj.value.project_id}')">
 	            </div>
 
+	<c:set var="flag" value="false" />
+	                <c:forEach var="likeId" items="${likeList}">
+						<c:if test="${likeId eq morePrj.value.project_id}">
+							<c:set var="flag" value="true" />
+						</c:if>		
+					</c:forEach>
 					
-		<c:if test="${morePrj.value.project_like eq 'cancelLike' }">
-			<button id="likeBtn${prj.project_id}" class="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
+					
+		<c:if test="${flag}">
+			<button id="likeBtn${morePrj.value.project_id}" class="likeBtn" onClick="MyFavoritProject('${morePrj.value.project_id}')">
 				<img class="likeImg" src="/fund/resources/img/fullHeart.png">
 			</button>
 				
 		</c:if>
-		<c:if test="${morePrj.value.project_like eq 'like'}">
-			<button id="likeBtn${prj.project_id}" class="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
+		<c:if test="${not flag}">
+			<button id="likeBtn${morePrj.value.project_id}" class="likeBtn" onClick="MyFavoritProject('${morePrj.value.project_id}')">
 				<img class="likeImg" src="/fund/resources/img/blankHeart.png">
 			</button>		
-		</c:if>
-	
+		</c:if>	
+		
+		
+		
+		
 	 <div class="card-block">
 	               <div class="card-title">
-	                    <small><a href="/fund/discover?category=${prj.project_sub_category}">${prj.project_sub_category}</a> | <a href="fund/u?member_url=${memberMap[prj.project_id].member_URL}">${memberMap[prj.project_id].member_name}</a></small>
+	                    <small><a href="/fund/discover?category=${morePrj.value.project_sub_category}">${morePrj.value.project_sub_category}</a> | <a href="fund/u?member_url=${memberMap[morePrj.value.project_id].member_URL}">${memberMap[morePrj.value.project_id].member_name}</a></small>
 	                    <h4><a href="/fund/discover/${morePrj.value.project_id}">${morePrj.value.project_title }</a></h4>
 	                    <p>${morePrj.value.project_summary }<br>
 	                   ${morePrj.value.project_current_percent} %달성</p>
@@ -666,6 +682,7 @@ float:left;
 			</div>
 			
 		</div>
+
 </c:forEach>
   </div>     
 

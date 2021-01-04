@@ -183,9 +183,14 @@ public class ProjectServiceImpl implements ProjectService {
 		int achieveRate = paramDto.getAchieveRate();
 		String sort = paramDto.getSort();
 		String onString = paramDto.getOngoing();
+		ArrayList<ProjectInfoDTO> projectList = null;
 		
 		
-		paramDto.setting();
+			paramDto.setting();
+			projectList = dao.getParamProjectList(paramDto, pageDto);	
+	
+		
+		
 
 		
 		
@@ -208,7 +213,7 @@ public class ProjectServiceImpl implements ProjectService {
 		// 페이지 셋팅(db에 넘겨줄 start,end 값)
 		
 		// select값 넣는 list
-		ArrayList<ProjectInfoDTO> projectList = dao.getParamProjectList(paramDto, pageDto);
+		
 		
 		//Map으로 포장해줄거임;
 		/*
@@ -491,7 +496,7 @@ public class ProjectServiceImpl implements ProjectService {
 		ProjectInfoDTO dto = dao.getAProject(project_id);
 		String date = credit.format(dto.getProject_deadline());
 		
-		dto.setProject_deadline_string(date);
+		dto.setProject_date_string(date);
 		System.out.println(date);
 
 		return dto;	

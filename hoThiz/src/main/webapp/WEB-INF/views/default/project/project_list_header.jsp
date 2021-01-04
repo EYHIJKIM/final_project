@@ -83,7 +83,7 @@ body{
 
 
 .conForm > input[type=text] {
-width: 30%; 
+
 
 }
 
@@ -135,7 +135,7 @@ width: 30%;
           </button>
           <ul id="achieveRate" class="dropdown-menu" role="menu">
 	          
-	          <li>
+	       </ul>
 	         		 <div class="conForm">
 
 						<input type="text" name="minAchieveRate" id="min" maxlength="4" oninput="numberMaxLength(this)"> - 
@@ -144,8 +144,8 @@ width: 30%;
 						<input type="button" id="rateSub" value="적용"> 
 
 					</div>
-				</li>
-          </ul>
+				
+          
 		 
 		 </div>
 		 

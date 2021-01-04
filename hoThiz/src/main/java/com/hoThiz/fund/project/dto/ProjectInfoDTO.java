@@ -20,18 +20,26 @@ public class ProjectInfoDTO {
 	private int project_current_percent;
 	private String project_main_category;
 	private String project_sub_category;
-	private int project_check;
+	private int project_check;//펀딩에 성공?실패?
 	private int project_prelaunching_check;//0이면 ㄴㄴ 1이면 프리런치
-	private String project_deadline_string;
+	private String project_story;
 	
+	private String project_date_string; //펀딩 끝나는 날짜(게시글상세보기), 혹은 펀딩 release 날짜(스케줄러)
+
 	
-	
-	public String getProject_deadline_string() {
-		return project_deadline_string;
+	public String getProject_date_string() {
+		return project_date_string;
 	}
-	public void setProject_deadline_string(String project_deadline_string) {
-		this.project_deadline_string = project_deadline_string;
+	public void setProject_date_string(String project_date_string) {
+		this.project_date_string = project_date_string;
 	}
+	public String getProject_story() {
+		return project_story;
+	}
+	public void setProject_story(String project_story) {
+		this.project_story = project_story;
+	}
+
 	public int getProject_prelaunching_check() {
 		return project_prelaunching_check;
 	}

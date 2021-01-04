@@ -34,6 +34,9 @@ public interface ProjectDAO {
 	@Select("SELECT count(*) from project_info")
 	public int getAllProjectCnt();
 	
+	//날짜를 스트링 타입으로 가져오자
+	@Select("select project_id,to_char(project_release_date,'yyyyMMddHHmm') as project_date_string from project_info where project_prelaunching_check=1")
+	public ArrayList<ProjectInfoDTO> getPreProjectList();
 	
 	////////////////////게시글 gift_list 뽑아옴
 	@Select("SELECT * FROM project_gift_list WHERE project_id=#{project_id} ORDER BY gift_id asc")
@@ -64,7 +67,7 @@ public interface ProjectDAO {
 
 	
 	//모든 프로젝트 정보 비교
-	@Select("SELECT project_id, member_email FROM project_info")
+	@Select("SELECT * FROM project_info")
 	public ArrayList<ProjectInfoDTO> getAllProjectList();
 	
 	
@@ -90,19 +93,23 @@ public interface ProjectDAO {
 		"              case WHEN #{param.ongoing} = 'prelaunching' then sysdate " + 
 		"                   WHEN #{param.ongoing} = 'ongoing' THEN project_release_date " + 
 		"                   WHEN #{param.ongoing} = 'confirm' THEN project_release_date " + 
+		"                   WHEN #{param.ongoing} = 'none' THEN sysdate " + 
 		"              END < " + 
 		"                case when #{param.ongoing} = 'prelaunching' THEN project_release_date " + 
 		"                     when #{param.ongoing} = 'ongoing' THEN sysdate " + 
 		"                     when #{param.ongoing} = 'confirm' THEN project_deadline " + 
+		"                     when #{param.ongoing} = 'none' THEN sysdate+1 " + 
 		"                END  " + 
 		"             AND " + 
 		"              case when #{param.ongoing} = 'prelaunching' then project_release_date " + 
 		"                   WHEN #{param.ongoing} = 'ongoing' THEN sysdate " + 
 		"                   WHEN #{param.ongoing} = 'confirm' THEN project_deadline " + 
+		"                   WHEN #{param.ongoing} = 'none' THEN sysdate " + 
 		"                END < " + 
 		"              CASE WHEN #{param.ongoing} = 'prelaunching' then project_deadline " + 
 		"                   WHEN #{param.ongoing} = 'ongoing' THEN project_deadline " + 
 		"                   WHEN #{param.ongoing} = 'confirm' THEN sysdate " + 
+		"                   WHEN #{param.ongoing} = 'none' THEN sysdate+1 " + 
 		"              END "+
 					 "AND"
 					  +" CASE WHEN #{param.ongoing}='confirm' THEN project_current_donated "

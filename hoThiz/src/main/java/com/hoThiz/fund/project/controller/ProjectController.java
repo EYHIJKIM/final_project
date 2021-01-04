@@ -35,10 +35,7 @@ public class ProjectController {
 	
 	@Autowired
 	ProjectService ps;
-	
-	@Autowired
-	ProjectDAO dao;
-	
+
 	
 	
 	///////////////////////////게시글 목록///////////////////////
@@ -57,7 +54,7 @@ public class ProjectController {
 		mv.addObject("countDonated",ps.getDonatedCntMap());
 		
 		
-		mv.setViewName("project/project_list_real");
+		mv.setViewName("project/project_list");
 
 		
 		return mv;
@@ -109,12 +106,11 @@ public class ProjectController {
 	@GetMapping(value = "/{project_id}")
 	public ModelAndView getAProjectDetail(@PathVariable int project_id, 
 			ModelAndView mv, ProjectParamDTO paramDto, HttpSession session) {
-		String path = "project/project_content/story_real";
+		String path = "project/project_content/story";
 		
 		
 		//프로젝트 전체 값을 준다음에, 상세보기 페이지에서 받는다.
 		//근데 이거...프리런칭인지/아닌지 구분해줘야 됨 =>이거 뷰에서 해버려
-
 
 		ProjectInfoDTO prjDto=ps.getAProjectDetail(project_id); //프로젝트 상세정보
 		MemberDTO memberDto = ps.getAMemberDetail(prjDto.getMember_email()); //프로젝트 발행 멤버
@@ -218,6 +214,7 @@ public class ProjectController {
 	}
 */
 
+	/*
 	//날짜 넣장
 	@RequestMapping("/update")
 	public void update() {
@@ -243,6 +240,6 @@ public class ProjectController {
 		for(int i=103;i<160;i++) {
 			dao.updateProject3(i);
 		}
-	}
+	}*/
 
 }

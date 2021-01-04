@@ -1,81 +1,51 @@
 <%@ page contentType="text/html;charset=utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<!DOCTYPE html>
-<html>
 <head>
-<meta charset="UTF-8">
-<title>hoThiz :: 핫디즈</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-	  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-	  <link rel="stylesheet" href="resources/mycss/mycss.css">
 
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>hoThiz :: 핫디즈</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/fund/resources/vendor2/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="/fund/resources/css/blog-post.css" rel="stylesheet">
 <style type="text/css">
-
-
-
-
-.modalWrap{
-
-	display: none;
-	width:300px;
-	height:500px;
-	position: absolute;
-	top:50%;
-	left:50%;
-	margin: -250px 0 0 -250px;
-	background:#eee;
-	z-index:2;
-
-}
-
-	.blackBg{
-
-		display:none;
-		position:absolute;
-		content:"";
-		width:100%;
-		height:100%;
-		background-color:rgba(0, 0,0, 0.5);
-		top:0;
-		left:0;
-		z-index: 1;
-		
-	}
-
-.modalClose{
-	position:fixed;
-	width: 26px;
-	height: 26px;
-	position: absolute;
-	top: -30px;
-	right: 0;
-
-}
-
-.modalClose> a{
-	display: block;
-	width: 100%;
-	height: 100%;
-	background:url(https://img.icons8.com/metro/26/000000/close-window.png);
-	text-indent: -9999px;
-}
-
-
-
 
 .likeBtn{
     border: none;
     outline:none;
     background-color: white;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.img-fluid rounded{
+float:left;
+}
+
+
+.bigLetter{
+	font-size: 3em;
+
+
+}
+
+.batch{
+	float:left;
 }
 
 </style>
 </head>
 
-<body onload="setTag()">
+<body>
 
+  <!-- Navigation -->
 <%@include file="../../default/main_header.jsp" %>
 
 
@@ -86,147 +56,232 @@
 <c:set var="day" value="${dDayInfo}"/>
 
 
-<h2>${prj.project_id}번 게시물 일수: ${day.chk}</h2>
 
-<c:if test="${day.chk>='0' and day.d_day>'0'}"><%--진행중인 경우 --%>
+  <!-- Page Content -->
+  <div class="container">
 
-<div class="banner">
-	<h1>이건 진행중인 프로젝트 상세보기 첫화면</h1>
-	<a href="/fund/discover?category=${prj.project_sub_category}">
-	
-	<%-- 이거 자바스크립트로 ㄱㄱ, 맵으로 리스트 만들어서 뽑으셈 --%>
-	<div id="subCategory">${prj.project_sub_category}</div>
-	</a>
-	
-	<h1>${prj.project_title}</h1>
-	<hr>
+    <div class="row">
+	<c:if test="${day.chk>='0' and day.d_day>'0'}"><%--진행중인 경우 --%>
+      <!-- Post Content Column -->
+      <div class="col-lg-8">
+		<button class="btn btn-default" onclick="location.href='/fund/discover?category=${prj.project_sub_category}'">
+		
+		<div id="subCategory">${prj.project_sub_category}</div>
+		</button>
+        <!-- Title -->
+        <h1 class="mt-4">${prj.project_title}</h1>
 
-<img src="${path}/project/${prj.project_main_image}" width="500px" height="500px">
+        <!-- Author -->
+        <p class="lead">
 
-이멜: ${mem.member_email }
-	
-	<a href="#멤버프로필로 고">
-	<img src="${path}/member/${mem.member_email}.jpg" width="50px" height="50px"></a> &nbsp;
-	${mem.member_name}<br>
-	
-	
-	모인금액 : ${prj.project_current_donated}원<br>
-	남은 시간 : ${day.chk} 일
-	후원자${donatedMemberCnt} 명<br>
-	<br>
-	
-
-				
-				
-				
-
-				
-	
-	
-	<button id="pushPrj">프로젝트 밀어주기</button><br><!-- 비동기로 내려가서 선물선택 보도록. -->
+          <a href="#멤버프로필로 고">
+			<img src="${path}/member/${mem.member_email}.jpg" width="50px" height="50px"></a> &nbsp;
+		
+          <a href="#">${mem.member_name}</a>
+        </p>
 
 
-				
+        <hr>
+
+        <!-- Preview Image -->
+
+        	<img class="img-fluid rounded" src="${path}/project/${prj.project_main_image}" alt="">
+		<hr>
+		
+	
+			<div class="textBox">
+					<p>
+						모인금액<br>
+						<span class="bigLetter">${prj.project_current_donated}</span>원 <font style="font-weight: bold">${prj.project_current_percent}%</font><br>
+					</p>
+					<p>
+						남은시간<br>
+						<span class="bigLetter">${day.chk}</span>일<br>
+					</p>
+					<p>
+						후원자<br>
+						<span class="bigLetter">${donatedMemberCnt}</span>원 <br>
+					</p>
+			</div>
+	
+		<blockquote class="blockquote">
+          <p class="mb-0">펀딩 진행중
+          <footer class="blockquote-footer">
+          <p>목표 금액인 ${prj.project_target_price } 원이 모여야만 결제됩니다.
+				<br>결제는 ${prj.project_date_string}에 다함께 진행됩니다.</p>
+          </footer>
+        </blockquote>	
 			
-	<%--만약 이미 좋아하는 프로젝트면 flag는 true --%>		
-	<c:if test="${likeId eq prj.project_id}">
-		<c:set var="flag" value="true"></c:set>
-	</c:if>			
-	<c:if test="${flag}">
-		<button id="likeBtn${prj.project_id}" class="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
-			<img class="likeImg" src="${path}/img/fullHeart.png">
-		</button>
-				
-	</c:if>
-	<c:if test="${not flag}">
-		<button id="likeBtn${prj.project_id}" class="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
-			<img class="likeImg" src="${path}/img/blankHeart.png">
-		</button>
-	</c:if>
-
-
-	
-<button class="kakao-link-btn" onclick="sendLink()">카톡 공유</button>
-
-	<div class="noticeBox">
-		<h3>펀딩 진행중</h3>
-		<p>목표 금액인 ${prj.project_target_price } 원이 모여야만 결제됩니다.
-		<br>결제는 ${prj.project_deadline_string }에 진행됩니다.</p>
-	</div>
-
-
-
-
-
-	
-
-	<a href="${prj.project_id}">스토리</a>
-	<a href="${prj.project_id}/community">라이브</a>
-	<a href="${prj.project_id}/notice">펀딩안내</a>
-
-	
-</div>
-	<hr>
-<div class="content">
-	여기는 프로젝트 내용...
-		->배너 사진은 pj에서 뽑아온 picture로 해야한다.
-	
-	
-	1. 처음 상세정보 들어오면 주소값 ___/게시글번호/ref=discover,,,추천프로젝트..이런거 뜸.<br>
-	
-	
-	2. 스토리 /커뮤니티/ 펀딩안내 탭  -> 이때부터 주소값 바뀜<br>
-	
-	
-	결제창 넘어갈때의 파라미터 이름 => 이거 로그인 안해있으면 로그인창으로 넘겨야함
-	money=10000&project_id=5&project_title=%`
-	
-	
-	
-	
-	아래 푸터에는 해당 동일 대분류 뽑아냄.-> popular기준으로 할까싶음...<br>
-</div>
-<div class="MemberIntro">
-	창작자 소개
-
-</div>
-
-<div id="giftForm">
-	선물 선택
-		<div class="aGift">
-			<button class="hiddenBtn0" onclick="showOrView(0)">1,000원+ 선물을 선택하지 않고 밀어만 줍니다</button>
-					<div class="hiddenList" id="gift0" style="display:none;">
+			<%--좋아요 버튼 --%>
+			<c:set var="flag" value="false" />
+	                <c:forEach var="likeId" items="${likeOrAlarmList}">
+						<c:if test="${likeId eq prj.project_id}">
+							<c:set var="flag" value="true" />
+						</c:if>		
+					</c:forEach>
 					
-						<input type="text" id="input0" maxlength="16" oninput="numSet(this,0)">
-	
-						<button id="5000" onclick="plusMoney(this,0,1000)" >+ 5천원</button>
-						<button id="10000" onclick="plusMoney(this,0,1000)" >+ 1만원</button>
-						<button id="50000" onclick="plusMoney(this,0,1000)" >+ 5만원</button>
-						<button id="100000" onclick="plusMoney(this,0,1000)" >+ 10만원</button><br>
-						<button id="payMoney0" onclick="pay(0,1000)">1000원 밀어주기</button>
+					
+		<c:if test="${flag}">
+			<button id="likeBtn${prj.project_id}" class="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
+				<img class="likeImg" src="/fund/resources/img/fullHeart.png">
+			</button>
+				
+		</c:if>
+		<c:if test="${not flag}">
+			<button id="likeBtn${prj.project_id}" class="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
+				<img class="likeImg" src="/fund/resources/img/blankHeart.png">
+			</button>		
+		</c:if>
+		
+		
+			<%----------------- --%>
+		<button id="pushPrj" class="btn btn-secondary my-2 my-sm-0">프로젝트 밀어주기</button>
+		<button class="kakao-link-btn" onclick="sendLink('${prj.project_id}')"><img src="https://lh3.googleusercontent.com/proxy/ix0Cqx6lj7RSmqnBc1zTkJD0F3iSgrLMbFbHwoG4R3mSO_Jf1faNynQffrRcdROFvglg_gMzXaWgkg9FpAsE7OFbcR1r9i27lOLS1DHL_fARwN2lQNWQ0rucBS4FtTR622uB078DQolYRKTPM69Suwo" width="32px" height="32px"></button>
+		
+        <hr>
+
+        <!-- Post Content -->
+        <p class="lead">
+        	${prj.project_story}
+        
+        </p>
+
+        <hr>
+
+        <!-- Comments Form -->
+        <div class="card my-4">
+          <h5 class="card-header">Leave a Comment:</h5>
+          <div class="card-body">
+            <form>
+              <div class="form-group">
+                <textarea class="form-control" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Single Comment -->
+        <div class="media mb-4">
+          <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+          <div class="media-body">
+            <h5 class="mt-0">Commenter Name</h5>
+            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+          </div>
+        </div>
+
+        <!-- Comment with nested comments -->
+        <div class="media mb-4">
+          <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+          <div class="media-body">
+            <h5 class="mt-0">Commenter Name</h5>
+            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+
+            <div class="media mt-4">
+              <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+              <div class="media-body">
+                <h5 class="mt-0">Commenter Name</h5>
+                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+              </div>
+            </div>
+
+            <div class="media mt-4">
+              <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+              <div class="media-body">
+                <h5 class="mt-0">Commenter Name</h5>
+                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sidebar Widgets Column -->
+      <div class="col-md-4">
+
+   
+
+        <!-- Categories Widget -->
+        <div class="card my-4">
+          <h5 class="card-header">창작자 소개</h5>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-6">
+                <ul class="list-unstyled mb-0">
+                  <li>
+                    <a href="#">Web Design</a>
+                  </li>
+                  <li>
+                    <a href="#">HTML</a>
+                  </li>
+                  <li>
+                    <a href="#">Freebies</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-6">
+                <ul class="list-unstyled mb-0">
+                  <li>
+                    <a href="#">JavaScript</a>
+                  </li>
+                  <li>
+                    <a href="#">CSS</a>
+                  </li>
+                  <li>
+                    <a href="#">Tutorials</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Side Widget -->
+        <div class="card my-4">
+          <h5 class="card-header">선물 선택</h5>
+          <div class="card-body">
+          
+<div id="giftForm">
+
+		<div class="aGift">
+			<button style="width:100%;height:auto" class="btn btn-default hiddenBtn0" onclick="showOrView(0)"><h3>1,000원+</h3> 선물을 선택하지 않고 밀어만 줍니다</button>
+					<div style="width:100%;margin:1.8em;"></div>
+					<div class="hiddenList" id="gift0" style="display:none;">
+						추가 후원금(선택)<br> 
+						<input type="text" id="input0" maxlength="16" oninput="numSet(this,0)"><br>
+						<span class="blockquote-footer">더 후원해주시면 프로젝트 성사가 앞당겨집니다.</span>
+						<div style="width:100%;margin:0.2em;"></div>
+						<button class="btn btn-default" id="5000" onclick="plusMoney(this,0,1000)" >+ 5천원</button>
+						<button class="btn btn-default" id="10000" onclick="plusMoney(this,0,1000)" >+ 1만원</button>
+						<button class="btn btn-default" id="50000" onclick="plusMoney(this,0,1000)" >+ 5만원</button>
+						<button class="btn btn-default" id="100000" onclick="plusMoney(this,0,1000)" >+ 10만원</button><br>
+						<div style="width:100%;margin:1.8em;"></div>
+						<button class="btn btn-secondary my-2 my-sm-0" id="payMoney0" onclick="pay(0,1000)">1000원 밀어주기</button>
 					</div>
-
-
 		</div>
-	
-		*더 후원해주시면 프로젝트 성사가 앞당겨집니다.
+		<hr>
+		
 	
 			<c:forEach var="gift" items="${projectGift}" varStatus="status">
 			
 				<div class="aGift">
-					<button class="hiddenBtn${gift.gift_id}" onClick="showOrView('${gift.gift_id}')">${gift.price}원+${gift.gift}
-					
-					추가 후원금(선택)
+					<button style="width:100%;height:auto" class="btn btn-default hiddenBtn${gift.gift_id}" onClick="showOrView('${gift.gift_id}')" >
+						<h3>${gift.price}원+</h3>${gift.gift}
 					</button>
+					<div style="width:100%;margin:1.8em;"></div>
 					<div class="hiddenList" id="gift${gift.gift_id}" style="display:none;">
-					
-						<input type="text" id="input${gift.gift_id}" maxlength="16" oninput="numSet(this,'${gift.price}')">
-	
-						<button id="5000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 5천원</button>
-						<button id="10000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 1만원</button>
-						<button id="50000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 5만원</button>
-						<button id="100000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 10만원</button><br>
-						<button id="payMoney${gift.gift_id}" onclick="pay('${gift.gift_id}','${gift.price}')">${gift.price}원 밀어주기</button>
+						추가 후원금(선택)<br>
+						<input type="text" id="input${gift.gift_id}" maxlength="16" oninput="numSet(this,'${gift.price}')"><br>
+						<span class="blockquote-footer">더 후원해주시면 프로젝트 성사가 앞당겨집니다.</span>
+						<div style="width:100%;margin:0.2em;"></div>
+						<button class="btn btn-default" id="5000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 5천원</button>
+						<button class="btn btn-default" id="10000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 1만원</button>
+						<button class="btn btn-default" id="50000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 5만원</button>
+						<button class="btn btn-default" id="100000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 10만원</button><br>
+						<div style="width:100%;margin:1.8em;"></div>
+						<button class="btn btn-secondary my-2 my-sm-0" id="payMoney${gift.gift_id}" onclick="pay('${gift.gift_id}','${gift.price}')">${gift.price}원 밀어주기</button>
 					</div>	
 				<hr>
 				</div>
@@ -236,11 +291,466 @@
 	
 	</div>
 	
-</c:if><%--진행중인 경우 --%>
+	
+	
+	
+	
+          </div>
+        </div>
+
+      </div>
+
+</c:if>
+    
+    
+<%--공개예정 --%>
+<c:if test="${day.chk<'0' and day.d_day>'0' and prj.project_prelaunching_check eq '1'}">
+	 <!-- Post Content Column -->
+      <div class="col-lg-8">
+		<button class="btn btn-default">
+		<a href="/fund/discover?category=${prj.project_sub_category}">
+		<div id="subCategory">${prj.project_sub_category}</div></a></button>
+        <!-- Title -->
+        <h1 class="mt-4">${prj.project_title}</h1>
+
+        <!-- Author -->
+        <p class="lead">
+
+          <a href="#멤버프로필로 고">
+			<img src="${path}/member/${mem.member_email}.jpg" width="50px" height="50px"></a> &nbsp;
+		
+          <a href="#">${mem.member_name}</a>
+        </p>
+        <!-- Preview Image -->
+
+        	<img class="img-fluid rounded" src="${path}/project/${prj.project_main_image}" alt="">
+		<hr>
+		${prj.project_summary}
+	
+	<p class="launchingDay" style="color:red;">${day.prelaunching_day}</p>
+	
+	<%--이거 알람 나타나는거 자바 스크립트로 띄우셈...안그러면 잘 안됨.. --%>
+
+	<c:set var="msg" value="알림신청" />
+	
+	
+				<c:forEach var="alarmId" items="${likeOrAlarmList}">
+					<c:if test="${alarmId eq prj.project_id}">
+						<c:set var="msg" value="알림신청완료" />
+					</c:if>
+				</c:forEach>
+
+		
+				<button class="btn btn-secondary my-2 my-sm-0" id="notificationBtn" onClick="MyAlarmProject('${prj.project_id}','${alarmMemberCnt}')">
+					<p id="notiBtn${prj.project_id}">${msg}</p>
+				</button>
+<button class="kakao-link-btn" onclick="sendLink()">카톡 공유</button>
+<hr>
+</c:if><%--공개예정 뷰 --%>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<c:if test="${day.d_day<'0'}">
+	
+	  <!-- Post Content Column -->
+      <div class="col-lg-8">
+		<button class="btn btn-default">
+		<a href="/fund/discover?category=${prj.project_sub_category}">
+		<div id="subCategory">${prj.project_sub_category}</div></a></button>
+        <!-- Title -->
+        <h1 class="mt-4">${prj.project_title}</h1>
+
+        <!-- Author -->
+        <p class="lead">
+
+          <a href="#멤버프로필로 고">
+			<img src="${path}/member/${mem.member_email}.jpg" width="50px" height="50px"></a> &nbsp;
+		
+          <a href="#">${mem.member_name}</a>
+        </p>
+
+
+        <hr>
+
+        <!-- Preview Image -->
+
+        	<img class="img-fluid rounded" src="${path}/project/${prj.project_main_image}" alt="">
+		<hr>
+		
+	
+			<div class="textBox">
+					<p>
+						모인금액<br>
+						<span class="bigLetter">${prj.project_current_donated}</span>원 <font style="font-weight: bold">${prj.project_current_percent}%</font><br>
+					</p>
+					<p>
+						남은시간<br>
+						<span class="bigLetter">${day.chk}</span>일<br>
+					</p>
+					<p>
+						후원자<br>
+						<span class="bigLetter">${donatedMemberCnt}</span>원 <br>
+					</p>
+			</div>
+	
+		<blockquote class="blockquote">
+          <p class="mb-0">펀딩 진행중
+          <footer class="blockquote-footer">
+          <p>목표 금액인 ${prj.project_target_price } 원이 모여야만 결제됩니다.
+				<br>결제는 ${prj.project_date_string }에 다함께 진행됩니다.</p>
+          </footer>
+        </blockquote>	
+			
+			<%--좋아요 버튼 --%>
+			<c:set var="flag" value="false" />
+	                <c:forEach var="likeId" items="${likeOrAlarmList}">
+						<c:if test="${likeId eq prj.project_id}">
+							<c:set var="flag" value="true" />
+						</c:if>		
+					</c:forEach>
+					
+					
+		<c:if test="${flag}">
+			<button id="likeBtn${prj.project_id}" class="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
+				<img class="likeImg" src="/fund/resources/img/fullHeart.png">
+			</button>
+				
+		</c:if>
+		<c:if test="${not flag}">
+			<button id="likeBtn${prj.project_id}" class="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
+				<img class="likeImg" src="/fund/resources/img/blankHeart.png">
+			</button>		
+		</c:if>
+		
+		
+			<%----------------- --%>
+		<button id="pushPrj" class="btn btn-secondary my-2 my-sm-0" style="'style:opacity:0.5" disabled>밀어주기가 마감되었습니다</button>
+		<button class="kakao-link-btn" onclick="sendLink('${prj.project_id}')">카톡 공유</button>
+		
+        <hr>
+
+        <!-- Post Content -->
+        <p class="lead">
+        ${prj.project_story}
+        
+        </p>
+
+        <hr>
+
+        <!-- Comments Form -->
+        <div class="card my-4">
+          <h5 class="card-header">Leave a Comment:</h5>
+          <div class="card-body">
+            <form>
+              <div class="form-group">
+                <textarea class="form-control" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Single Comment -->
+        <div class="media mb-4">
+          <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+          <div class="media-body">
+            <h5 class="mt-0">Commenter Name</h5>
+            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+          </div>
+        </div>
+
+        <!-- Comment with nested comments -->
+        <div class="media mb-4">
+          <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+          <div class="media-body">
+            <h5 class="mt-0">Commenter Name</h5>
+            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+
+            <div class="media mt-4">
+              <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+              <div class="media-body">
+                <h5 class="mt-0">Commenter Name</h5>
+                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+              </div>
+            </div>
+
+            <div class="media mt-4">
+              <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+              <div class="media-body">
+                <h5 class="mt-0">Commenter Name</h5>
+                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sidebar Widgets Column -->
+      <div class="col-md-4">
+
+   
+
+        <!-- Categories Widget -->
+        <div class="card my-4">
+          <h5 class="card-header">창작자 소개</h5>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-6">
+                <ul class="list-unstyled mb-0">
+                  <li>
+                    <a href="#">Web Design</a>
+                  </li>
+                  <li>
+                    <a href="#">HTML</a>
+                  </li>
+                  <li>
+                    <a href="#">Freebies</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-6">
+                <ul class="list-unstyled mb-0">
+                  <li>
+                    <a href="#">JavaScript</a>
+                  </li>
+                  <li>
+                    <a href="#">CSS</a>
+                  </li>
+                  <li>
+                    <a href="#">Tutorials</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Side Widget -->
+        <div class="card my-4">
+          <h5 class="card-header">선물 선택</h5>
+          <div class="card-body">
+          
+<div id="giftForm">
+
+		<div class="aGift">
+			<button style="width:100%;height:auto" class="btn btn-default hiddenBtn0" disabled onclick="showOrView(0)"><h3>1,000원+</h3> 선물을 선택하지 않고 밀어만 줍니다</button>
+					<div style="width:100%;margin:1.8em;"></div>
+					<div class="hiddenList" id="gift0" style="display:none;">
+						추가 후원금(선택)<br> 
+						<input type="text" id="input0" maxlength="16" oninput="numSet(this,0)"><br>
+						<span class="blockquote-footer">더 후원해주시면 프로젝트 성사가 앞당겨집니다.</span>
+						<div style="width:100%;margin:0.2em;"></div>
+						<button class="btn btn-default" id="5000" onclick="plusMoney(this,0,1000)" >+ 5천원</button>
+						<button class="btn btn-default" id="10000" onclick="plusMoney(this,0,1000)" >+ 1만원</button>
+						<button class="btn btn-default" id="50000" onclick="plusMoney(this,0,1000)" >+ 5만원</button>
+						<button class="btn btn-default" id="100000" onclick="plusMoney(this,0,1000)" >+ 10만원</button><br>
+						<div style="width:100%;margin:1.8em;"></div>
+						<button class="btn btn-secondary my-2 my-sm-0" id="payMoney0" onclick="pay(0,1000)">1000원 밀어주기</button>
+					</div>
+		</div>
+		<hr>
+		
+	
+			<c:forEach var="gift" items="${projectGift}" varStatus="status">
+			
+				<div class="aGift">
+					<button disabled style="width:100%;height:auto" class="btn btn-default hiddenBtn${gift.gift_id}" onClick="showOrView('${gift.gift_id}')" >
+						<h3>${gift.price}원+</h3>${gift.gift}
+					</button>
+					<div style="width:100%;margin:1.8em;"></div>
+					<div class="hiddenList" id="gift${gift.gift_id}" style="display:none;">
+						추가 후원금(선택)<br>
+						<input type="text" id="input${gift.gift_id}" maxlength="16" oninput="numSet(this,'${gift.price}')"><br>
+						<span class="blockquote-footer">더 후원해주시면 프로젝트 성사가 앞당겨집니다.</span>
+						<div style="width:100%;margin:0.2em;"></div>
+						<button class="btn btn-default" id="5000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 5천원</button>
+						<button class="btn btn-default" id="10000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 1만원</button>
+						<button class="btn btn-default" id="50000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 5만원</button>
+						<button class="btn btn-default" id="100000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 10만원</button><br>
+						<div style="width:100%;margin:1.8em;"></div>
+						<button class="btn btn-secondary my-2 my-sm-0" id="payMoney${gift.gift_id}" onclick="pay('${gift.gift_id}','${gift.price}')">${gift.price}원 밀어주기</button>
+					</div>	
+				<hr>
+				</div>
+				
+				
+			</c:forEach>
+	
+	</div>
+	
+	
+	
+	
+	
+          </div>
+        </div>
+
+      </div>
+
+</c:if>
+
+
+<!-- 공유 버튼은 둘다 있음~ -->
+   
+    </div>
+    <!-- /.row -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+  </div>
+  <!-- /.container -->
+
+<div style="width:100%;margin:3em;"></div>
+<h2>이런 프로젝트 어떠세요?</h2><br>
+<div class="row text-center">
+<c:forEach var="morePrj" items="${morePrjList}">
+	
+	    <div class="col-md-3">
+	        <div class="card">
+	            <div class="card-img">
+	                <img class="img-responsive" src="${path}/${moreprj.value.project_main_image}" onclick="goProject('${prj.project_id}')">
+	            </div>
+
+					
+		<c:if test="${morePrj.value.project_like eq 'cancelLike' }">
+			<button id="likeBtn${prj.project_id}" class="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
+				<img class="likeImg" src="/fund/resources/img/fullHeart.png">
+			</button>
+				
+		</c:if>
+		<c:if test="${morePrj.value.project_like eq 'like'}">
+			<button id="likeBtn${prj.project_id}" class="likeBtn" onClick="MyFavoritProject('${prj.project_id}')">
+				<img class="likeImg" src="/fund/resources/img/blankHeart.png">
+			</button>		
+		</c:if>
+	
+	 <div class="card-block">
+	               <div class="card-title">
+	                    <small><a href="/fund/discover?category=${prj.project_sub_category}">${prj.project_sub_category}</a> | <a href="fund/u?member_url=${memberMap[prj.project_id].member_URL}">${memberMap[prj.project_id].member_name}</a></small>
+	                    <h4><a href="/fund/discover/${morePrj.value.project_id}">${morePrj.value.project_title }</a></h4>
+	                    <p>${morePrj.value.project_summary }<br>
+	                   ${morePrj.value.project_current_percent} %달성</p>
+	                </div>
+				
+		
+				</div>
+				
+			
+				
+			</div>
+			
+		</div>
+</c:forEach>
+  </div>     
+
+    <div style="width:100%;margin:5em;"></div>
+    
+    
+    
+    
+    
+    
+    
+ 
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+	<script src="/fund/resources/myjsFunction/projectFunction.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+  <script src="/fund/resources/vendor2/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <script type="text/javascript">
+
+
+Kakao.init("4a910cfb1ef1434f4c361ae507d1375a");
+function sendLink(prjId){
+	console.log("샌드링크 들어옴");
+	var like = '${prj.project_like}';
+	console.log(like);
+	var id = prjId;
+	var path='http://localhost:8086/fund/resources/project/224.jpg';
+	var url = 'http://localhost:8086/fund/discover/'+id;
+	console.log(id);
+	Kakao.Link.sendDefault({
+		
+		 
+		  objectType: 'feed',
+		  content: {
+		    title: '${prj.project_title}',
+		    description: '${prj.project_summary}',
+		    imageUrl: 'http://localhost:8086/fund/resources/project/224.jpg',
+		    link: {
+		      mobileWebUrl: url,
+		     
+		    },
+		  },
+		  social: {
+		    likeCount: Number(like),
+
+		  },
+		  buttons: [
+		    {
+		      title: '웹으로 이동',
+		      link: {
+		        webUrl: url,
+		      },
+		    },
+		    
+		  ]
+		});
+	
+}
+
+
+
+
+$("#pushPrj").click(function(){
+	console.log("푸쉬");
+	var giftLocation = $("#giftForm").offset().top;
+
+	$("html,body").animate({scrollTop : giftLocation}, 500);
+});
+
+
+
+
+
+
 
 function pay(id, price){
 	let path = '';
@@ -489,198 +999,8 @@ function numSet(info,price){
 
 
 
-</script>
-
-
-
-
-
-
-<%--공개예정 --%>
-<c:if test="${day.chk<'0' and day.d_day>'0' and prj.project_prelaunching_check eq '1'}">
-	<h1>공개예정인 경우</h1>
-	
-	<%--이거 알람 나타나는거 자바 스크립트로 띄우셈...안그러면 잘 안됨.. --%>
-
-	<c:set var="msg" value="알림신청(${alarmMemberCnt}명 신청중)" />
-	
-	<img src="${path}/project/${prj.project_id}.jpg" width="500px" height="500px">
-	<a href="#멤버프로필로 고">
-	<img src="${path}/member/${mem.member_email}.jpg" width="50px" height="50px"></a> &nbsp;
-	${mem.member_name}<br>
-	
-	${prj.project_summary}
-	
-	
-	<p class="launchingDay">${day.prelaunching_day}</p>
-				<c:forEach var="alarmId" items="${likeOrAlarmList}">
-				 
-					<c:if test="${alarmId eq prj.project_id}">
-						<c:set var="msg" value="알림신청완료(${alarmMemberCnt}명 신청중)" />
-					</c:if>
-				</c:forEach>
-
-		
-				<button id="notificationBtn" onClick="MyAlarmProject('${prj.project_id}')">
-					<p id="notiBtn${prj.project_id}">${msg}</p>
-				</button>
-<button class="kakao-link-btn" onclick="sendLink()">카톡 공유</button>
-
-</c:if><%--공개예정 뷰 --%>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<c:if test="${day.d_day<'0'}">
-	<h1>펀딩 끝남!!</h1>
-	${prj.project_release_date}에 결제 진행됨
-</c:if>
-
-
-<!-- 공유 버튼은 둘다 있음~ -->
-
-
-
-<h2>이런 프로젝트 어떠세요?</h2>
-<c:forEach var="morePrj" items="${morePrjList}">
-	<img src="${path}/project/${morePrj.key}.jpg" width="100px" height="100px">
-	<br>
-	${morePrj.value.project_title }<br>
-	${morePrj.value.project_summary }<br>
-	${morePrj.value.member_name}
-<c:if test="${morePrj.value.project_like eq 'like' }">
-	<c:set var="msg" value="좋아요 누르기!" />
-</c:if>
-<c:if test="${morePrj.value.project_like eq 'cancelLike' }">
-	<c:set var="msg" value="좋아요 이미 누름!" />
-</c:if>
-	<button class="button small" id="likeBtn" onClick="MyFavoritProject('${morePrj.key}')">
-			<p id="likeBtn${morePrj.key}">${msg}</p>
-	</button>
-		${morePrj.value.project_current_percent} %달성
-<hr>
-
-
-
-</c:forEach>
-
-
-
-
-<footer id="footer">
-				<div class="inner">
-					<div class="content">
-					 
-						
-					</div>
-					<div class="copyright">
-						&copy; Untitled. Photos <a href="https://unsplash.co">Unsplash</a>, Video <a href="https://coverr.co">Coverr</a>.
-					</div>
-				</div>
-</footer>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
-
-
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script type="text/javascript">
-
-
-
-
-/*
-jQuery(document).ready(function(){
-	
-	
-	$('#money'+).on('keyup',function(){
-		
-	});
-	
-	
-});
-*/
-
-
-
-
-$("#pushPrj").click(function(){
-	console.log("푸쉬");
-	var giftLocation = $("#giftForm").offset().top;
-
-	$("html,body").animate({scrollTop : giftLocation}, 500);
-});
-
-
-
-
-
-
-
-
-Kakao.init("4a910cfb1ef1434f4c361ae507d1375a");
-function sendLink(){
-	console.log("샌드링크 들어옴");
-	var like = '${prj.project_like}';
-	console.log(like);
-	var id = '${prj.project_id}';
-	var path='http://localhost:8086/fund/resources/project/224.jpg'
-	console.log(id);
-	Kakao.Link.createDefaultButton({
-		
-		  container: '.kakao-link-btn',
-		  objectType: 'feed',
-		  content: {
-		    title: '${prj.project_title}',
-		    description: '${prj.project_summary}',
-		    imageUrl: path,
-		    link: {
-		      mobileWebUrl: "http://localhost:8086/fund/discover/224",
-		      androidExecParams: 'test',
-		    },
-		  },
-		  social: {
-		    likeCount: Number(like),
-
-		  },
-		  buttons: [
-		    {
-		      title: '웹으로 이동',
-		      link: {
-		        mobileWebUrl: "http://localhost:8086/fund/discover/224",
-		      },
-		    },
-		    {
-		      title: '앱으로 이동',
-		      link: {
-		        mobileWebUrl: "http://localhost:8086/fund/discover/224",
-		      },
-		    },
-		  ]
-		});
-	
-}
-
 
 </script>
-
-
 </body>
+
 </html>

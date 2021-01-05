@@ -551,6 +551,14 @@ public class ProjectServiceImpl implements ProjectService {
 		
 	}
 	
+	//해당 프로젝트의 기프트 id를 반환
+	@Override
+	public ArrayList<Integer> getAProjectGiftId(int project_id){
+		
+		ArrayList<Integer> giftIdList = dao.getAProjectGiftId(project_id);
+		return giftIdList;
+	}
+	
 	
 	public Map<Integer, Map<String, String>> getMoreProject(int project_id,HttpSession session){
 		ProjectInfoDTO dto = dao.getAProject(project_id);

@@ -67,6 +67,10 @@ public interface ProjectService {
 		//프로젝트 기프트
 		public ArrayList<Map<String, String>> getAProjectGift(int project_id);
 		
+		//기프트 id
+		public ArrayList<Integer> getAProjectGiftId(int project_id);
+		
+		
 		//해당 프젝과 같은 카테고리의 게시글목록(푸터쪽에 필요함)
 		public Map<Integer, Map<String, String>> getMoreProject(int project_id,HttpSession session);
 		

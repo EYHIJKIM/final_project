@@ -31,7 +31,7 @@ public interface ProjectDAO {
 	public ArrayList<String> getMemberListBeAlarmed(int project_id);
 	
 	@Insert("INSERT INTO message value(member_email,message_type,message_content,message_send_member,message_receive_member,message_date)"
-			+ "values(#{member_email},#{message_type}),#{message_content},#{message_send_member},#{message_receive_member},sysdate")
+			+ "values(#{member_email},#{message_type},#{message_content},#{message_send_member},#{message_receive_member},sysdate)")
 	public void sendAlarmToMember(Member_messageDTO msgDto);
 	
 	
@@ -52,6 +52,11 @@ public interface ProjectDAO {
 	////////////////////게시글 gift_list 뽑아옴
 	@Select("SELECT * FROM project_gift_list WHERE project_id=#{project_id} ORDER BY gift_id asc")
 	public ArrayList<ProjectGiftDTO> getAProjectGift(int project_id);
+	
+	//gift id 리스트임
+	@Select("SELECT gift_id FROM project_gift_list WHERE project_id=#{project_id} ")
+	public ArrayList<Integer> getAProjectGiftId(int project_id);
+	
 	
 	///////////////////이런 프젝 어떠세요??
 	@Select("SELECT B.* FROM(SELECT rownum rn, A.* FROM project_info A WHERE project_sub_category = #{project_sub_category} "
@@ -657,6 +662,7 @@ public void updateProject2(int project_id);
 
 @Update("update project_info set project_release_date = to_date('2021-01-11','YY-MM-DD') where project_id=#{project_id}")
 public void updateProject3(int project_id);
+
 
 
 	

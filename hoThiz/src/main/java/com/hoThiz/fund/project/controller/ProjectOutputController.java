@@ -128,6 +128,7 @@ public class ProjectOutputController {
 		mv.addObject("projectGift", ps.getAProjectGift(project_id));//프젝 기프트 목록 가져오기
 		//이런 프로젝트 어떠세요. prj와 같은 태그의 4개 뽑기...
 		mv.addObject("morePrjList", ps.getMoreProject(project_id, session));
+		mv.addObject("giftIdList", ps.getAProjectGiftId(project_id));
 		
 		
 		

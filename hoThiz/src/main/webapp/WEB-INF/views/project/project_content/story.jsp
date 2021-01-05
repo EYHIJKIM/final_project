@@ -139,8 +139,9 @@ float:left;
 		<button class="kakao-link-btn" onclick="sendLink('${prj.project_id}')"><img src="https://lh3.googleusercontent.com/proxy/ix0Cqx6lj7RSmqnBc1zTkJD0F3iSgrLMbFbHwoG4R3mSO_Jf1faNynQffrRcdROFvglg_gMzXaWgkg9FpAsE7OFbcR1r9i27lOLS1DHL_fARwN2lQNWQ0rucBS4FtTR622uB078DQolYRKTPM69Suwo" width="32px" height="32px"></button>
 		
         <hr>
-
+		
         <!-- Post Content -->
+       		${prj.project_video}
         <p class="lead">
         	${prj.project_story}
         
@@ -361,14 +362,6 @@ float:left;
 
 
 
-디데이:${day.d_day}
-${day.chk}
-
-
-
-
-
-
 
 
 
@@ -415,6 +408,7 @@ ${day.chk}
 					</p>
 			</div>
 	
+	
 		<blockquote class="blockquote">
           <p class="mb-0">펀딩 진행중
           <footer class="blockquote-footer">
@@ -453,6 +447,8 @@ ${day.chk}
 
         <!-- Post Content -->
         <p class="lead">
+        ${prj.project_video}
+        
         ${prj.project_story}
         
         </p>
@@ -917,41 +913,42 @@ function setTag(){
 
 
 
-
+ 
 function showOrView(id){
 	
-	var str = '${projectGift}';
-	var spList = str.split('{');
-	var cnt =0;
+	var str = '${giftIdList}'; //gift id만 들어가있는 리스트. 문자열로 들어옴
+	str=str.replace('[',''); //배열의 앞뒤 제거, 공백 제거
+	str=str.replace(']','');
+	str=str.replace(' ','');
 
+	var spList = str.split(','); //,로 스플릿해서 해당 id값만 배열에 받는다.
+	spList.push(0); //기본 목록도 나타나도록.
+	
+	 //index와 비교할 것
+	console.log(spList);
+	var cnt = 0;
 	$.each(spList,function(idx,value){
+		//리스트 안의 아이템만큼 반복한다. cnt처음에는 0
+		//지금은 리스트가 2갱
+		//value는 id리스트임. id는 클릭한 객체.
+		
 		if($("#gift"+id).is(":visible")){ //목록이 보이는 상황..그럼 굳이 누를건 없고..다른거 올려
-			if(cnt!==id){
-				$("#gift"+cnt).slideUp();
+			if(id!=value){ //누른 id를 제외한 다른 목록을 올려야 함.
+				$("#gift"+value).slideUp();
+			
 			} 
 		} else{//목록이 안보이는 상황이면
-			if(cnt==id){
-				$("#gift"+cnt).slideDown(); //누르것만 내림
+			if(id==value){
+				$("#gift"+value).slideDown(); //누르것만 내림
 			} else{
-				$("#gift"+cnt).slideUp()
+				$("#gift"+value).slideUp()
 			}
 		}
 
-		cnt++;
 	});
 	
 
 
-	//만약 보이는 중에 클릭하면
-	if($("#gift"+id).is(":visible")){ //보이면
-		//다른거 다 올려야될듯..
-		
-		
-	}else{//만약 안보이면
-		
-		//선택한것만 내림
-		$("#gift"+id).slideDown();
-	}
 	
 }
 

@@ -15,8 +15,10 @@ import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.member.dto.Member_messageDTO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
+import com.hothiz.fund.project.dto.ProjectReplyDTO;
 import com.hothiz.fund.project.dto.ProjectStateDTO;
 import com.hothiz.fund.project.dto.ProjectAlarmCountDTO;
+import com.hothiz.fund.project.dto.ProjectCommunityDTO;
 import com.hothiz.fund.project.dto.ProjectDateDTO;
 import com.hothiz.fund.project.dto.ProjectGiftDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
@@ -25,6 +27,31 @@ import com.hothiz.fund.project.dto.ProjectPagingDTO;
 
 @Repository
 public interface ProjectDAO {
+	
+	
+	
+	///////////////////////커뮤니티///////////////////////////
+	@Insert("insert into project_community value(project_id, bno, content, member_email, member_name)" + 
+			"values(#{project_id},project_community_seq.nextval,#{content},#{member_email},#{member_name})")
+	public void writeOnBoard(ProjectCommunityDTO coDto);
+	
+	
+	///게시판 리스트, 해당 프로젝트 아이디의.
+	@Select("SELECT * FROM project_community WHERE project_id=#{project_id}")
+	public ArrayList<ProjectCommunityDTO> getBoardList(int project_id);
+	
+	//댓글 다는 쿼리문
+	@Insert("insert into project_reply(project_id, rno, bno, content, member_email, member_name) "
+			+ "values(#{rno}, project_reply_seq.nextval, #{bno}, #{content}, #{member_email}, #{member_name})")
+	public void writeReplyOnBoard(ProjectReplyDTO reDto);
+	
+	//해당 게시글의 댓글 가져옴
+	@Select("SELECT * FROM project_reply where bno=#{bno} ORDER BY rno ")
+	public ArrayList<ProjectReplyDTO> getReplyOnBoard(int bno);
+	
+	
+	
+	////////////////////////////////////////////////////////
 	
 	//////////////////////스케줄러 실행//////////////////////
 	@Select("select member_email from member_alarm where project_id = #{project_id}")

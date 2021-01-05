@@ -4,6 +4,8 @@ package com.hothiz.fund.project.controller;
 
 
 
+import java.nio.channels.SeekableByteChannel;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +25,9 @@ import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
-
+import com.hothiz.fund.project.dto.ProjectCommunityDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
-
+import com.hothiz.fund.project.service.ProjectCommunityService;
 import com.hothiz.fund.project.service.ProjectService;
 
 
@@ -35,6 +37,8 @@ public class ProjectOutputController {
 	
 	@Autowired
 	ProjectService ps;
+	@Autowired
+	ProjectCommunityService pcs;
 
 	
 	
@@ -158,11 +162,16 @@ public class ProjectOutputController {
 		mv.addObject("projectGift", ps.getAProjectGift(project_id));//프젝 기프트 목록 가져오기
 		//이런 프로젝트 어떠세요. prj와 같은 태그의 4개 뽑기...
 		mv.addObject("morePrjList", ps.getMoreProject(project_id, session));
-		
+		mv.addObject("boardList", pcs.getBoardList(project_id));//게시판 리스트
 		
 
 		//해당 프젝 라이브 꺼내와야함.
 		mv.setViewName("project/project_content/community");
+		
+		
+		
+		
+		
 		return mv;
 	}
 	
@@ -187,18 +196,46 @@ public class ProjectOutputController {
 		mv.addObject("morePrjList", ps.getMoreProject(project_id, session));
 		
 		
+		
 		//그냥 펀딩 주의사항이요
 		mv.setViewName("project/project_content/notice");
 		return mv;
 	}
 	
+	
+	
+	
 
-	@GetMapping(value="header")
-	public ModelAndView header(ModelAndView mv) {
-		mv.setViewName("default/project/project_list_header");
+	//글쓰기 폼
 		
+	@GetMapping(value="/write")
+	public ModelAndView getWriteForm(ModelAndView mv,HttpSession session) {
+		
+		//String userId = (String)session.getAttribute("userId");
+		String userId = "10";
+		//폼으로 프로젝트 아이디 보내줌
+		//mv.addObject("project_id", project_id);
+		mv.addObject("member_email", userId);
+		mv.setViewName("project/project_content/communityWriteForm");
 		return mv;
 	}
+	
+	
+	@PostMapping(value="/write")
+	public ModelAndView setWriteOnDB(ModelAndView mv,ProjectCommunityDTO coDto) {
+		String path = "/"+coDto.getProject_id()+"/community";
+		pcs.writeOnCommunity(coDto);
+		mv.setViewName(path);
+
+		return mv;
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	/*
 

@@ -37,17 +37,33 @@ public interface ProjectDAO {
 	
 	
 	///게시판 리스트, 해당 프로젝트 아이디의.
-	@Select("SELECT * FROM project_community WHERE project_id=#{project_id}")
-	public ArrayList<ProjectCommunityDTO> getBoardList(int project_id);
+	@Select("SELECT B.*" + 
+			" FROM (SELECT rownum rn, A.*" + 
+					" FROM (select * from project_community  WHERE project_id=#{id} order by bno desc) A" + 
+			") B" + 
+			" WHERE rn between #{page.startRownum} and #{page.endRownum}")
+	public ArrayList<ProjectCommunityDTO> getBoardList(@Param("id") int project_id, @Param("page") ProjectPagingDTO pageDto);
 	
 	//댓글 다는 쿼리문
-	@Insert("insert into project_reply(project_id, rno, bno, content, member_email, member_name) "
-			+ "values(#{rno}, project_reply_seq.nextval, #{bno}, #{content}, #{member_email}, #{member_name})")
+	@Insert("insert into project_reply(project_id, rno, bno, content, member_email) "
+			+ "values(#{rno}, project_reply_seq.nextval, #{bno}, #{content}, #{member_email})")
 	public void writeReplyOnBoard(ProjectReplyDTO reDto);
 	
 	//해당 게시글의 댓글 가져옴
-	@Select("SELECT * FROM project_reply where bno=#{bno} ORDER BY rno ")
-	public ArrayList<ProjectReplyDTO> getReplyOnBoard(int bno);
+	@Select("SELECT * FROM project_reply where bno=#{bno} ORDER BY rno asc")
+	public ArrayList<ProjectReplyDTO> getReplyOnBoard(ProjectReplyDTO reDto);
+	
+/*
+	@Select("SELECT B.*, to_char(regdate,'yyyy.MM.dd') AS \"dateFormat\" "
+			+ " FROM (SELECT rownum rn, A.* FROM (select * from project_reply where bno=#{bno} and project_id=#{project_id} ORDER BY rno desc) A "
+			+ " ) B where rn=1")
+	public ProjectReplyDTO getAReply(ProjectReplyDTO reDto);
+*/
+	
+	
+	
+	
+	
 	
 	
 	
@@ -689,6 +705,7 @@ public void updateProject2(int project_id);
 
 @Update("update project_info set project_release_date = to_date('2021-01-11','YY-MM-DD') where project_id=#{project_id}")
 public void updateProject3(int project_id);
+
 
 
 

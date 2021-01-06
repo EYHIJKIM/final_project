@@ -8,6 +8,7 @@ import java.nio.channels.SeekableByteChannel;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,8 +26,10 @@ import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
+import com.hothiz.fund.project.dto.ProjectReplyDTO;
 import com.hothiz.fund.project.dto.ProjectCommunityDTO;
 import com.hothiz.fund.project.dto.ProjectInfoDTO;
+import com.hothiz.fund.project.dto.ProjectPagingDTO;
 import com.hothiz.fund.project.service.ProjectCommunityService;
 import com.hothiz.fund.project.service.ProjectService;
 
@@ -162,6 +165,8 @@ public class ProjectOutputController {
 		mv.addObject("projectGift", ps.getAProjectGift(project_id));//프젝 기프트 목록 가져오기
 		//이런 프로젝트 어떠세요. prj와 같은 태그의 4개 뽑기...
 		mv.addObject("morePrjList", ps.getMoreProject(project_id, session));
+		
+		//해당 프젝의 게시글 목록 불러옴.
 		mv.addObject("boardList", pcs.getBoardList(project_id));//게시판 리스트
 		
 
@@ -217,6 +222,7 @@ public class ProjectOutputController {
 		//mv.addObject("project_id", project_id);
 		mv.addObject("member_email", userId);
 		mv.setViewName("project/project_content/communityWriteForm");
+		
 		return mv;
 	}
 	
@@ -230,10 +236,40 @@ public class ProjectOutputController {
 		return mv;
 	}
 	
+	@GetMapping(value="/board", produces = "application/json;charset=utf-8")
+	public String getBoard(@RequestParam int project_id, @RequestParam int page) {
+		System.out.println("게시글 가지러 옴");
+		
+		String list = pcs.getNoSyncBoardList(project_id,page); 
+		
+		System.out.println(list);
+		return list;
+		
+	}
 	
 	
+	@GetMapping(value="/reply", produces = "application/json;charset=utf-8")
+	public String getReply(ProjectReplyDTO reDto) {
+		return pcs.getReply(reDto);
+		
+	}
 	
+	@PostMapping(value="/reply", produces = "application/text;charset=utf-8")
+	public String writeReply(ModelAndView mv, ProjectReplyDTO reDto) {
+		System.out.println("댓글 저장 컨트롤러");
+		System.out.println("파람잘됐나?"+reDto.getProject_id());
+		System.out.println(reDto.getBno());
+		System.out.println(reDto.getContent());
+		System.out.println(reDto.getMember_email());
+		String reply = pcs.writeReply(reDto);
+
+
+		return reply;
+		
+		
+	}
 	
+
 	
 	
 	

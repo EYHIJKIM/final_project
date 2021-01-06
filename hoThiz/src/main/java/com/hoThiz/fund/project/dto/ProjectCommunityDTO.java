@@ -13,8 +13,16 @@ public class ProjectCommunityDTO {
 	 	private String member_email;
 	 	private String member_name;
 	 	private Date regdate;
+	 	private String dateFormat;
 	 	
 	 	
+	 	
+		public String getDateFormat() {
+			return dateFormat;
+		}
+		public void setDateFormat(String dateFormat) {
+			this.dateFormat = dateFormat;
+		}
 		public int getProject_id() {
 			return project_id;
 		}

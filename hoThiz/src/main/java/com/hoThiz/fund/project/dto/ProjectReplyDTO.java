@@ -1,20 +1,37 @@
 package com.hothiz.fund.project.dto;
 
+import java.sql.Date;
+
 public class ProjectReplyDTO {
 
 	private int project_id;
 	private int bno;
 	private int rno;
 	private String content;
+	private String member_email;
+	private Date regdate;
+	private String dateFormat;
+	
+	
+	public String getDateFormat() {
+		return dateFormat;
+	}
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
+	}
+	public Date getRegdate() {
+		return regdate;
+	}
+	public void setRegdate(Date regdate) {
+		this.regdate = regdate;
+	}
 	public int getBno() {
 		return bno;
 	}
 	public void setBno(int bno) {
 		this.bno = bno;
 	}
-	private String member_email;
-	private String member_name;
-	private String regdate;
+	
 	public int getProject_id() {
 		return project_id;
 	}
@@ -39,18 +56,7 @@ public class ProjectReplyDTO {
 	public void setMember_email(String member_email) {
 		this.member_email = member_email;
 	}
-	public String getMember_name() {
-		return member_name;
-	}
-	public void setMember_name(String member_name) {
-		this.member_name = member_name;
-	}
-	public String getRegdate() {
-		return regdate;
-	}
-	public void setRegdate(String regdate) {
-		this.regdate = regdate;
-	}
+
 
 	
 	

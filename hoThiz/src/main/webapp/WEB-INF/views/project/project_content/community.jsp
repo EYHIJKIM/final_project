@@ -40,6 +40,11 @@ float:left;
 	float:left;
 }
 
+.form-group{
+	width: 	50%;
+	height:auto;
+}
+
 </style>
 </head>
 
@@ -140,22 +145,24 @@ float:left;
 		
         <hr>
 		
-        <!-- Post Content -->
+        <!-- Post Content --><%------------------------------------------------------------------------------------ --%>
 
        <c:forEach var="brd" items="${boardList}">
                <div class="card my-4">
-          <h5 class="card-header">${brd.member_name} | ${brd.regdate}</h5>
+          <h5 class="card-header">No.${brd.bno}  ${brd.member_email} | ${brd.dateFormat}</h5>
           <div class="card-body">
-			${brd.content }<br>
-			<button class="btn btn-secondary my-2 my-sm-0"  onclick="getReply('${brd.bno}')">댓글 보기</button>
-			<div id="reply${brd.bno}"></div>
+			${brd.content}<br><br>
+			<div id="reply${brd.bno}">
+			<button class="btn btn-secondary my-2 my-sm-0"  onclick="getReply('${brd.bno}','${prj.project_id}')">댓글 보기</button>
+			
+			</div>
 			
 		 </div>
 	
 		</div>
 		<hr>
-		</c:forEach>
-        
+	</c:forEach><%----------------------------------게시글임---------------------------------------------- --%>
+        <div id="board"></div>
         
 
         <hr>
@@ -417,27 +424,7 @@ float:left;
 
         <hr>
 
-        <!-- Comments Form -->
-        <div class="card my-4">
-          <h5 class="card-header">Leave a Comment:</h5>
-          <div class="card-body">
-            <form>
-              <div class="form-group">
-                <textarea class="form-control" rows="3"></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-          </div>
-        </div>
-
-        <!-- Single Comment -->
-        <div class="media mb-4">
-          <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-          <div class="media-body">
-            <h5 class="mt-0">Commenter Name</h5>
-            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-          </div>
-        </div>
+      
 
         <!-- Comment with nested comments -->
         <div class="media mb-4">
@@ -672,6 +659,187 @@ ${memberMap[morePrj.value.project_id].member_URL}
 <script type="text/javascript">
 
 
+
+var page = 0;
+function infiniteScroll() {
+		console.log("인피니트 진입")
+		//만약 전체 스크롤-10보다 내려온 스크롤이 크면(밑바닥에 거의 닿으면)
+		if ($(document).height() - 50 <= $(window).height()
+				+ $(window).scrollTop()) {
+			page += 1;
+			//list객체에서 page값을 1 올려준다. 
+			let params = "?page=" + page;
+			//param += ${param.cat1egory} ->이렇게 하면 안돼ㅜ
+			//파라미터값이 존재할때만 params에 붇혀줌(ajax로 url에 묻혀줄 변수임)
+				params += "&project_id="+'${prj.project_id}';
+	
+			
+			console.log("붙여줄 파람값:"+params);
+			
+			//비동기 실행
+			//여기서 보내줘야할것...은...필요한거 똑같이 보내줘야됨. if문도 걸어줘야 됨.(prelaunchig or not?)
+			$.ajax({
+				type : 'GET',
+				url : '/fund/discover/board' + params,
+				contentType : "application/json; charset=utf-8",
+				success : function(data) {
+		
+					let bhtml = "";
+					
+
+					$.each(data, function(index, dto) { //i배열이 들어온다.
+						bhtml += '<div class="card my-4"><h5 class="card-header">No.'+dto.bno+' '+dto.member_email+'|'+dto.dateFormat+'</h5>';
+						bhtml += '<div class="card-body">'+dto.content+'<br><br><button class="btn btn-secondary my-2 my-sm-0"  onclick="getReply('+dto.bno+','+dto.project_id+')">댓글보기</button>';
+						bhtml += '<div id="reply'+dto.bno+'"></div></div></div><hr>';			
+	
+					});
+
+					$("#board").append(bhtml);
+				}//success func 
+				,
+				error : function() {
+					alert("문제발생");
+				}
+			});//ajax 실행
+		}
+	}//infiniteScroll함수
+		$(document).ready(function() {
+			$(window).scroll(infiniteScroll)
+		});
+
+
+
+
+function getReply(bno,prjId){
+	
+	var param = '?project_id='+prjId+'&bno='+bno;
+	var sessionData = "userId"; //세션의 이메일 가져오는 것.
+	sessionStorage.setItem("userId","1");//이거 합치면 지워라잉/////////////////
+	
+	var userId = sessionStorage.getItem(sessionData);
+	
+	//bno의 댓글목록을 불러옴. 시발 이것도 비동기잖이 씹새끼야
+	$.ajax({
+				type : 'GET',
+				url : '/fund/discover/reply'+param ,
+				contentType : "application/json; charset=utf-8",
+				success : function(replyList) {//
+					let html = "";
+				
+			
+					//html += ' <div class="card my-4"><h5 class="card-header">댓글달기</h5><div class="card-body">';
+					html += '<hr><form id="form"'+bno+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3"></textarea> </div>';
+					html +='<input type="hidden" name="member_email" value="'+userId+'"><input type="button" class="btn btn-primary" value="댓글달기" onclick="replySub('+bno+','+prjId+')"></form></div>';
+	
+					var rno=0;
+					$.each(replyList,function(index,dto){
+					 	
+						html +='<div class="media mb-4"><div class="media-body"><h5 class="mt-0">'+dto.member_name+'</h5>'+dto.content+'</div></div>';				
+						//html +='<div id="rno"'+dto.bno+dto.rno+1+'></div>'
+						
+						if(userId==dto.member_email){
+							html +='<button>수정</button>';
+							html +='<button>삭제</button><hr>';
+							
+						}	
+						
+						
+						rno = dto.rno;
+					});
+					
+					rno +=1;
+					html += '<div id="bno"'+bno+'>여기다 늫는겨ㅈ id는 bno'+bno+'</div>'
+					
+					$("#reply"+bno).html(html);
+				}//success func 
+				,
+				error : function() {
+					alert("문제발생");
+				}
+			});//ajax 실행
+	
+}
+
+function replySub(bno,prjId){
+	console.log(prjId+"프로젝트의"+bno+"번 게시글 댓글달러감");
+
+	var sessionData = "userId"; //세션의 이메일 가져오는 것.
+	sessionStorage.setItem("userId","1");//이거 합치면 지워라잉/////////////////
+	
+	var userId = sessionStorage.getItem(sessionData);
+	var content = $('#text'+bno).val();
+	
+	if(content.replace(/\s| /gi, "").length==0){
+		alert("내용을 입력하세요.");
+	} else{
+		
+		let reDto = {
+				project_id : prjId,
+				bno : bno,
+				content : content,
+				member_email : userId,		
+		};
+		
+		console.log(reDto.project_id);
+		console.log(reDto.content);
+		console.log(reDto.member_email);
+		
+		
+		$.ajax({
+			type : 'POST',
+			url : '/fund/discover/reply',
+			data : reDto,
+			success : function(data) {
+				var htmlr='';
+				console.log(data);
+				console.log(data[bno]);
+				alert("성공");
+				
+						
+				
+					htmlr += '<div class="media mb-4"><div class="media-body"><h5 class="mt-0">'+data.member_name+'</h5>'+data.content+'</div></div>';
+					if(userId==data.member_email){
+						htmlr +='<button>수정</boutton>';
+						htmlr +='<button>삭제</boutton>';
+					}
+					htmlr += '<div id="bno"'+data.bno+'>여기다 늫는겨ㅈ id는 bno'+data.bno+'</div>'
+					
+				console.log("#reply"+data.bno);
+					$("#bno"+data.bno).html(htmlr);
+					
+					
+				
+				
+			
+			},
+			error : function() {
+				alert("실패!");
+			}
+
+		});
+		
+		
+		
+		
+	
+	}
+
+	
+	
+	
+	
+}
+
+
+
+
+
+
+
+
+
+
+
 Kakao.init("4a910cfb1ef1434f4c361ae507d1375a");
 function sendLink(prjId){
 	console.log("샌드링크 들어옴");
@@ -711,264 +879,6 @@ function sendLink(prjId){
 	
 }
 
-
-
-
-$("#pushPrj").click(function(){
-	console.log("푸쉬");
-	var giftLocation = $("#giftForm").offset().top;
-
-	$("html,body").animate({scrollTop : giftLocation}, 500);
-});
-
-
-
-
-
-
-
-function pay(id, price){
-	let path = '';
-	let money = Number($("#input"+id).val());
-	money += Number(price);
-	let prjId = '${prj.project_id}';
-	let title = '${prj.project_title}';
-	
-	path += 'fund/paymethod?money='+money+'&project_id='+prjId+'&project_title='+title;
-	console.log(path);
-	//location.href=path;
-	
-}
-
-
-function setTag(){
-	
-	var  category = [
-		 { 
-		 		'게임' : 'game',
-				'모바일 게임' : 'mobile-game', 
-				'비디오 게임':'video-game',
-				'보드 게임':'board-game'
-	 },
-	 
-	 {
-			 	'공연' : 'show',
-				'무용' : 'dance', 
-				'뮤지컬':'musical',
-				'공연':'theater'
-	 },
-	 
-	 {
-		 		 '디자인' : 'design',
-				 '건축, 공간' : 'architecture', 
-				 '그래픽 디자인':'graphic-design',
-				 '제품 디자인':'product-design'
-	 },
-	 
-	 {
-		        '만화' : 'comics',
-				'웹툰' : 'web-comics', 
-				'만화책':'comic-books'
-				
-  },
-	 {			
-		 	  '예술' : 'art',
-		 	  '전시' : 'exhibitions',
-			  '웹툰' : 'sculpture-and-action-figures', 
-			  '일러스트레이션':'illustration'
-			
-	 },		
-  
-	 	{			
-			 	  '공예' : 'crafts',
-			 	  '캔들&조향&비누' : 'candles-and-diffusers-and-soaps',
-			 	  '가죽&금속&목 공예' : 'leather-and-metal-and-woodworking',
-			 	  '도예' : 'pottery'
-				  
-				
-		 },
-		 
-		{			
-				 	  '사진' : 'photography',
-				 	  '인물' : 'people-photography',
-				 	  '배경' : 'space-and-urban-photography',
-				 	  '동물' : 'animals-photography'				
-		 
-	 },
-
-	{				
-				 	  '영상' : 'video',
-				 	  '영화' : 'film',
-				 	  '다큐멘터리' : 'documentary',
-				 	  '애니메이션' : 'animation',
-				 	  '뮤직비디오' : 'music-videos'
-					  
-		
-
-	},
-		{
-					
-				 	  '모든' : 'food',
-				 	  '에피타이저' : 'appetizer',
-				 	  '메인디쉬' : 'main-dish',
-				 	  '디저트' : 'dessert'
-					  
-			 
-		},
-		
-		{
-			 	  '음악' : 'music',
-			 	  '클래식' : 'classical-music',
-			 	  '대중음악' : 'popular-music',
-			 	  '인디음악' : 'independent-music'
-				  
-		},
-		
-		{
-					 '출판' : 'publication',
-					 '잡지' : 'zines',
-					 '문학&에세이' : 'literature-and-essay',
-					 '그림책' : 'picture-books'		  			 		
-	    },
-	    
-		{
-		
-				 	  '모든테크' : 'technology',
-				 	  '소프트웨어' : 'software',
-				 	  '하드웨어' : 'hardware',
-				 	  '앱' : 'apps',
-				 	  '웹' : 'web'
-					  
-		
-		},
-	
-		{
-				 	  '패션' : 'fashion',
-				 	  '의류' : 'apparels',
-				 	  '악세서리' : 'accessories',
-				 	  '뷰티' : 'beauty'
-		 		
-	   },
-
-		{
-				 	  '저널' : 'journalism',
-				 	  '오디오 저널' : 'audio-journals',
-				 	  '비디오 저널' : 'video-journals',
-				 	  '웹 저널' : 'web-journals'
-
-		}	
-	];
-	
-	
-	$.each(category,function(idx,map){
-		$.each(map,function(key,value){
-			if(value=='${prj.project_sub_category}'){
-				$("#subCategory").html(key);
-			}
-			
-		})
-	})
-
-	
-	
-}
-
-
-
- 
-function showOrView(id){
-	
-	var str = '${giftIdList}'; //gift id만 들어가있는 리스트. 문자열로 들어옴
-	str=str.replace('[',''); //배열의 앞뒤 제거, 공백 제거
-	str=str.replace(']','');
-	str=str.replace(' ','');
-
-	var spList = str.split(','); //,로 스플릿해서 해당 id값만 배열에 받는다.
-	spList.push(0); //기본 목록도 나타나도록.
-	
-	 //index와 비교할 것
-	console.log(spList);
-	var cnt = 0;
-	$.each(spList,function(idx,value){
-		//리스트 안의 아이템만큼 반복한다. cnt처음에는 0
-		//지금은 리스트가 2갱
-		//value는 id리스트임. id는 클릭한 객체.
-		
-		if($("#gift"+id).is(":visible")){ //목록이 보이는 상황..그럼 굳이 누를건 없고..다른거 올려
-			if(id!=value){ //누른 id를 제외한 다른 목록을 올려야 함.
-				$("#gift"+value).slideUp();
-			
-			} 
-		} else{//목록이 안보이는 상황이면
-			if(id==value){
-				$("#gift"+value).slideDown(); //누르것만 내림
-			} else{
-				$("#gift"+value).slideUp()
-			}
-		}
-
-	});
-	
-
-
-	
-}
-
-
-
-
-
-
-//가격 플러스 버튼클릭할시 실행
-function plusMoney(info,id,price){
-	var plus = Number(info.id);
-	var money = Number($("#input"+id).val());
-	var price = Number(price)
-	var plusMoney = plus+money;
-	
-	console.log(price);
-	
-	price += plusMoney
-	price = price+'원 밀어주기';
-	
-	
-	$('#input'+id).val(plusMoney);
-	$('#payMoney'+id).html(price);
-
-}
-
-
-
-function numSet(info,price){
-	console.log("numSet들옴");	
-	var id = info.id;
-	
-	id = id.replace('input','');
-
-	var price = Number(price);
-	var inputDonate = Number(info.value);
-	
-	info.value = info.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');	
-	if(info.value.length > info.maxLength){
-		info.value = info.value.slice(0, info.maxLength);
-
-	}
-
-	console.log("id:"+id);
-	console.log("price:"+price);
-	console.log("input:"+inputDonate);
-	
-	
-	price +=inputDonate;
-	price = price+'원 밀어주기';
-
-	$('#payMoney'+id).html(price);
-
-}	
-
-
-	
-	
 
 
 

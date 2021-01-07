@@ -54,12 +54,11 @@ float:left;
 <%@include file="/WEB-INF/views/member/default/main_header.jsp" %>
 
 
-
 <c:set var="path" value="/fund/resources/img/project/community/" />
 <c:set var="mem" value="${memberInfo}"/>
 <c:set var="prj" value="${projectInfo}" />
 <c:set var="day" value="${dDayInfo}"/>
-<c:set var="userId" value="1"/>
+<c:set var="userId" value="${sessionScope.userId}"/>
 
 
   <!-- Page Content -->
@@ -152,14 +151,7 @@ float:left;
         
         <%------------------------------------------------------------------------------------ --%>
         
-        <c:set var="replyFlag" value="false"/>
-        <%--후원한 멤버 목록에 있다면 댓글쓰기가 가능하도록. --%>
-        <c:forEach var="done" items="${donatedMemList}">
-        	<c:if test="${userId eq done}">
-        		<c:set var="replyFlag" value="true" />
-        	</c:if>
-        </c:forEach>     
-        
+  
         
         <c:set var="writeFlag" value="false" />
         <%-- 프로젝트 글쓴이와 세션이 같으면 글쓰기 버튼 보이게. --%>
@@ -189,7 +181,7 @@ float:left;
 		<hr>
 	</c:forEach><%----------------------------------게시글임---------------------------------------------- --%>
 
-
+	<div id="board"></div>
         <hr>
 
 
@@ -710,7 +702,7 @@ function infiniteScroll() {
 				success : function(data) {
 		
 					let bhtml = "";
-					
+					console.log("게시글 써넣자");
 
 					$.each(data, function(index, dto) { //i배열이 들어온다.
 						bhtml += '<div class="card my-4"><h5 class="card-header">No.'+dto.bno+' '+dto.member_email+'|'+dto.dateFormat+'</h5>';
@@ -718,7 +710,7 @@ function infiniteScroll() {
 						bhtml += '<div id="reply'+dto.bno+'"></div></div></div><hr>';			
 	
 					});
-
+					console.log(bhtml);
 					$("#board").append(bhtml);
 				}//success func 
 				,
@@ -739,7 +731,7 @@ function getReply(bno,prjId){
 	
 	var param = '?project_id='+prjId+'&bno='+bno;
 	var sessionData = "userId"; //세션의 이메일 가져오는 것.
-	sessionStorage.setItem("userId","1");//이거 합치면 지워라잉/////////////////
+	//sessionStorage.setItem("userId","1");//이거 합치면 지워라잉/////////////////
 	
 	var userId = sessionStorage.getItem(sessionData);
 	
@@ -754,24 +746,25 @@ function getReply(bno,prjId){
 			
 					//html += ' <div class="card my-4"><h5 class="card-header">댓글달기</h5><div class="card-body">';
 					
-						html += '<hr><form id="form"'+prjId+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3"></textarea> </div>';
+				
+						html += '<hr><form id="form"'+prjId+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3"></textarea></div>';
+					
 						html +='<input type="hidden" name="member_email" value="'+userId+'"><input type="button" class="btn btn-secondary my-2 my-sm-0" value="댓글달기" onclick="replySub('+bno+','+prjId+')"></form></div>';
 
 						
-					var rno=0;
+
 					$.each(replyList,function(index,dto){
 					 	
 						html +='<div class="media mb-4"><div class="media-body"><h5 class="mt-0">'+dto.member_name+'</h5>'+dto.content+'</div></div>';				
 						//html +='<div id="rno"'+dto.bno+dto.rno+1+'></div>'
 						
 						if(userId==dto.member_email){
-							html +='<button class="btn btn-secondary my-2 my-sm-0">수정</button>nbsp;nbsp;';
-							html +='<button class="btn btn-secondary my-2 my-sm-0">삭제</button><hr>';
+							html +='<button class="btn btn-secondary my-2 my-sm-0" onclick="editReply('+dto.bno+','+dto.rno+','+dto.project_id+')">수정</button>&nbsp;&nbsp;';
+							html +='<button class="btn btn-secondary my-2 my-sm-0" onclick="removeReply('+dto.bno+','+dto.rno+','+dto.project_id+')">삭제</button><hr>';
 							
 						}	
 						
-						
-						rno = dto.rno;
+
 					});
 					
 				
@@ -786,15 +779,18 @@ function getReply(bno,prjId){
 	
 }
 
+
+
+
 function replySub(bno,prjId){
 	console.log(prjId+"프로젝트의"+bno+"번 게시글 댓글달러감");
 
-	var sessionData = "userId"; //세션의 이메일 가져오는 것.
-	var userId = sessionStorage.getItem(sessionData);
-	var content = $('#text'+bno).val(); //댓글내용
+	//var sessionData = "userId"; //세션의 이메일 가져오는 것.
+	var userId = sessionStorage.getItem("userId");
+	console.log("userId:"+userId);
+	var contentR = $('#text'+bno).val(); //댓글내용
 	
-	console.log("세션아이디:"+typeof userId);
-	
+
 	
 	
 	let doneMem = '${donatedMemList}';
@@ -811,23 +807,22 @@ function replySub(bno,prjId){
 		}
 		
 	});
-	
-	if(flag){
-		if(content.replace(/\s| /gi, "").length==0){
+	if(userId==null){
+		alert("로그인 하세요");
+		location.href="/fund/login";
+	} else if(flag){
+		if(contentR.replace(/\s| /gi, "").length==0){
 			alert("내용을 입력하세요.");
 		} else{
 			
 			let reDto = {
 					project_id : prjId,
 					bno : bno,
-					content : content,
-					member_email : userId,		
+					content : contentR,
+					member_email : userId	
 			};
 			
-			console.log(reDto.project_id);
-			console.log(reDto.content);
-			console.log(reDto.member_email);
-			
+
 			
 			$.ajax({
 				type : 'POST',
@@ -837,22 +832,23 @@ function replySub(bno,prjId){
 				success : function(data) {
 					var htmlr='';
 					console.log(data);
-					console.log(data['project_id']);
-					alert("성공");
 					
-					if(userId==null){
+						if(userId==null){//로그인 안했으면??
+							$('textarea').attr('disabled','disabled');
+							
+						}
 						htmlr += '<hr><form id="form"'+prjId+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3"></textarea> </div>';
-					}
+			
 						htmlr +='<input type="hidden" name="member_email" value="'+userId+'"><input type="button" class="btn btn-primary" value="댓글보기" onclick="replySub('+bno+','+prjId+')"></form></div>';
 					
 					$.each(data, function(index,map){
-						console.log(map['project_id']);
-						htmlr += '<div class="media mb-4"><div class="media-body"><h5 class="mt-0">'+map['member_name']+'</h5>'+map['content']+'<span style="text-align:right">'+map['dateFormat']+'</span></div></div>';
-						if(userId==map['member_email']){
-							htmlr +='<button class="btn btn-secondary my-2 my-sm-0">수정</boutton>nbsp;nbsp;';
-							htmlr +='<button class="btn btn-secondary my-2 my-sm-0">삭제</boutton>';
-						}
 						
+						htmlr += '<div class="media mb-4"><div class="media-body"><h5 class="mt-0">'+map['member_name']+'</h5>'+map['content']+'</div></div>';
+						if(userId==map['member_email']){
+							htmlr +='<button class="btn btn-secondary my-2 my-sm-0" onclick="editReply('+map['bno']+','+map['rno']+','+map['project_id']+')">수정</button>&nbsp;&nbsp;';
+							htmlr +='<button class="btn btn-secondary my-2 my-sm-0" onclick="removeReply('+map['bno']+','+map['rno']+','+map['project_id']+')">삭제</button>';
+						}
+						htmlr +='<hr>';
 					});
 	
 					$("#reply"+bno).html(htmlr);
@@ -860,7 +856,7 @@ function replySub(bno,prjId){
 				},
 				error : function() {
 					alert("실패!");
-				}
+				}	
 	
 			});
 		
@@ -877,10 +873,61 @@ function replySub(bno,prjId){
 
 
 
+function removeReply(bno,rno,id){
+	
+	var sessionData = "userId"; //세션의 이메일 가져오는 것.
+	var userId = sessionStorage.getItem(sessionData);
+	var content = $('#text'+bno).val(); //댓글내용
+	console.log("userId:"+userId);
+	
+	let reDto = {
+			project_id : id,
+			bno : bno,
+			content : content,
+			rno : rno,
+			member_email : userId
+	};
+
+	$.ajax({
+		type : 'POST',
+		url : '/fund/discover/deleteReply',
+		dataType : 'json',
+		data : reDto,
+		success : function(data) {
+			var htmlrr='';
 
 
+			htmlrr += '<hr><form id="form"'+id+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3"></textarea></div>';
+		
+			htmlrr +='<input type="hidden" name="member_email" value="'+userId+'"><input type="button" class="btn btn-secondary my-2 my-sm-0" value="댓글달기" onclick="replySub('+bno+','+id+')"></form></div>';
 
+			
+		var rno=0;
+		$.each(data,function(index,dto){
+		 	
+			htmlrr +='<div class="media mb-4"><div class="media-body"><h5 class="mt-0">'+dto.member_name+'</h5>'+dto.content+'</div></div>';				
+			//html +='<div id="rno"'+dto.bno+dto.rno+1+'></div>'
+			
+			if(userId==dto.member_email){
+				htmlrr +='<button class="btn btn-secondary my-2 my-sm-0" onclick="editReply('+dto.bno+','+dto.rno+','+dto.project_id+')">수정</button>&nbsp;&nbsp;';
+				htmlrr +='<button class="btn btn-secondary my-2 my-sm-0" onclick="removeReply('+dto.bno+','+dto.rno+','+dto.project_id+')">삭제</button><hr>';
+				
+			}	
+			
 
+		});
+
+			$("#reply"+bno).html(htmlrr);
+
+		},
+		error : function() {
+			alert("실패!");
+		}
+
+	});
+	
+	
+}
 
 
 
@@ -890,7 +937,9 @@ function sendLink(prjId){
 	console.log("샌드링크 들어옴");
 	var like = '${prj.project_like}';
 	console.log(like);
+	console.log("userId:"+userId);
 	var id = prjId;
+	
 	var path='http://localhost:8086/fund/resources/project/224.jpg';
 	var url = 'http://localhost:8086/fund/discover/'+id;
 	console.log(id);
@@ -927,6 +976,70 @@ function sendLink(prjId){
 
 
 
+
+
+
+
+/*
+
+function editReply(bno,rno,id){
+	
+	//$("#re"+bno+rno).
+	
+	
+	//var sessionData = "userId"; //세션의 이메일 가져오는 것.
+	var userId = sessionStorage.getItem("userId");
+	var content = $('#text'+bno).val(); //댓글내용
+	console.log("userId:"+userId);
+	
+	let reDto = {
+			project_id : id,
+			bno : bno,
+			content : content,
+			rno : rno,
+			member_email : userId
+	};
+
+	$.ajax({
+		type : 'POST',
+		url : '/fund/discover/editReply',
+		dataType : 'json',
+		data : reDto,
+		success : function(data) {
+			var htmle='';
+			console.log(data);
+			
+			alert("성공");
+			
+			//if(userId==null){
+				htmle += '<hr><form id="form"'+prjId+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3" value="'+data.content+'"></textarea> </div>';
+			//}
+				htmle +='<input type="hidden" name="member_email" value="'+userId+'"><input type="button" class="btn btn-primary" value="댓글수정" onclick="replySub('+bno+','+id+')"></form></div>';
+			
+			$.each(data, function(index,map){
+			
+				htmle += '<div class="media mb-4"><div class="media-body"><h5 class="mt-0">'+map['member_name']+'</h5>'+map['content']+'<span style="text-align:right">'+map['dateFormat']+'</span></div></div>';
+				
+				htmlrr += '<div id="reply"'+bno+rno+'><div class="media mb-4"><div class="media-body"><h5 class="mt-0">'+map['member_name']+'</h5>'+map['content']+'</div></div>';
+				if(userId==map['member_email']){
+					htmle +='<button class="btn btn-secondary my-2 my-sm-0" onclick="editReply('+map['bno']+','+map['rno']+','+map['project_id']+')">수정</button>&nbsp;&nbsp;';
+					htmle +='<button class="btn btn-secondary my-2 my-sm-0" onclick="removeReply('+map['bno']+','+map['rno']+','+map['project_id']+')">삭제</button>';
+			
+				});
+				htmlr +='</div><hr>';
+
+			$("#reply"+bno+rno).html(htmle);
+
+		},
+		error : function() {
+			alert("실패!");
+		}
+
+	});
+	
+	
+}
+*/
 
 
 

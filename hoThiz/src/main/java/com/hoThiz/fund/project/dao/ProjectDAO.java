@@ -53,13 +53,14 @@ public interface ProjectDAO {
 	@Select("SELECT * FROM project_reply where bno=#{bno} ORDER BY rno asc")
 	public ArrayList<ProjectReplyDTO> getReplyOnBoard(ProjectReplyDTO reDto);
 	
-
+/*
 	//이건안쓸듯..
 	@Select("SELECT B.* "
 			+ " FROM (SELECT rownum rn, A.* FROM (select * from project_reply where bno=#{bno} and project_id=#{project_id} ORDER BY rno desc) A "
 			+ " ) B where rn=1")
 	public ProjectReplyDTO getAReply(ProjectReplyDTO reDto);
 
+	*/
 	
 	//게시글 사진 폴더 만들때 필요
 	@Select("SELECT bno FROM(SELECT rownum rn, bno from project_community where project_id=#{project_id} order by bno desc) A where rn=1")
@@ -69,6 +70,28 @@ public interface ProjectDAO {
 	//해당 프로젝트의 후원자를 얻어옴.
 	@Select("SELECT member_email FROM member_donated_project WHERE project_id = #{project_id}")
 	public ArrayList<String> getDonatedMemberList(int project_id);
+	
+	
+	//댓글 삭제
+	@Delete("DELETE FROM project_reply where project_id=#{project_id} AND bno=#{bno} AND rno=#{rno}")
+	public void deleteReply(ProjectReplyDTO reDto);
+	
+	
+	//댓글 가져오기
+	@Select("SELECT * from project_replywhere project_id=#{project_id} AND bno=#{bno} AND rno=#{rno}")
+	public ProjectReplyDTO getAReply(ProjectReplyDTO reDto);
+	
+	
+	//댓글 수정
+	@Update("UPDATE project_reply set content=#{content} where project_id=#{project_id} AND bno=#{bno} AND rno=#{rno}")
+	public void updateReply(ProjectReplyDTO reDto);
+	
+	
+	@Insert("update project_reply set member_name=#{name} where project_id=1")
+	public void updateName(String name);
+	
+	
+	
 	
 	
 	////////////////////////////////////////////////////////
@@ -309,284 +332,7 @@ public int getProjectsCnt(@Param("param") ProjectParamDTO paramDto);
 public int getPreProjectsCnt();
 
 	//7. 검색해서 게시글 뽑기
-/*
-   impl딴에서 null 혹은 "" 일 때 문자열 none을 넣었음.
-   
-	   만약 쿼리가 없는경우는 -> 바로 sort 쿼리문으로 가고
-	   쿼리가 있는 경우는 -> search 메소드로 간다. 쿼리가 먼저이므로..
-   
-   	쿼리가 있는데 소트는 없음 -> 
-						소트 없이 처리
-쿼리랑 ongoing은 함께갈 수 없음. 즉 쿼리가 논-> ongoing 확인
 
- 쿼리가 존재하면 -> 카테고리  존재 여부 확인  카테고리 존재 -> 소트 존재 여부 확인
- 					           
- 					                        카테고리 없으면 -> 소트 존재 여부 
- 					                        
- 					                 우선...시발..쿼리  
- if 쿼리가 있음-> A테이블에 where로 쿼리문을 붙여야 한다.
- if 카테고리가 있음-> A테이블에 where로 쿼리문을 붙여야 한다.
- 
- IF SORT가 있으면 테이블 뽑아낸다.
- if achieveRate가 있으면 조건을 걸어서 테이블을 뽑아낸다. -> 하위
- if currentMoney가 있으면 조건을 걸어서 테이블을 뽑아낸다. -> 하위
- if ongoing이 있으면 
- 		onging 이 뭔지 반별해서 테이블을 뽑아내야 한다. -> 하위
- 
-1. 온고윙+소트+어치브+쿼렌트  => 소트랑 온고윙으로 교집합 JOIN..?
-CASE WHEN 온고윙 있으면
- 	SELECT ONGOING.* FROM (
- 		CASE WHEN 온고윙="머시기"..
- 			(select ~~~`)
- 			when 온고윙="머시기"
- 			...
- 		END
- 	) 	
-
- 		
- 		
- 		
-
-즉 4개의 테이블을 뽑아내야 할수도 있음...
- 		
- 		우선 페이징땜에 CON1테이블은 필수로 존재. 여기는 조건을 걸 필요가 없음. 즉 CON1안에서부터 조건을 걸면 될듯.
- 		
- 		ONGOING, CURRENTMONEY, SORT, ACHIEVERATE가 존재하면..?
- 		
- 셀렉 COMPLETE.* FROM(
- 	
- 	
- 	1. ONGOING, SORT, CURRENT ACHIEVERATE가 모두 존
- 	
- 	셀렉 CON1.*(
- 		IF(ONGOING!=NONE){ //ongoing이 존재함
- 			소트 테이블로부터 ONGING 조건 뽑아냄.
- 			IF(소트 존재함){
- 			 	소트 뽑아냄
- 			 	ACHIEVE 테이블로부터 소트조건 뽑아냄.
- 			 	IF(CURRENT 있음){
- 			 		ACHIEVE테이블로부터 CURRENT 조건 뽀ㅃ아냄.
- 			 		IF(ACHIEVE 있음){
- 			 			
- 			 			ACHIEVE 테이블 뽑아냄.
- 			 		} ELSE{ 어치브 없음
- 			 			CURRENT부터 뽑아내야함.			 		
- 			 		}
-		 	
- 			 	}ELSE{ CURRENT없음
- 			 		
- 			 	
- 			 	}
- 			}
- 		}ELSE{
- 		
- 		}
- 			) ELSE{소트없음
- 				
- 			
- 			}
- 		   
- 		   
- 		} ELSE{
- 		
- 		}
- 	
- 	
- 	)CON1	
- 
- 
- ) COMPLETE
- 
- where 30개씩
- 
- 
- /////////////온고윙 으로 뽑아내기
- CASE WHEN #{param.sort} !='none' THEN
- 	SELECT sort.* FROM(
-		 CASE WHEN #{param.ongoing} !='none' THEN
-		 	CASE WHEN #{param.sort} = 'popular' THEN 
-		 				(select * from ongoing WHERE ongoing.project_like >= 50 ORDER BY project_id desc)
-				  WHEN #{param.sort} = 'endedAt' THEN
-						 		(select * from ongoing 
-						   		 where (ongoing.project_current_percent BETWEEN #{param.minAchieveRate} AND #{param.maxAchieveRate}))
-				  WHEN #{param.sort} = 'publishedAt' THEN
-					 			(select * from project_info ORDER BY project_id desc)
-				  WHEN #{param.sort} = 'amount' THEN
-					 		 	(select * from project_info ORDER BY project_current_donated desc)
-				) sort	 	
-					 	
-					 	
-					 	
-					 	
-						 	(SELECT ongoing.* FROM(
-						 			CASE WHEN #{param.ongoing} = 'ongoing' THEN
-						 					(SELECT * FROM project_info WHERE to_date(sysdate, 'YYYYMMDD') < project_deadline)
-						 				 WHEN #{param.ongoing} = 'confirm'
-							 				(SELECT * FROM project_info WHERE project_current_percent >= 100 
-							 					AND to_date(sysdate, 'YYYYMMDD') > project_deadline)
-						 				 WHEN #{param.ongoing} = 'prelanching' THEN
-						 				 	(select * from project_info WHERE (project_reg_date < project_release_date))
-						 			END	 	
-						 	) ongoing )
-		 ELSE
-		 
-		 
-		 END
- 
- 		
- 
- 
- SELECT B.* FROM(
- 	SELECT rownum rn, A.*
- 	FROM (
- 		sort가 존재할경우에만 아래 C를 뽑아낼것 //sort 없으면..??
- 		CASE WHEN #{param.sort} != 'none' THEN 
-			(SELECT sort.* 
-					 FROM ( 
-					 	CASE WHEN #{param.sort} = 'popular' THEN 
-					 			(select * from project_info WHERE project_like >= 50 ORDER BY project_id desc)
-					 		 WHEN #{param.sort} = 'endedAt' THEN
-						 		(select * from project_info 
-						   		 where (project_current_percent BETWEEN #{param.minAchieveRate} AND #{param.maxAchieveRate}) 
-						   		 ORDER BY project_id desc)
-					 		 WHEN #{param.sort} = 'publishedAt' THEN
-					 			(select * from project_info ORDER BY project_id desc)
-					 		 WHEN #{param.sort} = 'amount' THEN
-					 		 	(select * from project_info ORDER BY project_current_donated desc)
-					 		END
-					  ) sort
-		 	 WHERE (
-		 	 CASE WHEN #{param.category} != 'none' THEN 
-		 	 	(project_title LIKE CONCAT('%'|| #{param.query},'%') OR project_summary LIKE CONCAT('%'|| #{param.query},'%') ) 
-		 	 		AND category=#{param.category}			
-		 	 	)
-		 	 ELSE
-		 	 
-		 	  	project_title LIKE CONCAT('%'|| #{param.query},'%') OR project_summary LIKE CONCAT('%'|| #{param.query},'%')
-						  				
-			)
-						  				
-		   ) A
-		 	 	
- ) B
- 
- 
- 	
- 
-WHERE rn between #{page.startRownum} and #{page.endRownum}					
-					
-					
-					
-			
-WHERE rn between #{page.startRownum} and #{page.endRownum}
-  
-소트 존재하면
- CASE WHEN #{param.sort} != 'none' THEN 
- 		
- 		CASE WHEN #{param.category} != 'none' THEN 
-					
-				CASE WHEN #{param.sort} = 'popular' THEN 
-					(SELECT C.* 
-					 FROM ( select * from project_info WHERE project_like >= 50 ORDER BY project_id desc) C
- 					 WHERE category=#{param.category}
-					  		AND (project_title LIKE CONCAT('%'|| #{param.query},'%')
-					  				OR project_summary LIKE CONCAT('%'|| #{param.query},'%') )
-					) 
-
-			    
-					  WHEN #{param.sort} = 'endedAt' THEN
-					  (SELECT C.*
-					   FROM (select * from project_info 
-					   		 where (project_current_percent BETWEEN #{param.minAchieveRate} AND #{param.maxAchieveRate}) 
-					   		 ORDER BY project_id desc) C
-					   WHERE category=#{param.category}
-					  		AND (project_title LIKE CONCAT('%'|| #{param.query},'%')
-					  				OR project_summary LIKE CONCAT('%'|| #{param.query},'%') )
-					  )  
-					 
-			    
-			    	  WHEN #{param.sort} = 'publishedAt' THEN
-					  (SELECT C.*
-					   FROM (select * from project_info ORDER BY project_id desc) C
-					   WHERE category=#{param.category}
-					  		AND (project_title LIKE CONCAT('%'|| #{param.query},'%')
-					  				OR project_summary LIKE CONCAT('%'|| #{param.query},'%') )
-					 )	  
-					  
-				
-					 WHEN #{param.sort} = 'amount' THEN
-					  (SELECT C.*
-					   FROM (select * from project_info ORDER BY project_current_donated desc) C
-					   WHERE category=#{param.category}
-					  		AND (project_title LIKE CONCAT('%'|| #{param.query},'%')
-					  				OR project_summary LIKE CONCAT('%'|| #{param.query},'%') )
-					)  
-				END
-				
-		
- 		ELSE 
- 			 
-				CASE WHEN #{param.sort} = 'popular' THEN 
-					(SELECT C.* 
-					 FROM ( select * from project_info WHERE project_like >= 50 ORDER BY project_id desc) C
- 					 WHERE project_title LIKE CONCAT('%'|| #{param.query},'%')
-					  				OR project_summary LIKE CONCAT('%'|| #{param.query},'%')
-					)	  
-
-			    
-					  WHEN #{param.sort} = 'endedAt' THEN
-					  (SELECT C.*
-					   FROM (select * from project_info 
-					   		 where (project_current_percent BETWEEN #{param.minAchieveRate} AND #{param.maxAchieveRate}) 
-					   		 ORDER BY project_id desc) C
-					   WHERE project_title LIKE CONCAT('%'|| #{param.query},'%')
-					  				OR project_summary LIKE CONCAT('%'|| #{param.query},'%')
-					  )  
-					 
-			    
-			    	  WHEN #{param.sort} = 'publishedAt' THEN
-					  (SELECT C.*
-					   FROM (select * from project_info ORDER BY project_id desc) C
-					   WHERE project_title LIKE CONCAT('%'|| #{param.query},'%')
-					  				OR project_summary LIKE CONCAT('%'|| #{param.query},'%')
-					 )	  
-					  
-				
-					 WHEN #{param.sort} = 'amount' THEN
-					  (SELECT C.*
-					   FROM (select * from project_info ORDER BY project_current_donated desc) C
-					   WHERE project_title LIKE CONCAT('%'|| #{param.query},'%')
-					  				OR project_summary LIKE CONCAT('%',#{param.query},'%') 
-					  )
- 		
- 		END
-
- ELSE
-		CASE WHEN #{param.category} != 'none' THEN
-		   (SELECT * FROM project_info 
-		   	WHERE category = #{param.category} 
-		   		AND (project_title LIKE CONCAT('%'|| #{param.query},'%')
-							OR project_summary LIKE CONCAT('%'|| #{param.query},'%'))
-		   )
-		   
-		   
-		ELSE (SELECT * from project_info WHERE (project_title LIKE CONCAT('%'|| #{param.query},'%')
-							OR project_summary LIKE CONCAT('%'|| #{param.query},'%')))
-		END
- END
- 
- WHERE project_title LIKE CONCAT('%',#{param.keyword},'%')
-OR project_summary LIKE CONCAT('%',#{param.keyword},'%')) A
-   	  
-   	  WHEN 
-   	  WHEN
-   	  
-   	  
- SELECT *
-   
-   
-   
- */
 
 
 	/////////////////////////////////////////////////////////////////////////////

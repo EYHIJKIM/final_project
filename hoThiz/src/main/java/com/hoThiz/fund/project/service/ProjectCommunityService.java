@@ -2,6 +2,8 @@ package com.hothiz.fund.project.service;
 
 import java.util.ArrayList;
 
+import org.springframework.web.servlet.ModelAndView;
+
 import com.hothiz.fund.project.dto.ProjectCommunityDTO;
 import com.hothiz.fund.project.dto.ProjectPagingDTO;
 import com.hothiz.fund.project.dto.ProjectReplyDTO;
@@ -26,6 +28,12 @@ public interface ProjectCommunityService {
 	
 	//json파싱
 	public String jsonMapper(Object obj);
+	
+	
+	public String deleteReply (ProjectReplyDTO reDto);
+
+	public String editReply(ProjectReplyDTO reDto);
+	
 	
 	//public ProjectReplyDTO getAReply(ProjectReplyDTO reDto);
 }

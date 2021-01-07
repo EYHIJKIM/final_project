@@ -50,7 +50,8 @@ public class ProjectOutputController {
 	ProjectService ps;
 	@Autowired
 	ProjectCommunityService pcs;
-
+	@Autowired
+	ProjectDAO dao;
 	
 	
 	///////////////////////////게시글 목록///////////////////////
@@ -236,6 +237,7 @@ public class ProjectOutputController {
 	
 	
 	
+	
 	//////////////////////////////////////커뮤니티 사진뽑아오기///////////////////////////////////////////////////
 	private final String IMAGE_REPO = "D:\\Spring\\final_project\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\hoThiz\\resources\\img\\community";
 	private final String IMAGE_PATH = "/fund/resources/img/community";
@@ -327,10 +329,7 @@ public class ProjectOutputController {
 	@PostMapping(value="/reply", produces = "application/text;charset=utf-8")
 	public String writeReply(ModelAndView mv, ProjectReplyDTO reDto) {
 		System.out.println("댓글 저장 컨트롤러");
-		System.out.println("파람잘됐나?"+reDto.getProject_id());
-		System.out.println(reDto.getBno());
-		System.out.println(reDto.getContent());
-		System.out.println(reDto.getMember_email());
+	
 		String reply = pcs.writeReply(reDto);
 
 
@@ -340,9 +339,40 @@ public class ProjectOutputController {
 	}
 	
 
+	@PostMapping("/deleteReply")
+	public String deleteReply (ProjectReplyDTO reDto ) {
+		
+		System.out.println("댓글삭제");
+		pcs.deleteReply(reDto);
+		String reply= pcs.deleteReply(reDto);
+		
+		return reply;
+	}
+	
 	
 	
 
+	@PostMapping("/editReply")
+	public String editReply (ProjectReplyDTO reDto ) {
+		System.out.println("댓글 수정");
+		
+		
+		
+		return pcs.editReply(reDto);
+	}
+	
 
+	
+	@GetMapping("/insert")
+	public void insert() {
+		ProjectReplyDTO re = new ProjectReplyDTO();
+		String name = "name";
+		dao.updateName(name);
+		
+		
+		
+		
+	}
+	
 
 }

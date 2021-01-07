@@ -6,6 +6,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -122,6 +123,27 @@ public class ProjectCommunityServiceImpl implements ProjectCommunityService {
 		
 	}
 	
+	
+	
+	@Override
+	public String deleteReply (ProjectReplyDTO reDto) {
+		System.out.println("댓글삭제하러 서비스옴");
+		dao.deleteReply(reDto);
+
+		return getReply(reDto);
+	}
+	
+	
+	@Override
+	public String editReply(ProjectReplyDTO reDto) {
+		System.out.println("댓글수정하러 값 가지러옴.");
+		return jsonMapper(dao.getAReply(reDto));
+
+	}
+	
+	
+	
+	
 	/*
 	public ProjectReplyDTO getAReply(ProjectReplyDTO reDto) {
 		
@@ -154,5 +176,9 @@ public class ProjectCommunityServiceImpl implements ProjectCommunityService {
 		
 		return jsonStr;	
 	}
+
+
+
+
 
 }

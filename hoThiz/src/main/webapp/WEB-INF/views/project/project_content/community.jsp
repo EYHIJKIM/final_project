@@ -50,7 +50,7 @@ float:left;
 
 <body onload="setTag()">
 
-  <!-- Navigation -->
+  <!-- Navigation ${sessionScope.userId}-->
 <%@include file="/WEB-INF/views/member/default/main_header.jsp" %>
 
 
@@ -59,7 +59,7 @@ float:left;
 <c:set var="mem" value="${memberInfo}"/>
 <c:set var="prj" value="${projectInfo}" />
 <c:set var="day" value="${dDayInfo}"/>
-
+<c:set var="userId" value="1"/>
 
 
   <!-- Page Content -->
@@ -78,11 +78,8 @@ float:left;
 
         <!-- Author -->
         <p class="lead">
-
-          <a href="#멤버프로필로 고">
-			<img src="${path}/member/${mem.member_email}.jpg" width="50px" height="50px"></a> &nbsp;
-		
-          <a href="#">${mem.member_name}</a>
+			<img class="d-flex mr-3 rounded-circle" width="30px" width="30px" src="${path}/${mem.member_email}/${mem.member_profile_pic}"> &nbsp;
+          <a href="/fund/member_info/${member_URL}">${mem.member_name}</a>
         </p>
 
 
@@ -90,7 +87,7 @@ float:left;
 
         <!-- Preview Image -->
 
-        	<img class="img-fluid rounded" src="${path}/project/${prj.project_main_image}" alt="">
+        	<img class="img-fluid rounded" src="${path}/project/title/${mem.member_email}/${prj.project_id}/${prj.project_main_image}" >
 		<hr>
 		
 	
@@ -149,17 +146,37 @@ float:left;
         <a href="/fund/discover/${prj.project_id}/notice">펀딩</a>
         <hr>
 		
-		<c:if test="${sessionScope.userId ne null}" >
-			<button type="button" onClick="location.href='/fund/writeForm?project_id=${prj.project_id}'">글쓰기</button>
-		</c:if>
+	
 		
         <!-- Post Content -->
         
         <%------------------------------------------------------------------------------------ --%>
+        
+        <c:set var="replyFlag" value="false"/>
+        <%--후원한 멤버 목록에 있다면 댓글쓰기가 가능하도록. --%>
+        <c:forEach var="done" items="${donatedMemList}">
+        	<c:if test="${userId eq done}">
+        		<c:set var="replyFlag" value="true" />
+        	</c:if>
+        </c:forEach>     
+        
+        
+        <c:set var="writeFlag" value="false" />
+        <%-- 프로젝트 글쓴이와 세션이 같으면 글쓰기 버튼 보이게. --%>
+        <c:if test="${userId eq mem.member_email}">
+        	<c:set var="writeFlag" value="true" />
+        </c:if>
+  
+
+ 
+        <c:if test="${writeFlag}" >
+				<button type="button" onClick="location.href='/fund/writeForm?project_id=${prj.project_id}'">글쓰기</button>
+		</c:if>
+        
 
        <c:forEach var="brd" items="${boardList}">
                <div class="card my-4">
-          <h5 class="card-header">No.${brd.bno}  ${brd.member_email} | ${brd.dateFormat}</h5>
+          <h5 class="card-header">No.${brd.bno}  ${brd.member_name} | ${brd.dateFormat}</h5>
           <div class="card-body">
 			${brd.content}<br><br>
 			<div id="reply${brd.bno}">
@@ -171,8 +188,7 @@ float:left;
 		</div>
 		<hr>
 	</c:forEach><%----------------------------------게시글임---------------------------------------------- --%>
-        <div id="board"></div>
-        
+
 
         <hr>
 
@@ -727,7 +743,7 @@ function getReply(bno,prjId){
 	
 	var userId = sessionStorage.getItem(sessionData);
 	
-	//bno의 댓글목록을 불러옴. 시발 이것도 비동기잖이 씹새끼야
+	//bno의 댓글목록을 불러옴.
 	$.ajax({
 				type : 'GET',
 				url : '/fund/discover/reply'+param ,
@@ -738,13 +754,9 @@ function getReply(bno,prjId){
 			
 					//html += ' <div class="card my-4"><h5 class="card-header">댓글달기</h5><div class="card-body">';
 					
-					if(userId==null){
-						htmlr += '<hr><form id="form"'+prjId+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3"></textarea> </div>';
+						html += '<hr><form id="form"'+prjId+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3"></textarea> </div>';
 						html +='<input type="hidden" name="member_email" value="'+userId+'"><input type="button" class="btn btn-secondary my-2 my-sm-0" value="댓글달기" onclick="replySub('+bno+','+prjId+')"></form></div>';
-					}
-					
-					
-					
+
 						
 					var rno=0;
 					$.each(replyList,function(index,dto){
@@ -753,7 +765,7 @@ function getReply(bno,prjId){
 						//html +='<div id="rno"'+dto.bno+dto.rno+1+'></div>'
 						
 						if(userId==dto.member_email){
-							html +='<button class="btn btn-secondary my-2 my-sm-0">수정</button>';
+							html +='<button class="btn btn-secondary my-2 my-sm-0">수정</button>nbsp;nbsp;';
 							html +='<button class="btn btn-secondary my-2 my-sm-0">삭제</button><hr>';
 							
 						}	
@@ -778,74 +790,87 @@ function replySub(bno,prjId){
 	console.log(prjId+"프로젝트의"+bno+"번 게시글 댓글달러감");
 
 	var sessionData = "userId"; //세션의 이메일 가져오는 것.
-	sessionStorage.setItem("userId","1");//이거 합치면 지워라잉/////////////////
-	
 	var userId = sessionStorage.getItem(sessionData);
-	var content = $('#text'+bno).val();
+	var content = $('#text'+bno).val(); //댓글내용
 	
-	if(content.replace(/\s| /gi, "").length==0){
-		alert("내용을 입력하세요.");
-	} else{
-		
-		let reDto = {
-				project_id : prjId,
-				bno : bno,
-				content : content,
-				member_email : userId,		
-		};
-		
-		console.log(reDto.project_id);
-		console.log(reDto.content);
-		console.log(reDto.member_email);
-		
-		
-		$.ajax({
-			type : 'POST',
-			url : '/fund/discover/reply',
-			dataType : 'json',
-			data : reDto,
-			success : function(data) {
-				var htmlr='';
-				console.log(data);
-				console.log(data['project_id']);
-				alert("성공");
-				
-				if(userId==null){
-					htmlr += '<hr><form id="form"'+prjId+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3"></textarea> </div>';
-				}
-					htmlr +='<input type="hidden" name="member_email" value="'+userId+'"><input type="button" class="btn btn-primary" value="댓글보기" onclick="replySub('+bno+','+prjId+')"></form></div>';
-				
-				$.each(data, function(index,map){
-					console.log(map['project_id']);
-					htmlr += '<div class="media mb-4"><div class="media-body"><h5 class="mt-0">'+map['member_name']+'</h5>'+map['content']+'<span style="text-align:right">'+map['dateFormat']+'</span></div></div>';
-					if(userId==map['member_email']){
-						htmlr +='<button>수정</boutton>';
-						htmlr +='<button>삭제</boutton>';
-					}
-					
-				});
+	console.log("세션아이디:"+typeof userId);
+	
+	
+	
+	let doneMem = '${donatedMemList}';
+	doneMem = doneMem.replace('[',''); //배열의 앞뒤 제거, 공백 제거
+	doneMem = doneMem.replace(']','');
+	doneMem = doneMem.replace(' ','');
 
-				$("#reply"+bno).html(htmlr);
-					
-					
-				
-				
+	var doneList = doneMem.split(',');
+	var flag = false;
+	
+	$.each(doneList,function(index,email){
+		if(email==userId){ //지금 로그인한 사람이 도네목록에 있으면
+			flag =true;
+		}
+		
+	});
+	
+	if(flag){
+		if(content.replace(/\s| /gi, "").length==0){
+			alert("내용을 입력하세요.");
+		} else{
 			
-			},
-			error : function() {
-				alert("실패!");
-			}
-
-		});
-		
-		
-		
-		
+			let reDto = {
+					project_id : prjId,
+					bno : bno,
+					content : content,
+					member_email : userId,		
+			};
+			
+			console.log(reDto.project_id);
+			console.log(reDto.content);
+			console.log(reDto.member_email);
+			
+			
+			$.ajax({
+				type : 'POST',
+				url : '/fund/discover/reply',
+				dataType : 'json',
+				data : reDto,
+				success : function(data) {
+					var htmlr='';
+					console.log(data);
+					console.log(data['project_id']);
+					alert("성공");
+					
+					if(userId==null){
+						htmlr += '<hr><form id="form"'+prjId+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3"></textarea> </div>';
+					}
+						htmlr +='<input type="hidden" name="member_email" value="'+userId+'"><input type="button" class="btn btn-primary" value="댓글보기" onclick="replySub('+bno+','+prjId+')"></form></div>';
+					
+					$.each(data, function(index,map){
+						console.log(map['project_id']);
+						htmlr += '<div class="media mb-4"><div class="media-body"><h5 class="mt-0">'+map['member_name']+'</h5>'+map['content']+'<span style="text-align:right">'+map['dateFormat']+'</span></div></div>';
+						if(userId==map['member_email']){
+							htmlr +='<button class="btn btn-secondary my-2 my-sm-0">수정</boutton>nbsp;nbsp;';
+							htmlr +='<button class="btn btn-secondary my-2 my-sm-0">삭제</boutton>';
+						}
+						
+					});
 	
+					$("#reply"+bno).html(htmlr);
+	
+				},
+				error : function() {
+					alert("실패!");
+				}
+	
+			});
+		
+		}
+
+	}//도네목록 있는 사람 조건문
+	else{
+		
+		alert("해당 프로젝트의 후원자만 쓸 수 있습니다.");
 	}
-
-	
-	
 	
 	
 }

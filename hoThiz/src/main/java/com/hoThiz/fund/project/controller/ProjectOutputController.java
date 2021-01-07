@@ -31,6 +31,7 @@ import com.google.gson.JsonObject;
 import com.hothiz.fund.member.dto.MemberDTO;
 import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
+import com.hothiz.fund.member.dto.Member_messageDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
 import com.hothiz.fund.project.dto.ProjectReplyDTO;
@@ -153,6 +154,7 @@ public class ProjectOutputController {
 		return mv;
 	}
 	
+	//프로젝트 커뮤니티
 	@GetMapping(value = "/{project_id}/community")
 	public ModelAndView getAProjectLive(@PathVariable int project_id, ModelAndView mv, HttpSession session, ProjectParamDTO paramDto) {
 		
@@ -176,6 +178,8 @@ public class ProjectOutputController {
 		//해당 프젝의 게시글 목록 불러옴.
 		mv.addObject("boardList", pcs.getBoardList(project_id));//게시판 리스트
 		
+		//후원자들
+		mv.addObject("donatedMemList",ps.getDonatedMemberList(project_id));
 
 		//해당 프젝 라이브 꺼내와야함.
 		mv.setViewName("project/project_content/community");
@@ -188,7 +192,7 @@ public class ProjectOutputController {
 	}
 	
 	
-	
+	//notice 탭
 	@GetMapping(value = "/{project_id}/notice")
 	public ModelAndView getAProjectNotice(@PathVariable int project_id, HttpSession session, ModelAndView mv, ProjectParamDTO paramDto) {
 		ProjectInfoDTO prjDto=ps.getAProjectDetail(project_id); //프로젝트 상세정보
@@ -207,13 +211,32 @@ public class ProjectOutputController {
 		//이런 프로젝트 어떠세요. prj와 같은 태그의 4개 뽑기...
 		mv.addObject("morePrjList", ps.getMoreProject(project_id, session));
 		
-		
-		
 		//그냥 펀딩 주의사항이요
 		mv.setViewName("project/project_content/notice");
 		return mv;
 	}
 	
+	
+	
+	//창작자에게 문의하기
+	@PostMapping("/sendMessage")
+	public ModelAndView sendMessage( ModelAndView mv, Member_messageDTO msgDto, 
+			@RequestParam("project_id") String project_id) {
+		System.out.println("메시지 넣으러 옴");
+		System.out.println(msgDto.getMember_email());
+		System.out.println(msgDto.getMessage_content());
+		ps.sendMessage(msgDto);
+		
+		//String redirect = "/"+project_id+"/community";
+		mv.setViewName("redirect:"+project_id);
+	
+		return mv;
+	}
+	
+	
+	
+	
+	//////////////////////////////////////커뮤니티 사진뽑아오기///////////////////////////////////////////////////
 	private final String IMAGE_REPO = "D:\\Spring\\final_project\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\hoThiz\\resources\\img\\community";
 	private final String IMAGE_PATH = "/fund/resources/img/community";
 
@@ -253,8 +276,10 @@ public class ProjectOutputController {
 	      in.close(); out.close();
 	   }
 	
+	////////////////////////////////////////////////////////////////////////////////
 	
 	
+
 	
 	
 	

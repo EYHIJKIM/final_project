@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hothiz.fund.member.dto.MemberDTO;
 import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
+import com.hothiz.fund.member.dto.Member_messageDTO;
 import com.hothiz.fund.project.dao.ProjectDAO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
 import com.hothiz.fund.project.dto.ProjectStateDTO;
@@ -677,8 +678,19 @@ public class ProjectServiceImpl implements ProjectService {
 		return jsonStr;	
 	}
 
+	@Override
+	public void sendMessage(Member_messageDTO msgDto) {
+		dao.sendMessage(msgDto);
+		
+	}
 
-
+	@Override
+	public ArrayList<String> getDonatedMemberList(int project_id){
+		
+		ArrayList<String> list = dao.getDonatedMemberList(project_id);
+		
+		return list;
+	}
 
 
 

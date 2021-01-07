@@ -54,33 +54,43 @@ public interface ProjectDAO {
 	public ArrayList<ProjectReplyDTO> getReplyOnBoard(ProjectReplyDTO reDto);
 	
 
+	//이건안쓸듯..
 	@Select("SELECT B.* "
 			+ " FROM (SELECT rownum rn, A.* FROM (select * from project_reply where bno=#{bno} and project_id=#{project_id} ORDER BY rno desc) A "
 			+ " ) B where rn=1")
 	public ProjectReplyDTO getAReply(ProjectReplyDTO reDto);
 
 	
+	//게시글 사진 폴더 만들때 필요
 	@Select("SELECT bno FROM(SELECT rownum rn, bno from project_community where project_id=#{project_id} order by bno desc) A where rn=1")
 	public int getLastBno(int project_id);
 	
 	
-	
-	
-	
+	//해당 프로젝트의 후원자를 얻어옴.
+	@Select("SELECT member_email FROM member_donated_project WHERE project_id = #{project_id}")
+	public ArrayList<String> getDonatedMemberList(int project_id);
 	
 	
 	////////////////////////////////////////////////////////
 	
-	//////////////////////스케줄러 실행//////////////////////
+	
+	
+	//메시지 보내기
+	@Insert("insert into message values(#{member_email},message_seq.nextval,#{message_type},#{message_content},#{message_send_member},#{message_receive_member},to_date(sysdate,'yyyy.mm.dd hh24:mi'))") 
+	public void sendMessage(Member_messageDTO msgDto);
+	
+	
+	
+	
+	
+	
+	
+	//////////////////////스케줄러 실행///////////////////////////////
 	@Select("select member_email from member_alarm where project_id = #{project_id}")
 	public ArrayList<String> getMemberListBeAlarmed(int project_id);
-	
-	@Insert("INSERT INTO message value(member_email,message_type,message_content,message_send_member,message_receive_member,message_date)"
-			+ "values(#{member_email},#{message_type},#{message_content},#{message_send_member},#{message_receive_member},sysdate)")
-	public void sendAlarmToMember(Member_messageDTO msgDto);
+	//////////////////////////////////////////////////////////////////
 	
 	
-	//////////////////////////////////////////////
 	
 	///////////////////////게시글 하나 뽑아냄/////////////////////////
 	@Select("SELECT * FROM project_info WHERE project_id = #{project_id}")
@@ -662,8 +672,11 @@ public ArrayList<MemberDTO> getMemberInfoList();
 @Select("SELECT * FROM member_info WHERE member_email=#{member_email}")
 public MemberDTO getAMemberInfo(String member_email);
 	
+//몇명이 후원했는지.
 @Select("SELECT COUNT(*) FROM member_donated_project WHERE project_id = #{project_id}")
 public int getDonatedMemberCnt(int project_id);
+
+
 
 //confirm인 경우에 줄거임.
 @Select("select project_id, count(*) AS \"count\" from member_donated_project group by project_id")

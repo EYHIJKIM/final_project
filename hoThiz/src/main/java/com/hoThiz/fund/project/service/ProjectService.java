@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import com.hothiz.fund.member.dto.MemberDTO;
 import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
+import com.hothiz.fund.member.dto.Member_messageDTO;
 import com.hothiz.fund.project.dto.ProjectParamDTO;
 import com.hothiz.fund.project.dto.ProjectAlarmCountDTO;
 import com.hothiz.fund.project.dto.ProjectDateDTO;
@@ -90,11 +91,14 @@ public interface ProjectService {
 	
 	//멤버 한명 상세정보
 	public MemberDTO getAMemberDetail(String member_email);
+
+	//메시지 넣기
+	public void sendMessage(Member_messageDTO msgDto);
 	
 	//public Map<Integer, MemberDTO> getPrjMemberInfoMap();
 
-
-
+	//후원한 멤버들
+	public ArrayList<String> getDonatedMemberList(int project_id);
 
 
 

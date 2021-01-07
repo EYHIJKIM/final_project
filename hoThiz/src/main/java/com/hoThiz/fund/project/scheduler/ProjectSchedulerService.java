@@ -87,8 +87,8 @@ public class ProjectSchedulerService {
 					
 					for(String email:memList) {
 						msgDto.setMessage_receive_member(email);
-						msgDto.setMember_email(email);
-						dao.sendAlarmToMember(msgDto);
+						msgDto.setMember_email("admin");
+						dao.sendMessage(msgDto);
 						
 					}
 					

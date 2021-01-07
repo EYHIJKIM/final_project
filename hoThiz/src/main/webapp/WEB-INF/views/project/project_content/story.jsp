@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=utf-8"%>
+<%@ page language="java" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 
@@ -52,13 +52,19 @@
 
 
 .col-md-4{
+	position: sticky; 
+	top: 0; 
+}
+
+.hig{
+float:left;
 }
 
 
 .modalWrap{
 	display: none;
-	width:300px;
-	height:500px;
+	width:600px;
+	height:350px;
 	position: absolute;
 	top:50%;
 	left:50%;
@@ -109,18 +115,58 @@
 <c:set var="mem" value="${memberInfo}"/>
 <c:set var="prj" value="${projectInfo}" />
 <c:set var="day" value="${dDayInfo}"/>
-
+<c:set var="userId" value="${sessionScope.userId}"/>
 
 
   <!-- Page Content -->
  
+	<div class="blackBg"></div>
+	<div class="modalWrap">
+			<div class="modalClose"><a herf="#">close</a></div>
+			<div class="shredContent">		
+			<h3 align="center">창작자에게 문의하기</h3>
+			<form id="qForm" method="post" action="/fund/discover/sendMessage?project_id=${prj.project_id}">
+			<input type="hidden" name="member_email" value="${userId}">
+			<input type="hidden" name="message_send_member" value="${userId}">
+			<input type="hidden" name="message_receive_member" value="${mem.member_email}">
+			
+			
+			<table align="center" border="1">
+			<tr>
+			<td colspan="2">받는 사람 ${mem.member_name}님<br></td>
+			</tr>
+			<tr>
+			<td colspan="2">문의 내용 
+			<select name="message_type" id="message_type">
+					<option value="문의유형" selected disabled>문의유형</option>
+					<option value="선물/후원">선물/후원</option>
+					<option value="프로젝트">프로젝트</option>
+					<option value="수령자 정보">수령자 정보</option>
+					<option value="교환/환불">교환/환불</option>
+					<option value="배송">배송</option>
+					<option value="기타">기타</option>
+				</select></td>
+			
+			</tr>
+			<tr>
+				<td colspan="2">				
+				<textarea name="message_content" rows="10" cols="40" placeholder="프로젝트 진행자에게 문의하고 싶은 내용을 적으세요.">
 
+				</textarea></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="right"><input type="button" id="questionSubmit" type="button" value="전송"></td>
+			</tr>
+			
+			</table>
+			</form>	
+			</div>
+	</div>
 
 
 
 
   <div class="container">
-
   
 
     <div class="row">
@@ -148,7 +194,7 @@
 
         <!-- Author -->
         <p class="lead">
-			<img class="d-flex mr-3 rounded-circle" src="${path}/${mem.member_email}/${mem.member_profile_pic}"> &nbsp;
+			<img class="d-flex mr-3 rounded-circle" width="30px" width="30px" src="${path}/${mem.member_email}/${mem.member_profile_pic}"> &nbsp;
           <a href="/fund/member_info/${member_URL}">${mem.member_name}</a>
         </p>
 
@@ -218,16 +264,66 @@
 		</div>
 		
 		
-		
+		<div>
         <!-- Post Content -->
-       		${prj.project_video}
+       		
         <p class="lead">
+        
         	${prj.project_story}
 
         </p>
 
         <hr>
+</div>
+       <!-- Comments Form -->
+        <div class="card my-4">
+          <h5 class="card-header">Leave a Comment:</h5>
+          <div class="card-body">
+            <form>
+              <div class="form-group">
+                <textarea class="form-control" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
 
+	       <!-- Single Comment -->
+        <div class="media mb-4">
+          <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+          <div class="media-body">
+            <h5 class="mt-0">Commenter Name</h5>
+            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+          </div>
+        </div>
+
+        <!-- Comment with nested comments -->
+        <div class="media mb-4">
+          <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+          <div class="media-body">
+            <h5 class="mt-0">Commenter Name</h5>
+            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+
+            <div class="media mt-4">
+              <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+              <div class="media-body">
+                <h5 class="mt-0">Commenter Name</h5>
+                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+              </div>
+            </div>
+
+            <div class="media mt-4">
+              <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+              <div class="media-body">
+                <h5 class="mt-0">Commenter Name</h5>
+                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
 
       <!-- Sidebar Widgets Column -->
      
@@ -240,21 +336,11 @@
          		 <a href="/fund/member_info/${mem.member_URL}">${mem.member_name}</a>
            		<p>${member.member_introduce}</p>
           	 <hr>
-          	 
-          	 <button class="btn btn-secondary my-2 my-sm-0">창작자에게 문의하기</button>
-	
-          	 
-        
 
-           
+          	 <button id="modalBtn" class="btn btn-secondary my-2 my-sm-0">창작자에게 문의하기</button>
           </div>
         </div>
-        
-     
- 
 
-        
-        
         
         
         <!-- Side Widget -->
@@ -583,6 +669,21 @@ ${memberMap[morePrj.value.project_id].member_URL}
 
 <script type="text/javascript">
 
+
+$("#questionSubmit").click(function(){
+	
+	var q = $("#questionSubmit").val();
+	if(q.replace(/\s| /gi, "").length==0){
+		alert("내용을 입력하세요.");
+	} else{
+		alert("메시지 전송을 완료했습니다.");
+		$('#qForm').submit();
+		$('.modalWrap').hide();
+		$('.blackBg').hide();
+	}
+	
+});
+
 $(document).ready(function(){
 	$('#modalBtn').click(function(){
 		console.log("안녕하삼");
@@ -597,6 +698,25 @@ $(document).ready(function(){
 		
 	});	
 });
+$(window).scroll(function(event){
+	
+	var winTop = $(window).scrollTop();
+	var bgTop = $(".blackBg").offset().top;
+	
+	if(winTop > bgTop){
+		
+		$(".blackBg").css("position", "fixed");
+		$(".modalWrap").css("position", "fixed");
+	}
+	else if(winTop < bgTop){
+		$(".blackBg").css("position", "static");
+		$(".modalWrap").css("position", "static");
+	}
+	
+	
+});
+
+
 
 
 
@@ -617,7 +737,7 @@ function sendLink(prjId){
 		  content: {
 		    title: '${prj.project_title}',
 		    description: '${prj.project_summary}',
-		    imageUrl: 'http://localhost:8086/fund/resources/project/224.jpg',
+		    imageUrl: '27.jpg',
 		    link: {
 		      mobileWebUrl: url,
 		     
@@ -663,9 +783,8 @@ function pay(id, price){
 	let prjId = '${prj.project_id}';
 	let title = '${prj.project_title}';
 	
-	path += 'fund/paymethod?money='+money+'&project_id='+prjId+'&project_title='+title;
-	console.log(path);
-	//location.href=path;
+	path += '/fund/paymethod?money='+money+'&project_id='+prjId+'&project_title='+title;
+	location.href=path;
 	
 }
 
@@ -813,23 +932,28 @@ function showOrView(id){
 	str=str.replace(' ','');
 
 	var spList = str.split(','); //,로 스플릿해서 해당 id값만 배열에 받는다.
-	spList.push(0); //기본 목록도 나타나도록.
+	spList.push("0"); //기본 목록도 나타나도록.
 	
 	 //index와 비교할 것
 	console.log(spList);
-	var cnt = 0;
+	console.log(id);
 	$.each(spList,function(idx,value){
-		//리스트 안의 아이템만큼 반복한다. cnt처음에는 0
-		//지금은 리스트가 2갱
+		//리스트 안의 아이템만큼 반복한다. 
+		//지금은 리스트가 4개임,.
 		//value는 id리스트임. id는 클릭한 객체.
 		
 		if($("#gift"+id).is(":visible")){ //목록이 보이는 상황..그럼 굳이 누를건 없고..다른거 올려
 			if(id!=value){ //누른 id를 제외한 다른 목록을 올려야 함.
 				$("#gift"+value).slideUp();
 			
-			} 
-		} else{//목록이 안보이는 상황이면
+			} else{ //만약 
+				$("#gift"+value).slideDown();
+			}
+		
+		} else{ //목록이 안보이는 상황이면 =>여기에 3만 안들어옴.
 			if(id==value){
+				console.log(id)
+				console.log(value)
 				$("#gift"+value).slideDown(); //누르것만 내림
 			} else{
 				$("#gift"+value).slideUp()
@@ -897,15 +1021,14 @@ function numSet(info,price){
 
 
 	
-	
-
-
-
-
-
-
-
 </script>
+
+
+
+
+
+
+
 </body>
 
 </html>

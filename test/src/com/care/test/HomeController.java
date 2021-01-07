@@ -51,6 +51,7 @@ public class HomeController {
 	public void write(@RequestParam String title, @RequestParam String content) {
 		System.out.println(title);
 		System.out.println(content);
+		
 		//처리되는 코드는 실제 서버에 올라온 파일을 저장하는 역할을 만들고 데이터 처리하면 된다.
 		System.out.println(content.indexOf("imageFileName="));
 		System.out.println(content.lastIndexOf("."));

@@ -9,10 +9,18 @@ public class ProjectReplyDTO {
 	private int rno;
 	private String content;
 	private String member_email;
+	private String member_name;
 	private Date regdate;
 	private String dateFormat;
 	
 	
+	
+	public String getMember_name() {
+		return member_name;
+	}
+	public void setMember_name(String member_name) {
+		this.member_name = member_name;
+	}
 	public String getDateFormat() {
 		return dateFormat;
 	}

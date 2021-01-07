@@ -51,11 +51,11 @@ float:left;
 <body onload="setTag()">
 
   <!-- Navigation -->
-<%@include file="../../default/main_header.jsp" %>
+<%@include file="/WEB-INF/views/member/default/main_header.jsp" %>
 
 
 
-<c:set var="path" value="/fund/resources" />
+<c:set var="path" value="/fund/resources/img/project/community/" />
 <c:set var="mem" value="${memberInfo}"/>
 <c:set var="prj" value="${projectInfo}" />
 <c:set var="day" value="${dDayInfo}"/>
@@ -101,7 +101,7 @@ float:left;
 					</p>
 					<p>
 						남은시간<br>
-						<span class="bigLetter">${day.chk}</span>일<br>
+						<span class="bigLetter">${day.d_day}</span>일<br>
 					</p>
 					<p>
 						후원자<br>
@@ -144,8 +144,18 @@ float:left;
 		<button class="kakao-link-btn" onclick="sendLink('${prj.project_id}')"><img src="https://lh3.googleusercontent.com/proxy/ix0Cqx6lj7RSmqnBc1zTkJD0F3iSgrLMbFbHwoG4R3mSO_Jf1faNynQffrRcdROFvglg_gMzXaWgkg9FpAsE7OFbcR1r9i27lOLS1DHL_fARwN2lQNWQ0rucBS4FtTR622uB078DQolYRKTPM69Suwo" width="32px" height="32px"></button>
 		
         <hr>
+        <a href="/fund/discover/${prj.project_id}">스토리</a>
+        <a href="/fund/discover/${prj.project_id}/community">커뮤니티</a>
+        <a href="/fund/discover/${prj.project_id}/notice">펀딩</a>
+        <hr>
 		
-        <!-- Post Content --><%------------------------------------------------------------------------------------ --%>
+		<c:if test="${sessionScope.userId ne null}" >
+			<button type="button" onClick="location.href='/fund/writeForm?project_id=${prj.project_id}'">글쓰기</button>
+		</c:if>
+		
+        <!-- Post Content -->
+        
+        <%------------------------------------------------------------------------------------ --%>
 
        <c:forEach var="brd" items="${boardList}">
                <div class="card my-4">
@@ -728,9 +738,11 @@ function getReply(bno,prjId){
 				
 			
 					//html += ' <div class="card my-4"><h5 class="card-header">댓글달기</h5><div class="card-body">';
+					
+					html +='<c:if test="${sessionScope.userId ne null}">'
 					html += '<hr><form id="form"'+bno+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3"></textarea> </div>';
 					html +='<input type="hidden" name="member_email" value="'+userId+'"><input type="button" class="btn btn-primary" value="댓글달기" onclick="replySub('+bno+','+prjId+')"></form></div>';
-	
+					html +='</c:if>'
 					var rno=0;
 					$.each(replyList,function(index,dto){
 					 	
@@ -747,8 +759,7 @@ function getReply(bno,prjId){
 						rno = dto.rno;
 					});
 					
-					rno +=1;
-					html += '<div id="bno"'+bno+'>여기다 늫는겨ㅈ id는 bno'+bno+'</div>'
+				
 					
 					$("#reply"+bno).html(html);
 				}//success func 
@@ -788,24 +799,30 @@ function replySub(bno,prjId){
 		$.ajax({
 			type : 'POST',
 			url : '/fund/discover/reply',
+			dataType : 'json',
 			data : reDto,
 			success : function(data) {
 				var htmlr='';
 				console.log(data);
-				console.log(data[bno]);
+				console.log(data['project_id']);
 				alert("성공");
 				
-						
+				htmlr +='<c:if test="${sessionScope.userId ne null}">'
+				htmlr += '<hr><form id="form"'+prjId+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3"></textarea> </div>';
+				htmlr +='<input type="hidden" name="member_email" value="'+userId+'"><input type="button" class="btn btn-primary" value="댓글달기" onclick="replySub('+bno+','+prjId+')"></form></div>';
+				htmlr +='</c:if>'
 				
-					htmlr += '<div class="media mb-4"><div class="media-body"><h5 class="mt-0">'+data.member_name+'</h5>'+data.content+'</div></div>';
-					if(userId==data.member_email){
+				$.each(data, function(index,map){
+					console.log(map['project_id']);
+					htmlr += '<div class="media mb-4"><div class="media-body"><h5 class="mt-0">'+map['member_name']+'</h5>'+map['content']+'<span style="text-align:right">'+map['dateFormat']+'</span></div></div>';
+					if(userId==map['member_email']){
 						htmlr +='<button>수정</boutton>';
 						htmlr +='<button>삭제</boutton>';
 					}
-					htmlr += '<div id="bno"'+data.bno+'>여기다 늫는겨ㅈ id는 bno'+data.bno+'</div>'
 					
-				console.log("#reply"+data.bno);
-					$("#bno"+data.bno).html(htmlr);
+				});
+
+				$("#reply"+bno).html(htmlr);
 					
 					
 				
@@ -856,7 +873,7 @@ function sendLink(prjId){
 		  content: {
 		    title: '${prj.project_title}',
 		    description: '${prj.project_summary}',
-		    imageUrl: 'http://localhost:8086/fund/resources/project/224.jpg',
+		    imageUrl: '/fund/resources/project/224.jpg',
 		    link: {
 		      mobileWebUrl: url,
 		     

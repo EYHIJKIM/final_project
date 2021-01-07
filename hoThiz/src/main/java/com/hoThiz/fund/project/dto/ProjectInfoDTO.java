@@ -25,8 +25,16 @@ public class ProjectInfoDTO {
 	private String project_story;
 	private String project_video;
 	private String project_date_string; //펀딩 끝나는 날짜(게시글상세보기), 혹은 펀딩 release 날짜(스케줄러)
-
+	private String member_name;
 	
+	
+	
+	public String getMember_name() {
+		return member_name;
+	}
+	public void setMember_name(String member_name) {
+		this.member_name = member_name;
+	}
 	public String getProject_video() {
 		return project_video;
 	}

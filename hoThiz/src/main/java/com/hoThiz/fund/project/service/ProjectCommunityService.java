@@ -27,5 +27,5 @@ public interface ProjectCommunityService {
 	//json파싱
 	public String jsonMapper(Object obj);
 	
-	public ProjectReplyDTO getAReply(ProjectReplyDTO reDto);
+	//public ProjectReplyDTO getAReply(ProjectReplyDTO reDto);
 }

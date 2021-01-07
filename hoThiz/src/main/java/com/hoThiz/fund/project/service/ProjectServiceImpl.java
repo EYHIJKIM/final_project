@@ -573,7 +573,7 @@ public class ProjectServiceImpl implements ProjectService {
 		//이제 이 프로젝트의 멤버이름...만 가져오면 되는데...어케껴넣지
 		/*
 		 프젝 id, 프젝 메인 이미지, 프젝 요약, 프젝 서브카테고리, 프젝 퍼센트, 
-		 타이틀, 좋아요 여부..;;;??...<좟같네 ㅋㅋ싀발,,
+		 타이틀, 좋아요 여부..;;;??...
 		
 		*/
 		Map<Integer, Map<String, String>> map = new HashMap<>(); //큰맵
@@ -590,7 +590,7 @@ public class ProjectServiceImpl implements ProjectService {
 			detail.put("project_summary", prj.getProject_summary());
 			detail.put("project_sub_cateogry",prj.getProject_sub_category());
 			detail.put("project_current_percent",Integer.toString(prj.getProject_current_percent()));
-			detail.put("member_name",memberDto.getMember_name());
+			detail.put("member_name",prj.getMember_name());
 			
 			for(Integer likeId : likeList) {
 				if(prj.getProject_id()==likeId) { //좋아하는 목록에 있으면

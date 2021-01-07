@@ -8,7 +8,7 @@
 <style type="text/css">
 .col-md-3{
  margin-bottom: 2em;
-		}
+}
 
 </style>
 
@@ -28,8 +28,7 @@
 
 
 
-<%@include file="default/main_header.jsp" %>
-
+<%@include file="/WEB-INF/views/member/default/main_header.jsp" %>
 
 
 
@@ -447,8 +446,8 @@
   <!-- Bootstrap core JavaScript -->
   <script src="/fund/resources/myjsFunction/projectFunction.js"></script>
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-  <script src="resources/vendor/jquery/jquery.min.js"></script>
-  <script src="resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/fund/resources/vendor/jquery/jquery5/jquery.min.js"></script>
+  <script src="/fund/resources/vendor/bootstrap5/js/bootstrap.bundle.min.js"></script>
   
   <script type="text/javascript">
   function goProject(id){

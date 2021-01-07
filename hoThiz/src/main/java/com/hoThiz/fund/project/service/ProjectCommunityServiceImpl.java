@@ -22,14 +22,18 @@ public class ProjectCommunityServiceImpl implements ProjectCommunityService {
 	@Autowired
 	ProjectDAO dao;
 	
+	
 	@Override
 	public void writeOnCommunity(ProjectCommunityDTO coDto) {
+		System.out.println("게시글 넣으러 옴.");
 		dao.writeOnBoard(coDto);
 		
 	}
 	
 	
-	
+	public int getLastBno(int project_id) {
+		return dao.getLastBno(project_id);
+	}
 	
 	
 
@@ -45,8 +49,6 @@ public class ProjectCommunityServiceImpl implements ProjectCommunityService {
 		
 		for(ProjectCommunityDTO dto : list) {
 			dto.setDateFormat(brdDate.format(dto.getRegdate()));
-			
-
 		}
 		
 		
@@ -55,6 +57,9 @@ public class ProjectCommunityServiceImpl implements ProjectCommunityService {
 		return list;
 		
 	}
+	
+	
+	
 	
 	//비동기 게시글
 	@Override
@@ -88,14 +93,13 @@ public class ProjectCommunityServiceImpl implements ProjectCommunityService {
 		ArrayList<ProjectReplyDTO> list = dao.getReplyOnBoard(reDto);
 		
 		//맵에 넣자..게시글 번호 : {댓글 쓴사람 : ____, 댓글 내용 : _____< }
+		SimpleDateFormat brdDate = new SimpleDateFormat("yyyy.MM.dd");
 		
 		
-		
-		  
-		 //SimpleDateFormat brdDate = new SimpleDateFormat("yyyy.MM.dd");
 		for(ProjectReplyDTO dto : list) {
-			//dto.setDateFormat(brdDate.format(dto.getRegdate()));
+			dto.setDateFormat(brdDate.format(dto.getRegdate()));
 			System.out.println(dto.getDateFormat());
+
 		}
 		
 		
@@ -112,25 +116,26 @@ public class ProjectCommunityServiceImpl implements ProjectCommunityService {
 		System.out.println(reDto.getBno());
 		System.out.println(reDto.getProject_id());
 		
-	
-		ArrayList<ProjectReplyDTO> list = dao.getReplyOnBoard(reDto);
+
 		
-		
-		return ;	
+		return getReply(reDto);
 		
 	}
-	
 	
 	/*
 	public ProjectReplyDTO getAReply(ProjectReplyDTO reDto) {
 		
 		ProjectReplyDTO aDto = dao.getAReply(reDto);
 		System.out.println("db에서 잘 꺼냇나:"+aDto);
-
+		SimpleDateFormat brdDate = new SimpleDateFormat("yyyy.MM.dd");
+		
+			reDto.setDateFormat(brdDate.format(aDto.getRegdate()));
+			System.out.println(aDto.getDateFormat());
+			
 			return aDto;
 
 		}
-	*/	
+		*/
 	
 	
 	

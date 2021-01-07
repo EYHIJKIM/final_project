@@ -53,13 +53,15 @@ public interface ProjectDAO {
 	@Select("SELECT * FROM project_reply where bno=#{bno} ORDER BY rno asc")
 	public ArrayList<ProjectReplyDTO> getReplyOnBoard(ProjectReplyDTO reDto);
 	
-/*
-	@Select("SELECT B.*, to_char(regdate,'yyyy.MM.dd') AS \"dateFormat\" "
+
+	@Select("SELECT B.* "
 			+ " FROM (SELECT rownum rn, A.* FROM (select * from project_reply where bno=#{bno} and project_id=#{project_id} ORDER BY rno desc) A "
 			+ " ) B where rn=1")
 	public ProjectReplyDTO getAReply(ProjectReplyDTO reDto);
-*/
+
 	
+	@Select("SELECT bno FROM(SELECT rownum rn, bno from project_community where project_id=#{project_id} order by bno desc) A where rn=1")
+	public int getLastBno(int project_id);
 	
 	
 	

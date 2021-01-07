@@ -49,7 +49,7 @@ float:left;
 <body onload="setTag()">
 
   <!-- Navigation -->
-<%@include file="../../default/main_header.jsp" %>
+<%@include file="/WEB-INF/views/member/default/main_header.jsp" %>
 
 
 
@@ -99,7 +99,7 @@ float:left;
 					</p>
 					<p>
 						남은시간<br>
-						<span class="bigLetter">${day.chk}</span>일<br>
+						<span class="bigLetter">${day.d_day}</span>일<br>
 					</p>
 					<p>
 						후원자<br>
@@ -141,6 +141,10 @@ float:left;
 		<button id="pushPrj" class="btn btn-secondary my-2 my-sm-0">프로젝트 밀어주기</button>
 		<button class="kakao-link-btn" onclick="sendLink('${prj.project_id}')"><img src="https://lh3.googleusercontent.com/proxy/ix0Cqx6lj7RSmqnBc1zTkJD0F3iSgrLMbFbHwoG4R3mSO_Jf1faNynQffrRcdROFvglg_gMzXaWgkg9FpAsE7OFbcR1r9i27lOLS1DHL_fARwN2lQNWQ0rucBS4FtTR622uB078DQolYRKTPM69Suwo" width="32px" height="32px"></button>
 		
+         <hr>
+        <a href="/fund/discover/${prj.project_id}">스토리</a>
+        <a href="/fund/discover/${prj.project_id}/community">커뮤니티</a>
+        <a href="/fund/discover/${prj.project_id}/notice">펀딩</a>
         <hr>
 		
         <!-- Post Content -->

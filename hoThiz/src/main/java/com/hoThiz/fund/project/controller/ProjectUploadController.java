@@ -173,6 +173,7 @@ public class ProjectUploadController {
 		service.insert_image(dto);
 	}
 	
+	
 	public static String fdId = null;
 	@RequestMapping(value="edit-project/java_save_image",
 	produces="application/json;charset=utf-8")
@@ -184,6 +185,7 @@ public class ProjectUploadController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+	
 		Map map = new HashMap();
 		Enumeration enu = mul.getParameterNames();
 		while(enu.hasMoreElements()) {
@@ -192,6 +194,7 @@ public class ProjectUploadController {
 			System.out.println(name + ":" + value);
 			map.put(name, value);
 		}
+		
 		List fileList = fileProcess(mul);
 		map.put("fileList", fileList);
 		ModelAndView mv = new ModelAndView();
@@ -202,7 +205,9 @@ public class ProjectUploadController {
 	
 	private List<String> 
 	
+	
 	fileProcess(MultipartHttpServletRequest mul){
+		System.out.println("fileProcess실행!");
 		//System.out.println(fdId);
 		List<String> fileList = new ArrayList<String>();
 		Iterator<String> fileNames = mul.getFileNames();
@@ -223,6 +228,8 @@ public class ProjectUploadController {
 		}
 		return fileList;
 	}
+	
+	
 	@RequestMapping(value="edit-project/insert_gift_list",
 	produces="application/json;charset=utf-8")
 	@ResponseBody

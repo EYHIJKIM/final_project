@@ -38,7 +38,7 @@
 		
 </head>
 <body onload='build()'>
-<%@include file="../default/main_header.jsp" %>
+<%@include file="/WEB-INF/views/member/default/main_header.jsp" %>
 
 <div class="container">
       

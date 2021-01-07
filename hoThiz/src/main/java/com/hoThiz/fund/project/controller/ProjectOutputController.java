@@ -4,8 +4,12 @@ package com.hothiz.fund.project.controller;
 
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.nio.channels.SeekableByteChannel;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.annotations.Param;
@@ -18,9 +22,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.JsonObject;
 import com.hothiz.fund.member.dto.MemberDTO;
 import com.hothiz.fund.member.dto.Member_alarmDTO;
 import com.hothiz.fund.member.dto.Member_likeDTO;
@@ -210,42 +217,35 @@ public class ProjectOutputController {
 	
 	
 	
-
+/*
 	//글쓰기 폼
-		
-	@GetMapping(value="/write")
-	public ModelAndView getWriteForm(ModelAndView mv,HttpSession session) {
+	@GetMapping(value="/{project_id}/write")
+	public ModelAndView getWriteForm(ModelAndView mv,@PathVariable int project_id,HttpSession session) {
 		
 		//String userId = (String)session.getAttribute("userId");
-		String userId = "10";
+		String userId = "30";
 		//폼으로 프로젝트 아이디 보내줌
-		//mv.addObject("project_id", project_id);
-		mv.addObject("member_email", userId);
+		//여기에 sessionId에서 뽑아낸 멤버 정보도 보내야 할듯.
+		
+		mv.addObject("memberInfo", ps.getAMemberDetail(userId));
+		mv.addObject("project_id", project_id);
 		mv.setViewName("project/project_content/communityWriteForm");
 		
+		
 		return mv;
 	}
 	
+	*/
 	
-	@PostMapping(value="/write")
-	public ModelAndView setWriteOnDB(ModelAndView mv,ProjectCommunityDTO coDto) {
-		String path = "/"+coDto.getProject_id()+"/community";
-		pcs.writeOnCommunity(coDto);
-		mv.setViewName(path);
-
-		return mv;
-	}
-	
+	//비동기 게시글 가져오기
 	@GetMapping(value="/board", produces = "application/json;charset=utf-8")
 	public String getBoard(@RequestParam int project_id, @RequestParam int page) {
-		System.out.println("게시글 가지러 옴");
-		
+
 		String list = pcs.getNoSyncBoardList(project_id,page); 
-		
-		System.out.println(list);
 		return list;
 		
 	}
+	
 	
 	
 	@GetMapping(value="/reply", produces = "application/json;charset=utf-8")
@@ -272,55 +272,7 @@ public class ProjectOutputController {
 
 	
 	
-	
-	/*
 
-	@RequestMapping("/insert")
-	public void insert() {
-		
-			for(int i=1;i<31;i++) {
-				ProjectInfoDTO dto = new ProjectInfoDTO();
-				String e = ""+i;
-				dto.setMember_email(e);
-				dto.setProject_like(i*50);
-				dto.setProject_current_percent(i*50);
-				dto.setProject_title(i+"제목");
-				dto.setProject_summary("요약"+i);
-				dto.setProject_target_price(i*1000);
-				dto.setProject_main_category("video");
-				dto.setProject_sub_category("film");
-				dao.setProjectInfo(dto);
-			}
-		
-	}
-*/
 
-	/*
-	//날짜 넣장
-	@RequestMapping("/update")
-	public void update() {
-		String img=null;
-		
-		for(int i=80;i<210;i++) {
-			img = Integer.toString(i)+".jpg";
-			
-			
-			dao.updateProject1(i,img);
-		}
-	}
-	
-	@RequestMapping("/update2")
-	public void update2() {
-		for(int i=103;i<160;i++) {
-			dao.updateProject2(i);
-		}
-	}
-	
-	@RequestMapping("/update3")
-	public void update3() {
-		for(int i=103;i<160;i++) {
-			dao.updateProject3(i);
-		}
-	}*/
 
 }

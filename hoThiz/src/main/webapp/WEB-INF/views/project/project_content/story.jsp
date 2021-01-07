@@ -10,6 +10,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
+  
 
   <title>hoThiz :: 핫디즈</title>
 
@@ -29,8 +30,11 @@
 }
 
 .img-fluid rounded{
-float:left;
+	float:left;
 }
+
+
+
 
 
 .bigLetter{
@@ -43,6 +47,54 @@ float:left;
 	float:left;
 }
 
+
+
+
+
+.col-md-4{
+}
+
+
+.modalWrap{
+	display: none;
+	width:300px;
+	height:500px;
+	position: absolute;
+	top:50%;
+	left:50%;
+	margin: -250px 0 0 -250px;
+	background:#eee;
+	z-index:2;
+}
+	.blackBg{
+		display:none;
+		position:absolute;
+		content:"";
+		width:100%;
+		height:100%;
+		background-color:rgba(0, 0,0, 0.5);
+		top:0;
+		left:0;
+		z-index: 1;
+		
+	}
+.modalClose{
+	position:fixed;
+	width: 26px;
+	height: 26px;
+	position: absolute;
+	top: -30px;
+	right: 0;
+}
+.modalClose> a{
+	display: block;
+	width: 100%;
+	height: 100%;
+	background:url(https://img.icons8.com/metro/26/000000/close-window.png);
+	text-indent: -9999px;
+}
+
+
 </style>
 </head>
 
@@ -53,7 +105,7 @@ float:left;
 
 
 
-<c:set var="path" value="/fund/resources" />
+<c:set var="path" value="/fund/resources/img" />
 <c:set var="mem" value="${memberInfo}"/>
 <c:set var="prj" value="${projectInfo}" />
 <c:set var="day" value="${dDayInfo}"/>
@@ -61,12 +113,32 @@ float:left;
 
 
   <!-- Page Content -->
+ 
+
+
+
+
+
   <div class="container">
+
+  
 
     <div class="row">
 	<c:if test="${day.chk>='0' and day.d_day>'0'}"><%--진행중인 경우 --%>
+
+
+	
+	
+	
+	
+	
+	
+	
       <!-- Post Content Column -->
       <div class="col-lg-8">
+      
+      
+      
 		<button class="btn btn-default" onclick="location.href='/fund/discover?category=${prj.project_sub_category}'">
 		
 		<div id="subCategory">${prj.project_sub_category}</div>
@@ -76,11 +148,8 @@ float:left;
 
         <!-- Author -->
         <p class="lead">
-
-          <a href="#멤버프로필로 고">
-			<img src="${path}/member/${mem.member_email}.jpg" width="50px" height="50px"></a> &nbsp;
-		
-          <a href="#">${mem.member_name}</a>
+			<img class="d-flex mr-3 rounded-circle" src="${path}/${mem.member_email}/${mem.member_profile_pic}"> &nbsp;
+          <a href="/fund/member_info/${member_URL}">${mem.member_name}</a>
         </p>
 
 
@@ -88,7 +157,7 @@ float:left;
 
         <!-- Preview Image -->
 
-        	<img class="img-fluid rounded" src="${path}/project/${prj.project_main_image}" alt="">
+        	<img class="img-fluid rounded" src="${path}/project/title/${mem.member_email}/${prj.project_id}/${prj.project_main_image}" alt="">
 		<hr>
 		
 	
@@ -140,118 +209,60 @@ float:left;
 			<%----------------- --%>
 		<button id="pushPrj" class="btn btn-secondary my-2 my-sm-0">프로젝트 밀어주기</button>
 		<button class="kakao-link-btn" onclick="sendLink('${prj.project_id}')"><img src="https://lh3.googleusercontent.com/proxy/ix0Cqx6lj7RSmqnBc1zTkJD0F3iSgrLMbFbHwoG4R3mSO_Jf1faNynQffrRcdROFvglg_gMzXaWgkg9FpAsE7OFbcR1r9i27lOLS1DHL_fARwN2lQNWQ0rucBS4FtTR622uB078DQolYRKTPM69Suwo" width="32px" height="32px"></button>
+			
+	         <hr>
+	        <a href="/fund/discover/${prj.project_id}">스토리</a>
+	        <a href="/fund/discover/${prj.project_id}/community">커뮤니티</a>
+	        <a href="/fund/discover/${prj.project_id}/notice">펀딩</a>
+	        <hr>
+		</div>
 		
-         <hr>
-        <a href="/fund/discover/${prj.project_id}">스토리</a>
-        <a href="/fund/discover/${prj.project_id}/community">커뮤니티</a>
-        <a href="/fund/discover/${prj.project_id}/notice">펀딩</a>
-        <hr>
+		
 		
         <!-- Post Content -->
        		${prj.project_video}
         <p class="lead">
         	${prj.project_story}
-        
+
         </p>
 
         <hr>
 
-        <!-- Comments Form -->
-        <div class="card my-4">
-          <h5 class="card-header">Leave a Comment:</h5>
-          <div class="card-body">
-            <form>
-              <div class="form-group">
-                <textarea class="form-control" rows="3"></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-          </div>
-        </div>
-
-        <!-- Single Comment -->
-        <div class="media mb-4">
-          <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-          <div class="media-body">
-            <h5 class="mt-0">Commenter Name</h5>
-            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-          </div>
-        </div>
-
-        <!-- Comment with nested comments -->
-        <div class="media mb-4">
-          <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-          <div class="media-body">
-            <h5 class="mt-0">Commenter Name</h5>
-            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-
-            <div class="media mt-4">
-              <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-              <div class="media-body">
-                <h5 class="mt-0">Commenter Name</h5>
-                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-              </div>
-            </div>
-
-            <div class="media mt-4">
-              <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-              <div class="media-body">
-                <h5 class="mt-0">Commenter Name</h5>
-                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
 
       <!-- Sidebar Widgets Column -->
-      <div class="col-md-4">
-
-   
-
-        <!-- Categories Widget -->
-        <div class="card my-4">
+     
+	
+	<div class="col-md-4">
+          <div class="card my-4">
           <h5 class="card-header">창작자 소개</h5>
           <div class="card-body">
-            <div class="row">
-              <div class="col-lg-6">
-                <ul class="list-unstyled mb-0">
-                  <li>
-                    <a href="#">Web Design</a>
-                  </li>
-                  <li>
-                    <a href="#">HTML</a>
-                  </li>
-                  <li>
-                    <a href="#">Freebies</a>
-                  </li>
-                </ul>
-              </div>
-              <div class="col-lg-6">
-                <ul class="list-unstyled mb-0">
-                  <li>
-                    <a href="#">JavaScript</a>
-                  </li>
-                  <li>
-                    <a href="#">CSS</a>
-                  </li>
-                  <li>
-                    <a href="#">Tutorials</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
+           <img class="d-flex mr-3 rounded-circle" src="${path}/${mem.member_email}/${mem.member_profile_pic}"> &nbsp;
+         		 <a href="/fund/member_info/${mem.member_URL}">${mem.member_name}</a>
+           		<p>${member.member_introduce}</p>
+          	 <hr>
+          	 
+          	 <button class="btn btn-secondary my-2 my-sm-0">창작자에게 문의하기</button>
+	
+          	 
+        
+
+           
           </div>
         </div>
+        
+     
+ 
 
+        
+        
+        
+        
         <!-- Side Widget -->
         <div class="card my-4">
           <h5 class="card-header">선물 선택</h5>
           <div class="card-body">
           
-<div id="giftForm">
+		<div id="giftForm">
 
 		<div class="aGift">
 			<button style="width:100%;height:auto" class="btn btn-default hiddenBtn0" onclick="showOrView(0)"><h3>1,000원+</h3> 선물을 선택하지 않고 밀어만 줍니다</button>
@@ -297,16 +308,17 @@ float:left;
 				
 			</c:forEach>
 	
-	</div>
-	
-	
-	
-	
-	
+			</div>
           </div>
         </div>
 
       </div>
+
+
+
+
+
+
 
 </c:if>
     
@@ -372,7 +384,7 @@ float:left;
 
 
 
-<c:if test="${day.d_day<='0'}">
+<c:if test="${day.d_day<='0'}"><%--------------끝남 --%>
 	
 	  <!-- Post Content Column -->
       <div class="col-lg-8">
@@ -462,157 +474,9 @@ float:left;
 
         <hr>
 
-        <!-- Comments Form -->
-        <div class="card my-4">
-          <h5 class="card-header">Leave a Comment:</h5>
-          <div class="card-body">
-            <form>
-              <div class="form-group">
-                <textarea class="form-control" rows="3"></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-          </div>
-        </div>
+       
+</div>
 
-        <!-- Single Comment -->
-        <div class="media mb-4">
-          <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-          <div class="media-body">
-            <h5 class="mt-0">Commenter Name</h5>
-            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-          </div>
-        </div>
-
-        <!-- Comment with nested comments -->
-        <div class="media mb-4">
-          <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-          <div class="media-body">
-            <h5 class="mt-0">Commenter Name</h5>
-            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-
-            <div class="media mt-4">
-              <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-              <div class="media-body">
-                <h5 class="mt-0">Commenter Name</h5>
-                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-              </div>
-            </div>
-
-            <div class="media mt-4">
-              <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-              <div class="media-body">
-                <h5 class="mt-0">Commenter Name</h5>
-                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Sidebar Widgets Column -->
-      <div class="col-md-4">
-
-   
-
-        <!-- Categories Widget -->
-        <div class="card my-4">
-          <h5 class="card-header">창작자 소개</h5>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-lg-6">
-                <ul class="list-unstyled mb-0">
-                  <li>
-                    <a href="#">Web Design</a>
-                  </li>
-                  <li>
-                    <a href="#">HTML</a>
-                  </li>
-                  <li>
-                    <a href="#">Freebies</a>
-                  </li>
-                </ul>
-              </div>
-              <div class="col-lg-6">
-                <ul class="list-unstyled mb-0">
-                  <li>
-                    <a href="#">JavaScript</a>
-                  </li>
-                  <li>
-                    <a href="#">CSS</a>
-                  </li>
-                  <li>
-                    <a href="#">Tutorials</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Side Widget -->
-        <div class="card my-4">
-          <h5 class="card-header">선물 선택</h5>
-          <div class="card-body">
-          
-<div id="giftForm">
-
-		<div class="aGift">
-			<button style="width:100%;height:auto" class="btn btn-default hiddenBtn0" disabled onclick="showOrView(0)"><h3>1,000원+</h3> 선물을 선택하지 않고 밀어만 줍니다</button>
-					<div style="width:100%;margin:1.8em;"></div>
-					<div class="hiddenList" id="gift0" style="display:none;">
-						추가 후원금(선택)<br> 
-						<input type="text" id="input0" maxlength="16" oninput="numSet(this,0)"><br>
-						<span class="blockquote-footer">더 후원해주시면 프로젝트 성사가 앞당겨집니다.</span>
-						<div style="width:100%;margin:0.2em;"></div>
-						<button class="btn btn-default" id="5000" onclick="plusMoney(this,0,1000)" >+ 5천원</button>
-						<button class="btn btn-default" id="10000" onclick="plusMoney(this,0,1000)" >+ 1만원</button>
-						<button class="btn btn-default" id="50000" onclick="plusMoney(this,0,1000)" >+ 5만원</button>
-						<button class="btn btn-default" id="100000" onclick="plusMoney(this,0,1000)" >+ 10만원</button><br>
-						<div style="width:100%;margin:1.8em;"></div>
-						<button class="btn btn-secondary my-2 my-sm-0" id="payMoney0" onclick="pay(0,1000)">1000원 밀어주기</button>
-					</div>
-		</div>
-		<hr>
-		
-	
-			<c:forEach var="gift" items="${projectGift}" varStatus="status">
-			
-				<div class="aGift">
-					<button disabled style="width:100%;height:auto" class="btn btn-default hiddenBtn${gift.gift_id}" onClick="showOrView('${gift.gift_id}')" >
-						<h3>${gift.price}원+</h3>${gift.gift}
-					</button>
-					<div style="width:100%;margin:1.8em;"></div>
-					<div class="hiddenList" id="gift${gift.gift_id}" style="display:none;">
-						추가 후원금(선택)<br>
-						<input type="text" id="input${gift.gift_id}" maxlength="16" oninput="numSet(this,'${gift.price}')"><br>
-						<span class="blockquote-footer">더 후원해주시면 프로젝트 성사가 앞당겨집니다.</span>
-						<div style="width:100%;margin:0.2em;"></div>
-						<button class="btn btn-default" id="5000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 5천원</button>
-						<button class="btn btn-default" id="10000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 1만원</button>
-						<button class="btn btn-default" id="50000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 5만원</button>
-						<button class="btn btn-default" id="100000" onclick="plusMoney(this,'${gift.gift_id}','${gift.price}')" >+ 10만원</button><br>
-						<div style="width:100%;margin:1.8em;"></div>
-						<button class="btn btn-secondary my-2 my-sm-0" id="payMoney${gift.gift_id}" onclick="pay('${gift.gift_id}','${gift.price}')">${gift.price}원 밀어주기</button>
-					</div>	
-				<hr>
-				</div>
-				
-				
-			</c:forEach>
-	
-	</div>
-	
-	
-	
-	
-	
-          </div>
-        </div>
-
-      </div>
 
 </c:if>
 
@@ -693,6 +557,9 @@ ${memberMap[morePrj.value.project_id].member_URL}
     
     
     
+
+ 
+
     
     
     
@@ -715,6 +582,23 @@ ${memberMap[morePrj.value.project_id].member_URL}
   <script src="/fund/resources/vendor2/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <script type="text/javascript">
+
+$(document).ready(function(){
+	$('#modalBtn').click(function(){
+		console.log("안녕하삼");
+		$('.modalWrap').show();
+		$('.blackBg').show();
+		
+		$('.modalClose').click(function(){
+			$('.modalWrap').hide();
+			$('.blackBg').hide();
+			
+		});
+		
+	});	
+});
+
+
 
 
 Kakao.init("4a910cfb1ef1434f4c361ae507d1375a");

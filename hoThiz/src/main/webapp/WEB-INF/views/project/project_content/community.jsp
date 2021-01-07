@@ -738,10 +738,14 @@ function getReply(bno,prjId){
 			
 					//html += ' <div class="card my-4"><h5 class="card-header">댓글달기</h5><div class="card-body">';
 					
-					html +='<c:if test="${sessionScope.userId ne null}">'
-					html += '<hr><form id="form"'+bno+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3"></textarea> </div>';
-					html +='<input type="hidden" name="member_email" value="'+userId+'"><input type="button" class="btn btn-primary" value="댓글달기" onclick="replySub('+bno+','+prjId+')"></form></div>';
-					html +='</c:if>'
+					if(userId==null){
+						htmlr += '<hr><form id="form"'+prjId+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3"></textarea> </div>';
+						html +='<input type="hidden" name="member_email" value="'+userId+'"><input type="button" class="btn btn-secondary my-2 my-sm-0" value="댓글달기" onclick="replySub('+bno+','+prjId+')"></form></div>';
+					}
+					
+					
+					
+						
 					var rno=0;
 					$.each(replyList,function(index,dto){
 					 	
@@ -749,8 +753,8 @@ function getReply(bno,prjId){
 						//html +='<div id="rno"'+dto.bno+dto.rno+1+'></div>'
 						
 						if(userId==dto.member_email){
-							html +='<button>수정</button>';
-							html +='<button>삭제</button><hr>';
+							html +='<button class="btn btn-secondary my-2 my-sm-0">수정</button>';
+							html +='<button class="btn btn-secondary my-2 my-sm-0">삭제</button><hr>';
 							
 						}	
 						
@@ -806,10 +810,10 @@ function replySub(bno,prjId){
 				console.log(data['project_id']);
 				alert("성공");
 				
-				htmlr +='<c:if test="${sessionScope.userId ne null}">'
-				htmlr += '<hr><form id="form"'+prjId+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3"></textarea> </div>';
-				htmlr +='<input type="hidden" name="member_email" value="'+userId+'"><input type="button" class="btn btn-primary" value="댓글달기" onclick="replySub('+bno+','+prjId+')"></form></div>';
-				htmlr +='</c:if>'
+				if(userId==null){
+					htmlr += '<hr><form id="form"'+prjId+'><div class="form-group"><textarea id="text'+bno+'" name="content" class="form-control" rows="3"></textarea> </div>';
+				}
+					htmlr +='<input type="hidden" name="member_email" value="'+userId+'"><input type="button" class="btn btn-primary" value="댓글보기" onclick="replySub('+bno+','+prjId+')"></form></div>';
 				
 				$.each(data, function(index,map){
 					console.log(map['project_id']);

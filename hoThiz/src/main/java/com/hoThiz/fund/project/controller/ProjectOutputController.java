@@ -214,6 +214,51 @@ public class ProjectOutputController {
 		return mv;
 	}
 	
+	private final String IMAGE_REPO = "D:\\Spring\\final_project\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\hoThiz\\resources\\img\\community";
+	private final String IMAGE_PATH = "/fund/resources/img/community";
+
+	@RequestMapping("/{project_id}/download")
+	   public void getBoarddownload(@RequestParam("imageFileName") String imageFileName,
+	                          HttpServletResponse response, HttpSession session, 
+	                          @PathVariable String project_id, @RequestParam("bno") String bno)throws Exception {
+	      //System.out.println("다운로드 실행 됩니까???");
+
+	      String path = IMAGE_PATH+"\\"+project_id+"\\"+bno; //폴더 경로
+	      File Folder = new File(path);
+
+	      // 해당 디렉토리가 없을경우 디렉토리를 생성합니다.
+	      if (!Folder.exists()) {
+	         try{
+	             Folder.mkdir(); //폴더 생성합니다.
+	              } 
+	              catch(Exception e){
+	             e.getStackTrace();
+	         }        
+	      }
+	      OutputStream out = response.getOutputStream();
+	      String downFile = IMAGE_REPO +"\\"+project_id+"\\"+bno+"\\"+ imageFileName;
+	      File file = new File(downFile);
+	      //Content-disposition :파일 다운로드를 처리하는 HTTP헤더 중 하나다
+	      //Content-disposition : attachment : attachment는 파일을 다운로드하여 브라우저로 표현 하는 의미다
+	      //fileName는 파일을 다운로드할때의 이름을 지정해 준다.
+	      response.addHeader("Content-disposition", "attachment; fileName=" + imageFileName);
+	      FileInputStream in = new FileInputStream(file);
+	      byte[] buffer = new byte[1024 * 8];
+	      while (true) {//브라우저로 전송
+	         int count = in.read(buffer);  
+	         if (count == -1) 
+	            break;
+	         out.write(buffer, 0, count);
+	      }
+	      in.close(); out.close();
+	   }
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

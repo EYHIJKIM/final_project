@@ -34,15 +34,16 @@ public class ProjectCommuController {
 	@Autowired
 	ProjectServiceImpl ps;
 	
-	static String bno;
+
 	
 	//스토리에 들어가는 이미지 저장 위치
-	private final String IMAGE_REPO = "D:\\Spring\\final_project\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\hoThiz\\resources\\img\\project\\community";
+	private final String IMAGE_REPO = "D:\\Spring\\final_project\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\hoThiz\\resources\\img\\community";
+	private final String IMAGE_PATH = "/fund/resources/img/community";
 	
 	
 	
 	@GetMapping(value="writeForm")
-	public ModelAndView boardWrite(ModelAndView mv,HttpSession session) {
+	public ModelAndView boardWrite(ModelAndView mv,HttpSession session, @RequestParam("project_id") String project_id) {
 		
 		//String userId = (String)session.getAttribute("userId");
 				String userId = "30";
@@ -88,14 +89,14 @@ public class ProjectCommuController {
 		pcs.writeOnCommunity(coDto);
 		
 		System.out.println();
-		String path = "redirect:/fund/discover/"+coDto.getProject_id()+"/community";
+		String path = "redirect:/discover/"+coDto.getProject_id()+"/community";
 		
 		return path;
 		
 	}
 	
 	
-	private String uploadFile(MultipartFile mFile) throws Exception{//업로드는 됨.
+	private String uploadFile(MultipartFile mFile,String project_id, String bno) throws Exception{//업로드는 됨.
 		
 		//int num = pcs.getLastBno(project_id);
 		//bno = Integer.toString(num+1);
@@ -103,22 +104,30 @@ public class ProjectCommuController {
 		
 		String imageFileName= null;
 			imageFileName=mFile.getOriginalFilename();//실제 파일명을 가져온다
-			File file = new File(IMAGE_REPO +"\\"+bno+"\\"+ imageFileName);
+			File file = new File(IMAGE_REPO +"\\"+project_id+"\\"+bno+"\\"+ imageFileName);
 			file.getParentFile().mkdirs(); //해당 경로 디렉터리 생성(존재하면 생성하지 않음)
 			if(mFile.getSize()!=0){ //File Null Check
 				//임시로 저장된 multipartFile을 실제 파일로 전송
-				mFile.transferTo(new File(IMAGE_REPO +"\\"+bno+"\\"+imageFileName)); 
+				mFile.transferTo(new File(IMAGE_REPO +"\\"+project_id+"\\"+bno+"\\"+imageFileName)); 
 			}
 		return imageFileName;
 	}
 	
 	
+	
+	
+	
+
 	@RequestMapping("/download")
 	public void download(@RequestParam("imageFileName") String imageFileName,
-			                 HttpServletResponse response)throws Exception {
+			                 HttpServletResponse response, 
+			                 @RequestParam("bno") String bno,
+			                 @RequestParam("project_id") String project_id)throws Exception {
 		System.out.println("다운로드 실행 됩니까???");
+		
 		OutputStream out = response.getOutputStream();
-		String downFile = IMAGE_REPO + "\\"+bno+"\\" + imageFileName;
+		String downFile = IMAGE_REPO +"\\"+project_id+"\\"+bno+"\\"+ imageFileName;
+		
 		File file = new File(downFile);
 		//Content-disposition :파일 다운로드를 처리하는 HTTP헤더 중 하나다
 		//Content-disposition : attachment : attachment는 파일을 다운로드하여 브라우저로 표현 하는 의미다
@@ -135,16 +144,64 @@ public class ProjectCommuController {
 		in.close(); out.close();
 	}
 	
+	
+	
+	/*
+	@RequestMapping("/{project_id}/download")
+	   public void getdownload(@RequestParam("imageFileName") String imageFileName,
+	                          HttpServletResponse response, HttpSession session, 
+	                          @PathVariable String project_id, @RequestParam("bno") String bno)throws Exception {
+	      //System.out.println("다운로드 실행 됩니까???");
+
+	      String path = IMAGE_PATH+"\\"+project_id+"\\"+bno; //폴더 경로
+	      File Folder = new File(path);
+
+	      // 해당 디렉토리가 없을경우 디렉토리를 생성합니다.
+	      if (!Folder.exists()) {
+	         try{
+	             Folder.mkdir(); //폴더 생성합니다.
+	              } 
+	              catch(Exception e){
+	             e.getStackTrace();
+	         }        
+	      }
+	      OutputStream out = response.getOutputStream();
+	      String downFile = IMAGE_REPO +"\\"+project_id+"\\"+bno+"\\"+ imageFileName;
+	      File file = new File(downFile);
+	      //Content-disposition :파일 다운로드를 처리하는 HTTP헤더 중 하나다
+	      //Content-disposition : attachment : attachment는 파일을 다운로드하여 브라우저로 표현 하는 의미다
+	      //fileName는 파일을 다운로드할때의 이름을 지정해 준다.
+	      response.addHeader("Content-disposition", "attachment; fileName=" + imageFileName);
+	      FileInputStream in = new FileInputStream(file);
+	      byte[] buffer = new byte[1024 * 8];
+	      while (true) {//브라우저로 전송
+	         int count = in.read(buffer);  
+	         if (count == -1) 
+	            break;
+	         out.write(buffer, 0, count);
+	      }
+	      in.close(); out.close();
+	   }
+	
+	
+	*/
+	
+	
+	
+	
+	
+	
 	@PostMapping(value="image", produces = "application/json;charset=utf8")
 	@ResponseBody
 	public String uploadSummernoteImageFile(@RequestParam("file") MultipartFile multipartFile, @RequestParam("project_id") int id) throws Exception {
 		JsonObject jsonObject = new JsonObject();
+		String project_id = Integer.toString(id);
 		int num = pcs.getLastBno(id);
-		bno = Integer.toString(num+1);
+		String bno = Integer.toString(num+1);
 		
-		String savedFileName = uploadFile(multipartFile);
+		String savedFileName = uploadFile(multipartFile,project_id,bno);
 		try {
-			jsonObject.addProperty("url", "download?imageFileName="+savedFileName);
+			jsonObject.addProperty("url", "download?project_id="+project_id+"&bno="+bno+"&imageFileName="+savedFileName);
 			jsonObject.addProperty("responseCode", "success");
 	
 		} catch (Exception e) {
@@ -152,6 +209,15 @@ public class ProjectCommuController {
 		}
 		return jsonObject.toString();
 	}
+	
+	
+	
+
+	
+	
+	
+	
+	
 	
 	
 }

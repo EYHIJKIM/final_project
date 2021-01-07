@@ -163,8 +163,7 @@ float:left;
           <div class="card-body">
 			${brd.content}<br><br>
 			<div id="reply${brd.bno}">
-			<button class="btn btn-secondary my-2 my-sm-0"  onclick="getReply('${brd.bno}','${prj.project_id}')">댓글 보기</button>
-			
+				<button class="btn btn-secondary my-2 my-sm-0"  onclick="getReply('${brd.bno}','${prj.project_id}')">댓글 보기</button>
 			</div>
 			
 		 </div>

@@ -4,13 +4,22 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+<<<<<<< HEAD
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+=======
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+>>>>>>> Jihye
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+<<<<<<< HEAD
 /**
  * Handles requests for the application home page.
  */
@@ -36,4 +45,38 @@ public class HomeController {
 		return "home";
 	}
 	
+=======
+import com.hothiz.fund.project.dto.ProjectParamDTO;
+import com.hothiz.fund.project.service.ProjectService;
+
+
+// Handles requests for the application home page.
+
+@Controller
+public class HomeController {
+	@Autowired
+	ProjectService ps;
+	
+	
+	
+	 //Simply selects the home view to render by returning its name.
+	 
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public String home(Model model,HttpSession session) {
+
+		System.out.println("=====");
+		System.out.println(session.getAttribute("userId"));
+		System.out.println("=====");
+		
+		
+		
+		ps.getMainProjectList(model, session);
+		
+
+		
+		return "index";
+		
+	}
+
+>>>>>>> Jihye
 }

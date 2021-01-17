@@ -1,6 +1,7 @@
 Manifest-Version: 1.0
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 Built-By: june
 Build-Jdk: 11.0.9
 =======
@@ -11,5 +12,9 @@ Build-Jdk: 1.8.0_251
 Built-By: june
 Build-Jdk: 11.0.9
 >>>>>>> pjune
+=======
+Built-By: june
+Build-Jdk: 11.0.9
+>>>>>>> Jihye
 Created-By: Maven Integration for Eclipse
 

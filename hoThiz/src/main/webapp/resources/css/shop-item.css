@@ -1,0 +1,53 @@
+/*!
+ * Start Bootstrap - Shop Item (https://startbootstrap.com/template/shop-item)
+ * Copyright 2013-2020 Start Bootstrap
+ * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-shop-item/blob/master/LICENSE)
+ */
+body {
+  padding-top: 56px;
+}
+
+.bttn{
+	border: 0;
+	outline: 0;
+	background-color: white;
+	color: blue;
+}
+
+.btnsave {
+
+    width:100px;
+
+    background-color: gray;
+
+    border: none;
+
+    color:#fff;
+
+    padding: 15px 0;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    display: inline-block;
+
+    font-size: 15px;
+
+    margin: 4px;
+
+    cursor: pointer;
+
+	border-radius:10px;
+}
+
+
+.btnelse{
+	background-color: skyblue;
+	color: white;
+	border:0;
+	outline: 0;
+	border-radius:10px;
+}
+
+

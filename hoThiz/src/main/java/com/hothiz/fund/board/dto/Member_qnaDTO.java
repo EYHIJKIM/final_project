@@ -1,6 +1,10 @@
 package com.hothiz.fund.board.dto;
 
+<<<<<<< HEAD
 import java.sql.Date;
+=======
+import java.util.Date;
+>>>>>>> Jihye
 
 public class Member_qnaDTO {
 	private int qna_board_id;
@@ -9,8 +13,20 @@ public class Member_qnaDTO {
 	private String member_email;
 	private Date qna_board_date;
 	private int qna_board_indent;
+<<<<<<< HEAD
 	
 	
+=======
+	private int qna_board_hit;
+	
+	
+	public int getQna_board_hit() {
+		return qna_board_hit;
+	}
+	public void setQna_board_hit(int qna_board_hit) {
+		this.qna_board_hit = qna_board_hit;
+	}
+>>>>>>> Jihye
 	public int getQna_board_id() {
 		return qna_board_id;
 	}
